@@ -44,6 +44,8 @@ console = Console()
 DOMAIN_WEIGHTS = {"troubleshooting": 30, "architecture": 25, "networking": 20, "workloads": 15, "storage": 10}
 DOMAIN_COUNTS = {"troubleshooting": 5, "architecture": 4, "networking": 3, "workloads": 3, "storage": 2}
 PASS_MARK = 66
+PROTECTED = {"ckaquest", "default", "kube-system", "kube-public", "kube-node-lease", "local-path-storage",
+             "ingress-nginx", "nginx-gateway"}
 
 # What a level changes outside its namespace. Two tasks with the same key never go in one set.
 TOUCHES = {
@@ -199,7 +201,7 @@ def cmd_start(name):
         console.print(f"  [dim]task {i + 1}: {m['name']}[/dim]")
         run(d, "cleanup.sh", m)
         ns = m.get("namespace", "ckaquest")
-        if ns != "ckaquest":
+        if ns not in PROTECTED:
             subprocess.run(["kubectl", "delete", "ns", ns, "--ignore-not-found", "--timeout=120s"], capture_output=True)
         subprocess.run(["kubectl", "create", "ns", ns], capture_output=True)
         r = run(d, "setup.sh", m)
@@ -347,7 +349,7 @@ def cmd_end():
         m = load_mission(d)
         run(d, "cleanup.sh", m)
         ns = m.get("namespace", "ckaquest")
-        if ns not in ("ckaquest", "default", "kube-system"):
+        if ns not in PROTECTED:
             subprocess.run(["kubectl", "delete", "ns", ns, "--ignore-not-found", "--wait=false"], capture_output=True)
     s["ended"] = True
     save_state(s)

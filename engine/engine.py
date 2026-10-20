@@ -101,6 +101,10 @@ def discover_levels(world_path):
     ]
 
 
+PROTECTED_NAMESPACES = {"default", "kube-system", "kube-public", "kube-node-lease", "local-path-storage",
+                        "ingress-nginx", "nginx-gateway", DEFAULT_NAMESPACE}
+
+
 def parse_minutes(text):
     m = re.match(r"\s*(\d+)", str(text or ""))
     return int(m.group(1)) if m else 0
@@ -782,7 +786,7 @@ class CKAQuest:
             if result and result.returncode != 0:
                 console.print(f"[yellow]Cleanup reported a problem:[/yellow]\n[dim]{result.stdout}{result.stderr}[/dim]")
         namespace = level_namespace(mission)
-        if namespace not in (DEFAULT_NAMESPACE, "default", "kube-system"):
+        if namespace not in PROTECTED_NAMESPACES:
             # Free the RAM. --wait=false so the next level does not wait for it.
             subprocess.run(
                 ["kubectl", "delete", "namespace", namespace, "--ignore-not-found", "--wait=false"],
@@ -850,9 +854,10 @@ class CKAQuest:
             task = progress.add_task("Cleaning up...", total=3)
             # Clean state first, also for a level replayed after a quit
             self.run_level_script(level_path, "cleanup.sh", mission)
-            if namespace == DEFAULT_NAMESPACE:
+            if namespace in PROTECTED_NAMESPACES:
                 subprocess.run(["kubectl", "create", "namespace", namespace], capture_output=True, text=True)
-                self.reset_namespace(namespace)
+                if namespace == DEFAULT_NAMESPACE:
+                    self.reset_namespace(namespace)
             else:
                 # Own namespace per level: start from an empty one, also on a replay
                 subprocess.run(

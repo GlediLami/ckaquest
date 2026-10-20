@@ -16,6 +16,11 @@ PASS_TIMEOUT="${PASS_TIMEOUT:-180}"
 RESULTS="$CQ_HOME/test-results.txt"
 : > "$RESULTS"
 
+is_protected() {
+  case "$1" in ckaquest|default|kube-system|kube-public|kube-node-lease|local-path-storage|ingress-nginx|nginx-gateway) return 0 ;; esac
+  return 1
+}
+
 level_requires() {
   awk '/^requires:/ {r=1; next} r && /^  - / {print $2; next} r {exit}' "$1/mission.yaml"
 }
@@ -58,7 +63,7 @@ test_level() {
     "$CQ_ROOT/bin/cq-cluster" addon "$addon" >/dev/null 2>&1 || { echo "ADDON-FAIL $addon"; echo "$name ADDON-FAIL" >> "$RESULTS"; return; }
   done
   [ -f "$dir/cleanup.sh" ] && run_in "$dir" "$ns" cleanup.sh >/dev/null 2>&1
-  if [ "$ns" = "ckaquest" ]; then
+  if is_protected "$ns"; then
     kubectl create namespace "$ns" >/dev/null 2>&1
     reset_default_ns
   else
@@ -97,7 +102,7 @@ test_level() {
 
   if [ -z "${KEEP:-}" ]; then
     [ -f "$dir/cleanup.sh" ] && run_in "$dir" "$ns" cleanup.sh >/dev/null 2>&1
-    [ "$ns" != "ckaquest" ] && kubectl delete namespace "$ns" --ignore-not-found --wait=false >/dev/null 2>&1
+    is_protected "$ns" || kubectl delete namespace "$ns" --ignore-not-found --wait=false >/dev/null 2>&1
   fi
 }
 
