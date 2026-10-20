@@ -33,3 +33,7 @@ success_criteria:
   - Correct service type for local development
 
 hints_available: 3
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer

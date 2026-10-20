@@ -11,3 +11,13 @@ concepts:
   - kubectl get with label filters
   - Service endpoints
   - Pod connectivity
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/
+  - https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+task: |
+  Context: `kind-ckaquest`
+
+  Service **backend-service** in namespace **ckaquest** has no endpoints, so it sends traffic nowhere.
+  Fix it so the service routes to pod **backend-app**.

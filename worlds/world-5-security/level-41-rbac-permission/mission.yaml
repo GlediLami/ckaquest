@@ -21,3 +21,7 @@ learning_objectives:
   - Learn to create Roles and RoleBindings
   - Configure ServiceAccount permissions
   - Debug permission denied errors
+domain: architecture
+course_section: 7
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/

@@ -20,3 +20,7 @@ learning_objectives:
   - Learn difference between Delete and Retain
   - Prevent accidental data loss
   - Configure appropriate retention policies
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming

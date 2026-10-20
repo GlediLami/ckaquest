@@ -10,3 +10,7 @@ concepts:
   - FQDN format
   - CoreDNS
   - DNS troubleshooting
+domain: networking
+course_section: 9
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/

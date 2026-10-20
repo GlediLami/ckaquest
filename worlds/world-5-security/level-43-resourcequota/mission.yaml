@@ -27,3 +27,7 @@ learning_objectives:
   - Configure resource requests/limits properly
   - Balance quotas with application needs
   - Debug quota-related scheduling failures
+domain: workloads
+course_section: 3
+docs:
+  - https://kubernetes.io/docs/concepts/policy/resource-quotas/

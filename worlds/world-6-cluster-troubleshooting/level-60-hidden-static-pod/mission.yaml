@@ -19,3 +19,4 @@ task: |
   Remove it permanently. Do not stop or reconfigure the kubelet. node01 must stay Ready.
 docs:
   - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
+course_section: 14

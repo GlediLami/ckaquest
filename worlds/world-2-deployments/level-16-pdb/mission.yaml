@@ -11,3 +11,13 @@ concepts:
   - node maintenance
   - pod eviction
   - cluster upgrades
+domain: workloads
+course_section: 6
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+  - https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+task: |
+  Context: `kind-ckaquest`
+
+  Node drains hang because of PodDisruptionBudget **db-proxy-pdb** in namespace **ckaquest**. It covers the 3 pods of Deployment **database-proxy**.
+  Change the PDB so that 2 pods must stay available and 1 pod may be evicted at a time.

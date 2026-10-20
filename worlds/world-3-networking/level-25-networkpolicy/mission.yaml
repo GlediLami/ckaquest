@@ -33,3 +33,7 @@ success_criteria:
   - NetworkPolicy allows traffic from frontend to backend
   - NetworkPolicy still blocks traffic from other pods (maintains security)
   - All pods are running and healthy
+domain: networking
+course_section: 7
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/network-policies/

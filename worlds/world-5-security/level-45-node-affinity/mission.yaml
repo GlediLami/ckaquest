@@ -26,3 +26,7 @@ learning_objectives:
   - Configure nodeAffinity selectors correctly
   - Match node label keys and values
   - Debug scheduling failures
+domain: workloads
+course_section: 3
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity

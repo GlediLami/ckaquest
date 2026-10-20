@@ -11,3 +11,12 @@ concepts:
   - pod startup
   - HTTP probes
   - liveness vs readiness
+domain: workloads
+course_section: 5
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+task: |
+  Context: `kind-ckaquest`
+
+  Service **slow-app-service** in namespace **ckaquest** sends traffic to pods of Deployment **slow-startup-app** before they can serve it.
+  Add a readiness probe to the container: HTTP GET on path `/`, port 80. All replicas must become ready.

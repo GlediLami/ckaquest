@@ -19,3 +19,7 @@ learning_objectives:
   - Learn to diagnose PVC Pending issues
   - Configure proper storage class references
   - Understand available storage classes
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/storage/storage-classes/

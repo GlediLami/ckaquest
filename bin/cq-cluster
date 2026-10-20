@@ -8,6 +8,8 @@
 #   cq-cluster addon <name>      install an on-demand add-on: ingress | gateway
 #   cq-cluster lab-up [--no-cni] create the small lab cluster (upgrade / CNI practice)
 #   cq-cluster lab-down          delete the lab cluster
+#   cq-cluster bare-up           start 2 bare nodes (no cluster yet) for kubeadm init/join practice
+#   cq-cluster bare-down         remove the bare nodes
 #
 # Only touches the CKAQuest kubeconfig (~/.ckaquest/kubeconfig by default).
 set -euo pipefail
@@ -149,6 +151,61 @@ EOF
   kubectl config use-context "$CQ_CONTEXT" >/dev/null
 }
 
+# Bare nodes: kindest/node containers started without kind. systemd and containerd run,
+# kubelet waits for "kubeadm init" or "kubeadm join".
+BARE_NODES="ckaquest-bare-cp ckaquest-bare-worker"
+
+cmd_bare_up() {
+  check_prereqs
+  local node
+  for node in $BARE_NODES; do
+    if docker inspect "$node" >/dev/null 2>&1; then
+      log "$node exists"
+      continue
+    fi
+    log "starting bare node $node"
+    docker run -d --name "$node" --hostname "$node" --network kind \
+      --privileged --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
+      --tmpfs /tmp --tmpfs /run -v /var -v /lib/modules:/lib/modules:ro \
+      --cgroupns=private -e container=docker --label io.ckaquest.bare=true \
+      "$LAB_NODE_IMAGE" >/dev/null
+  done
+  sleep 10
+  for node in $BARE_NODES; do
+    # A container cannot swapoff and WSL has swap, so kubelet must accept it.
+    docker exec "$node" bash -c 'echo "KUBELET_EXTRA_ARGS=--fail-swap-on=false" > /etc/default/kubelet'
+    docker cp "$CQ_ROOT/cluster/node-bootstrap.sh" "$node:/root/.cq-node-bootstrap.sh" >/dev/null
+    docker exec "$node" bash /root/.cq-node-bootstrap.sh worker &
+  done
+  wait
+  install_proxy_fix ckaquest-bare-cp
+  log "bare nodes ready: $BARE_NODES"
+}
+
+install_proxy_fix() {
+  local node="$1"
+  docker cp "$CQ_ROOT/cluster/bare-proxy-fix.sh" "$node:/usr/local/sbin/cq-proxy-fix" >/dev/null
+  docker exec "$node" bash -c 'chmod +x /usr/local/sbin/cq-proxy-fix
+cat > /etc/systemd/system/cq-proxy-fix.service <<UNIT
+[Unit]
+Description=CKAQuest: kube-proxy conntrack setting for container nodes
+[Service]
+ExecStart=/usr/local/sbin/cq-proxy-fix
+Restart=always
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload && systemctl enable --now cq-proxy-fix >/dev/null 2>&1'
+}
+
+cmd_bare_down() {
+  local node
+  for node in $BARE_NODES; do
+    docker inspect "$node" >/dev/null 2>&1 && docker rm -f -v "$node" >/dev/null && log "removed $node"
+  done
+  return 0
+}
+
 cmd_lab_down() {
   if cluster_exists "$CQ_LAB_CLUSTER"; then
     "$CQ_KIND" delete cluster --name "$CQ_LAB_CLUSTER" --kubeconfig "$KUBECONFIG"
@@ -168,5 +225,7 @@ case "${1:-}" in
     esac ;;
   lab-up) shift; cmd_lab_up "$@" ;;
   lab-down) cmd_lab_down ;;
+  bare-up) cmd_bare_up ;;
+  bare-down) cmd_bare_down ;;
   *) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
 esac

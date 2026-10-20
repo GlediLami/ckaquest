@@ -21,3 +21,7 @@ learning_objectives:
   - Learn per-pod persistent storage
   - Configure dynamic PVC creation
   - Understand StatefulSet storage patterns
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates

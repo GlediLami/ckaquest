@@ -11,3 +11,12 @@ concepts:
   - declarative updates
   - rollout management
   - abstraction layers
+domain: workloads
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **ckaquest** runs a bare ReplicaSet **web-app-rs** with 3 pods.
+  Replace it with a Deployment **web-app**, 3 replicas, same image and labels. Delete the ReplicaSet so only the Deployment manages the pods.

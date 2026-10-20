@@ -9,3 +9,12 @@ concepts:
   - scaling
   - replicas
   - kubectl scale
+domain: workloads
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **web** in namespace **ckaquest** has no available pods.
+  Fix it so the Deployment has at least one ready replica.

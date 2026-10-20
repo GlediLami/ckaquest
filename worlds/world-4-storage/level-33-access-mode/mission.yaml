@@ -27,3 +27,7 @@ learning_objectives:
   - Configure storage for multi-pod shared access
   - Experience PVC spec immutability (accessModes cannot be edited)
   - Learn delete/recreate workflow for fixing immutable fields
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes

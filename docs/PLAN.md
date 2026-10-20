@@ -194,13 +194,13 @@ Each phase ends with the harness green for everything in it and a commit.
 | # | Phase | Done when |
 |---|---|---|
 | 1 | Done (2026-10-20): base 50 and World 6 tested, 12, 14, 37, 45 to 50 fixed | Harness shows 60 of 60 OK |
-| 2 | Feasibility spikes: kubeadm upgrade inside kind, kubeadm init/join on bare kind node images, Calico in kind, offline image loading, offline docs build | One short report: what works, what gets dropped |
+| 2 | Done (2026-10-21), see section 12. Feasibility spikes: kubeadm upgrade inside kind, kubeadm init/join on bare kind node images, Calico in kind, offline image loading, offline docs build | One short report: what works, what gets dropped |
 | 3 | Base 50 upgrade (section 3.3) | Every level has task, domain, docs, course section, strict validator |
 | 4 | Worlds 7 to 10 | Harness green |
 | 5 | Exam simulator engine plus 2 mock sets | You can do a full mock end to end |
 | 6 | Offline pack and offline proof | A full mock runs with the network cut |
 | 7 | World 11 (lab cluster), World 12 drills, 4 more mock sets, random sets | 6 mocks plus random |
-| 8 | Polish: README with credits, game mechanics (par time, mastery, readiness), security and code review pass, private GitHub repo | Review findings fixed |
+| 8 | Polish: game mechanics (par time, mastery, readiness), security and code review pass | Review findings fixed |
 
 Suggested order of your own study: play worlds 1 to 5 now (they work). Phases 1 to 4 run in parallel with your course sections 1 to 10. Exam mocks are ready before you reach the course mock exams.
 
@@ -224,7 +224,9 @@ Two lessons for the engine:
 - A shared namespace leaks state between levels. Per-level namespaces fix the whole class.
 - Any level that picks "the first node" breaks on multi-node. Grep for `items[0]` and use exam node names.
 
-World 6 (levels 51 to 60) is not tested yet.
+World 6 (levels 51 to 60): 10 of 10 clean.
+
+Update (2026-10-20): 12, 14, 37, 45 to 50 fixed and re-tested. **All 60 levels pass.**
 
 ## 10. Decisions (2026-10-20)
 
@@ -249,3 +251,59 @@ Result: **public is possible.** Conditions:
 | Personal paths | Remove | No private home folder paths in the repo. Checked before the first push. |
 
 Before the first push: `git grep` for personal paths and emails, run a secret scan, and check that no task text matches an outside source.
+
+## 12. Phase 2 spikes
+
+Run on the lab cluster and on bare node containers, 2026-10-21. Logs in `~/.ckaquest/spikes/`.
+
+### 12.1 kubeadm upgrade inside kind: works
+
+v1.36.4 to v1.37.1 on a 2-node lab cluster, the exam way: add the pkgs.k8s.io v1.37 apt repo, `apt-get install kubeadm`, `kubeadm upgrade plan`, `kubeadm upgrade apply`, drain, `apt-get install kubelet kubectl`, restart kubelet, uncordon. Worker: `kubeadm upgrade node`, same kubelet steps.
+
+- kind installs the binaries without dpkg, so apt simply replaces them.
+- `apt-get install kubelet` stops at a dpkg prompt about kind's `/etc/default/kubelet`. Fix: `--force-confold` in `/etc/apt/apt.conf.d`. Now in `node-bootstrap.sh`.
+- `kubeadm upgrade apply` took 3m50s, mostly image pulls. The offline pack must preload the target control plane images.
+- Online needs: the apt repo and the images. Offline plan: a local apt repo of the target .debs, served from the host or copied into the node.
+
+### 12.2 kubeadm init and join on bare nodes: works
+
+A bare node is a container from the kindest/node image started without kind (same flags kind uses: privileged, tmpfs /run and /tmp, a /var volume, network `kind`). systemd and containerd run. kubelet waits for a config.
+
+- First try failed: WSL has swap on and kubelet refuses to start. `swapoff` cannot work inside a container. Fix: `KUBELET_EXTRA_ARGS=--fail-swap-on=false` in `/etc/default/kubelet`, set before the player starts. The player still runs plain `kubeadm init --pod-network-cidr=...`.
+- With that, `kubeadm init` took 37s. `kubeadm join` works with the printed command.
+- `kubeadm reset` on a kind-made cluster is a bad base for levels. Fresh bare containers are cleaner and quicker.
+
+### 12.3 Calico on bare nodes: works, with one hidden fix
+
+`kubectl apply -f calico.yaml` (v3.33.0, pod CIDR 192.168.0.0/16). Nodes go Ready, CoreDNS starts, pods on different nodes ping each other, DNS resolves.
+
+- First try failed: kube-proxy crashes with `open /proc/sys/net/netfilter/nf_conntrack_max: permission denied`. Without kube-proxy the Service IP 10.96.0.1 does not route, so Calico's install step cannot reach the API server.
+- kind avoids this with `conntrack.maxPerCore: 0` in the kube-proxy config. A plain `kubeadm init` does not set it.
+- Fix, tested end to end with plain exam commands: `cq-cluster bare-up` installs a small systemd unit on the control plane (`cluster/bare-proxy-fix.sh`). After the player's `kubeadm init` it sets `maxPerCore: 0` in the kube-proxy ConfigMap and restarts kube-proxy. The player types the normal exam commands.
+- Calico image pulls take about 45s. The offline pack must preload them.
+
+### 12.4 Offline image loading: works
+
+`docker save --platform linux/amd64 IMAGE -o x.tar`, then `ctr -n k8s.io images import --platform linux/amd64 - < x.tar` inside the node. A pod with `imagePullPolicy: Never` runs from it.
+
+- Without `--platform`, Docker 29 saves a multi-platform index and the import fails with `content digest ... not found`.
+- On arm64 Macs the platform is linux/arm64. The pack script must pick the host platform.
+
+### 12.5 RAM (WSL, 9.7 GB)
+
+Measured with docker stats, idle:
+
+| Containers | RAM |
+|---|---|
+| Main cluster (3 nodes) | about 1.2 GB |
+| Lab cluster (2 nodes, kindnet) | about 1.0 GB |
+| Bare nodes after init plus Calico | about 2.1 GB |
+
+Main cluster plus one of the others fits with 4 GB still free. All three at once is tight. The exam simulator with 2 clusters (main plus lab) is fine.
+
+### 12.6 Results for the plan
+
+- World 11 can use real `kubeadm init`, `join`, upgrade and Calico. Nothing gets dropped.
+- The lab cluster used here is now at v1.37.1. Run `cq-cluster lab-down` and `lab-up` before using it for an upgrade level.
+- Offline pack needs: the upgrade target images and .debs, Calico images, all level images, per platform.
+

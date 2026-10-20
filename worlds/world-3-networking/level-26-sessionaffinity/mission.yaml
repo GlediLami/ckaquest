@@ -34,3 +34,7 @@ success_criteria:
   - Requests from the same client consistently route to the same pod
   - User sessions persist across multiple requests
   - Application works correctly with session affinity
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/reference/networking/virtual-ips/#session-affinity

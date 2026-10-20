@@ -9,3 +9,13 @@ concepts:
   - Application debugging
   - Environment variables
   - Container troubleshooting
+domain: troubleshooting
+course_section: 4
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/
+  - https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **database-app** in namespace **ckaquest** keeps restarting.
+  Use its logs to find the missing configuration and fix the pod so the database runs.

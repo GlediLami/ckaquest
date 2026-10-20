@@ -20,3 +20,4 @@ task: |
 docs:
   - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
   - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/
+course_section: 14

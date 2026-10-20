@@ -26,3 +26,7 @@ learning_objectives:
   - Configure tolerations correctly
   - Differentiate NoSchedule, PreferNoSchedule, NoExecute
   - Debug taint-related scheduling failures
+domain: workloads
+course_section: 3
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/

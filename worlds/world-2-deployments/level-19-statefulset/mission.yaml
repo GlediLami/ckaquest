@@ -12,3 +12,12 @@ concepts:
   - stable network IDs
   - headless services
   - stateful workloads
+domain: workloads
+course_section: 5
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+task: |
+  Context: `kind-ckaquest`
+
+  The database in namespace **ckaquest** runs as Deployment **database**. Its pods need stable names.
+  Replace it with a StatefulSet **database**, 3 replicas, same image and labels, using the existing Service **database-service** as its serviceName. Delete the Deployment.

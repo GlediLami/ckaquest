@@ -10,3 +10,12 @@ concepts:
   - Container dependencies
   - kubectl logs with container selection
   - Pod lifecycle
+domain: workloads
+course_section: 5
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **app-with-logging** in namespace **ckaquest** has a main container and a logging sidecar. The pod never becomes fully ready.
+  Find the failing container and fix it. Both containers must be running.

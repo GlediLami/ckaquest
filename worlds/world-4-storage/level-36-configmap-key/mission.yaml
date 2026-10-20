@@ -19,3 +19,7 @@ learning_objectives:
   - Learn to reference ConfigMap data in pods
   - Debug missing configuration issues
   - Properly manage application configuration
+domain: workloads
+course_section: 5
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/

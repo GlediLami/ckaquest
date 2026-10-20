@@ -27,3 +27,7 @@ learning_objectives:
   - Configure pod selectors and namespace selectors
   - Allow specific ports while blocking others
   - Debug network connectivity issues
+domain: networking
+course_section: 7
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/network-policies/

@@ -9,3 +9,12 @@ concepts:
   - kubectl describe
   - CrashLoopBackOff
   - container commands
+domain: troubleshooting
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **nginx-broken** in namespace **ckaquest** does not start.
+  Find the cause and fix it. The pod must be Running with the nginx image.

@@ -11,3 +11,12 @@ concepts:
   - kubectl describe
   - Pending status
   - Node capacity
+domain: workloads
+course_section: 3
+docs:
+  - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **hungry-app** in namespace **ckaquest** stays Pending.
+  Find out why the scheduler cannot place it. Change the pod so it is scheduled and Running. Do not remove the resource requests.

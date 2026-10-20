@@ -25,3 +25,7 @@ learning_objectives:
   - Configure minAvailable vs maxUnavailable
   - Balance availability with maintenance needs
   - Debug PDB-related eviction failures
+domain: workloads
+course_section: 6
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

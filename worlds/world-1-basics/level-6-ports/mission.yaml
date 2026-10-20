@@ -10,3 +10,12 @@ concepts:
   - Port mapping
   - kubectl port-forward
   - Debugging connectivity
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/
+task: |
+  Context: `kind-ckaquest`
+
+  Service **web-service** in namespace **ckaquest** should forward to pod **web-server** (nginx), but requests to it fail.
+  Fix the port configuration so the service reaches nginx.

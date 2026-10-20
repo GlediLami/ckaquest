@@ -21,3 +21,7 @@ learning_objectives:
   - Learn to configure fsGroup and runAsUser
   - Debug permission issues in containers
   - Properly configure security contexts
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/security-context/

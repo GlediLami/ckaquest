@@ -11,3 +11,12 @@ concepts:
   - kubectl rollout
   - deployment history
   - image versioning
+domain: workloads
+course_section: 5
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **web-app** in namespace **ckaquest** was just updated and the new pods do not start.
+  Roll the Deployment back to the previous revision. All replicas must be ready again.

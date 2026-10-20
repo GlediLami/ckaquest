@@ -22,3 +22,4 @@ task: |
 docs:
   - https://kubernetes.io/docs/concepts/configuration/secret/
   - https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/
+course_section: 5

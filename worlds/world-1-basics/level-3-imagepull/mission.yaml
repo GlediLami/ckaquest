@@ -10,3 +10,12 @@ concepts:
   - image tags
   - kubectl describe
   - debugging pod failures
+domain: troubleshooting
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/containers/images/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **web-app** in namespace **ckaquest** never starts.
+  Fix the pod so it runs nginx and becomes Ready. Keep the pod name.

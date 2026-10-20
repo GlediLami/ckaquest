@@ -33,3 +33,7 @@ success_criteria:
   - Pod successfully starts and mounts the volume
 
 hints_available: 3
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/storage/persistent-volumes/

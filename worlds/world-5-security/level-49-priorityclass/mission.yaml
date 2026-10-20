@@ -26,3 +26,7 @@ learning_objectives:
   - Configure preemption for critical workloads
   - Balance resource allocation by priority
   - Debug priority-based scheduling
+domain: workloads
+course_section: 3
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/

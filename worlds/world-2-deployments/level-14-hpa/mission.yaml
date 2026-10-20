@@ -24,3 +24,4 @@ task: |
 docs:
   - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
   - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+course_section: 5

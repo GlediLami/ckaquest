@@ -33,3 +33,7 @@ success_criteria:
   - Service configured as headless (clusterIP: None)
 
 hints_available: 3
+domain: networking
+course_section: 9
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/#headless-services

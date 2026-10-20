@@ -33,3 +33,7 @@ success_criteria:
   - Using proper FQDN format: service.namespace.svc.cluster.local
   - DNS resolution works across namespaces
   - Connection succeeds and returns API response
+domain: networking
+course_section: 9
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/

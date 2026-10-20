@@ -10,3 +10,7 @@ concepts:
   - service endpoints
   - kubectl describe svc
   - ClusterIP
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/

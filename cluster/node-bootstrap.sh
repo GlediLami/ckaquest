@@ -8,6 +8,9 @@ marker=/root/.cq-bootstrapped
 [ -f "$marker" ] && exit 0
 
 export DEBIAN_FRONTEND=noninteractive
+# kind ships its own /etc/default/kubelet. Without this, "apt-get install kubelet" during an
+# upgrade task stops at a dpkg config-file prompt.
+echo 'Dpkg::Options { "--force-confold"; };' > /etc/apt/apt.conf.d/90ckaquest
 apt-get update -qq >/dev/null
 apt-get install -y -qq --no-install-recommends vim less bash-completion iproute2 procps >/dev/null
 

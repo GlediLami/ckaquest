@@ -10,3 +10,7 @@ concepts:
   - external access
   - service types
   - port configuration
+domain: networking
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport

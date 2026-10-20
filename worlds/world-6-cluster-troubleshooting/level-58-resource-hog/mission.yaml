@@ -22,3 +22,4 @@ task: |
 docs:
   - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_top/
   - https://kubernetes.io/docs/tasks/configure-pod-container/resize-container-resources/
+course_section: 4

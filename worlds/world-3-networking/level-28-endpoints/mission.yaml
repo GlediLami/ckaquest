@@ -34,3 +34,7 @@ success_criteria:
   - Service only routes to ready pods
   - Endpoints update automatically as pods become ready/unready
   - No traffic sent to pods during initialization
+domain: troubleshooting
+course_section: 14
+docs:
+  - https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/

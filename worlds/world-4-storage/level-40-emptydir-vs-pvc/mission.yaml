@@ -20,3 +20,7 @@ learning_objectives:
   - Learn when to use ephemeral vs persistent storage
   - Recognize data persistence requirements
   - Choose appropriate volume types
+domain: storage
+course_section: 8
+docs:
+  - https://kubernetes.io/docs/concepts/storage/volumes/#emptydir

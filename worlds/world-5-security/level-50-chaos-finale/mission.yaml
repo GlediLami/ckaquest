@@ -38,3 +38,9 @@ learning_objectives:
   - Debug complex multi-layered failures
   - Think holistically about Kubernetes security and operations
   - Demonstrate production-ready expertise
+domain: troubleshooting
+course_section: 14
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - https://kubernetes.io/docs/concepts/policy/resource-quotas/
+  - https://kubernetes.io/docs/tasks/configure-pod-container/security-context/

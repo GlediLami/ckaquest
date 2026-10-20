@@ -88,6 +88,8 @@ Some levels break the cluster itself, for example the kubelet or the API server.
 bin/cq-cluster status     # nodes and add-ons
 bin/cq-cluster rebuild    # delete and recreate the cluster, if something is really broken
 bin/cq-cluster down       # delete the cluster
+bin/cq-cluster lab-up     # small 2-node cluster one version behind, for upgrade practice
+bin/cq-cluster bare-up    # 2 bare nodes with no cluster yet, for kubeadm init and join practice
 docker stop ckaquest-control-plane ckaquest-worker ckaquest-worker2   # pause it and free RAM
 docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 ```

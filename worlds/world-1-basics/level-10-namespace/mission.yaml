@@ -10,3 +10,12 @@ concepts:
   - kubectl namespaces
   - Cross-namespace communication
   - Namespace best practices
+domain: workloads
+course_section: 2
+docs:
+  - https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **client-app** and Service **backend-service** belong in namespace **ckaquest**, but they were created somewhere else.
+  Move both into **ckaquest**. Nothing of them may remain in the wrong namespace.

@@ -23,3 +23,4 @@ task: |
 docs:
   - https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
   - https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+course_section: 6

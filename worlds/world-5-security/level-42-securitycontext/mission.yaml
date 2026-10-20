@@ -27,3 +27,7 @@ learning_objectives:
   - Configure runAsNonRoot and runAsUser
   - Prevent privilege escalation
   - Apply security best practices
+domain: workloads
+course_section: 7
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
