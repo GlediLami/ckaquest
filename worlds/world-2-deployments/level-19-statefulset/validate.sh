@@ -1,41 +1,9 @@
-#!/bin/bash
-
-# Check if it's a StatefulSet (not Deployment)
-if kubectl get statefulset database -n ckaquest &>/dev/null; then
-    READY=$(kubectl get statefulset database -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    DESIRED=$(kubectl get statefulset database -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
-    
-    if [ "$READY" = "$DESIRED" ]; then
-        echo "✅ StatefulSet is correctly configured"
-        echo "   Ready: $READY/$DESIRED"
-        
-        # Verify pod names are stable (database-0, database-1, database-2)
-        POD_NAMES=$(kubectl get pods -n ckaquest -l app=database -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
-        echo "   Pod names: $POD_NAMES"
-        
-        # Check if pods have stable names (should contain "-0", "-1", "-2")
-        if echo "$POD_NAMES" | grep -q "database-[0-2]"; then
-            echo "   ✅ Pods have stable ordinal names"
-        fi
-        
-        exit 0
-    else
-        echo "⏳ Waiting for StatefulSet to be ready"
-        echo "   Ready: $READY/$DESIRED"
-        exit 1
-    fi
-else
-    # Check if it's still a Deployment
-    if kubectl get deployment database -n ckaquest &>/dev/null; then
-        echo "❌ Still using Deployment (should be StatefulSet)"
-        echo "   Deployments are for stateless apps"
-        echo "   Databases need StatefulSets for:"
-        echo "   - Stable pod identities"
-        echo "   - Persistent storage"
-        echo "   - Ordered startup/shutdown"
-        exit 1
-    else
-        echo "❌ database resource not found"
-        exit 1
-    fi
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+sts_ready() { [ "$(jp ckaquest sts/database "{.status.readyReplicas}")" = 3 ]; }
+check "StatefulSet database exists" exists ckaquest sts/database
+check "it uses database-service as serviceName" field_eq ckaquest sts/database "{.spec.serviceName}" database-service
+check 2 "3/3 replicas are ready" sts_ready
+check "pods have stable names (database-0 exists)" pod_ready ckaquest database-0
+check "Deployment database is gone" not_exists ckaquest deploy/database
+finish

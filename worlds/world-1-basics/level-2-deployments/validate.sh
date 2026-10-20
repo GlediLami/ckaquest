@@ -1,9 +1,6 @@
-#!/bin/bash
-READY=$(kubectl get deploy web -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo 0)
-
-if [[ "$READY" -ge 1 ]]; then
-  echo "✅ Deployment fixed!"
-else
-  echo "❌ No ready replicas"
-  exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+has_replicas() { [ "$(jp ckaquest deploy/web "{.spec.replicas}")" -ge 1 ]; }
+check "web asks for at least 1 replica" has_replicas
+check 2 "all replicas of web are ready" deploy_ready ckaquest web
+finish

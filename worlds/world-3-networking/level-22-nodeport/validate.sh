@@ -1,18 +1,7 @@
-#!/bin/bash
-
-# Check if NodePort is explicitly set
-NODEPORT=$(kubectl get svc web-nodeport -n ckaquest -o jsonpath='{.spec.ports[0].nodePort}' 2>/dev/null)
-
-if [[ -z "$NODEPORT" ]]; then
-  echo "❌ Service not found"
-  exit 1
-fi
-
-# Check if NodePort is in the valid range and explicitly set (30080)
-if [[ "$NODEPORT" == "30080" ]]; then
-  echo "✅ Level complete! NodePort explicitly configured"
-  exit 0
-else
-  echo "❌ NodePort is $NODEPORT (random). Set nodePort: 30080 explicitly"
-  exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+nodeport_answers() { cq_node_sh node01 "curl -s -o /dev/null -m 5 http://\$(hostname -i | cut -d\" \" -f1):30080"; }
+check "web-nodeport is type NodePort" field_eq ckaquest svc/web-nodeport "{.spec.type}" NodePort
+check 2 "nodePort is 30080" field_eq ckaquest svc/web-nodeport "{.spec.ports[0].nodePort}" 30080
+check 2 "node01:30080 answers" nodeport_answers
+finish

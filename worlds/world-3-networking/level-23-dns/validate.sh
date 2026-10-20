@@ -1,18 +1,6 @@
-#!/bin/bash
-
-# Check if client pod can resolve service DNS
-LOGS=$(kubectl logs app-client -n ckaquest --tail=10 2>/dev/null)
-
-# Check for pg_isready success message with correct service name
-if echo "$LOGS" | grep -qE "(database-service|database):5432 - accepting connections"; then
-  echo "✅ Level complete! DNS resolution working"
-  echo "   Client successfully connected to database-service"
-  exit 0
-else
-  echo "❌ DNS resolution failing. Check the service name in client pod"
-  echo "Hint: Service is named 'database-service', not 'database'"
-  echo ""
-  echo "Recent logs:"
-  echo "$LOGS"
-  exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+answers() { kubectl logs app-client -n ckaquest --tail=3 2>/dev/null | grep -q "accepting connections"; }
+check "app-client points at database-service" field_match ckaquest pod/app-client "{.spec.containers[0].command} {.spec.containers[0].args}" "database-service"
+check 2 "app-client reaches the database (accepting connections)" answers
+finish

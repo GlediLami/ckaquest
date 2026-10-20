@@ -1017,6 +1017,45 @@ class CKAQuest:
             if not self.play_level(level):
                 return
 
+    COURSE_SECTIONS = {
+        1: "Introduction", 2: "Core Concepts", 3: "Scheduling", 4: "Logging & Monitoring",
+        5: "Application Lifecycle Management", 6: "Cluster Maintenance", 7: "Security", 8: "Storage",
+        9: "Networking", 10: "Design and Install a Cluster", 11: "Install the kubeadm way",
+        12: "Helm Basics", 13: "Kustomize Basics", 14: "Troubleshooting", 15: "Other Topics",
+    }
+
+    def play_by_section(self):
+        """Play the levels that belong to one course section, in order"""
+        console.clear()
+        console.print(Panel("[bold cyan]Play by Course Section[/bold cyan]\n[dim]Watch a section of the course, then play its levels[/dim]", border_style="cyan"))
+        by_section = {}
+        for world, level in self.all_levels():
+            sec = self.load_mission(level).get("course_section")
+            if sec:
+                by_section.setdefault(int(sec), []).append((world, level))
+        for sec, title in self.COURSE_SECTIONS.items():
+            levels = by_section.get(sec, [])
+            done = sum(1 for _, l in levels if l.name in self.progress["completed_levels"])
+            count = f"{done}/{len(levels)} done" if levels else "no levels yet"
+            console.print(f"  [{sec:2d}] {title} [dim]{count}[/dim]", markup=True)
+        console.print("\n[dim]Enter section number or 'q' to go back[/dim]\n")
+        choice = Prompt.ask("Section", default="q")
+        if choice.lower() == "q":
+            return
+        if not choice.isdigit() or not by_section.get(int(choice)):
+            console.print("[red]No levels for that section[/red]")
+            time.sleep(1)
+            return self.play_by_section()
+        for world, level in by_section[int(choice)]:
+            if level.name in self.progress["completed_levels"]:
+                continue
+            self.progress["current_level"] = level.name
+            self.progress["current_world"] = world.name
+            self.save_progress()
+            if not self.play_level(level):
+                return
+        console.print(f"\n[green]Section {choice} cleared.[/green]")
+
     def play_specific_level(self):
         """Pick a level from the full list"""
         console.clear()
@@ -1080,11 +1119,12 @@ def main():
         else:
             console.print("  [1] Start from level 1", markup=False)
         console.print("  [2] Play a specific level", markup=False)
-        console.print("  [3] Start over (reset progress)", markup=False)
-        menu_choices = ["1", "2", "3"]
+        console.print("  [3] Play by course section", markup=False)
+        console.print("  [4] Start over (reset progress)", markup=False)
+        menu_choices = ["1", "2", "3", "4"]
         if game.get_completed_debriefs():
-            console.print("  [4] Review completed mission debriefs", markup=False)
-            menu_choices.append("4")
+            console.print("  [5] Review completed mission debriefs", markup=False)
+            menu_choices.append("5")
         console.print("  [q] Quit", markup=False)
         console.print()
         choice = Prompt.ask("Your choice", choices=menu_choices + ["q"], default="1")
@@ -1094,11 +1134,13 @@ def main():
         elif choice == "2":
             game.play_specific_level()
         elif choice == "3":
+            game.play_by_section()
+        elif choice == "4":
             if Confirm.ask("Really reset all progress?", default=False):
                 game.progress.update(current_level=None, completed_levels=[], total_xp=0)
                 game.save_progress()
                 game.play_from(None)
-        elif choice == "4":
+        elif choice == "5":
             game.review_completed_debriefs()
             continue
         console.print(f"\n[yellow]See you later, {game.progress['player_name']}![/yellow]\n")

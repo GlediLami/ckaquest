@@ -1,23 +1,7 @@
-#!/bin/bash
-
-# Check if deployment has readiness probe configured
-HAS_READINESS=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.spec.template.spec.containers[0].readinessProbe}' 2>/dev/null)
-
-if [ -z "$HAS_READINESS" ]; then
-    echo "❌ Deployment does not have a readiness probe configured"
-    exit 1
-fi
-
-# Check if all pods are ready
-DESIRED=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
-READY=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-
-if [ "$READY" = "$DESIRED" ]; then
-    echo "✅ All $READY/$DESIRED pods are ready"
-    echo "   Readiness probe is configured correctly!"
-    exit 0
-else
-    echo "⏳ Waiting for pods to be ready: $READY/$DESIRED"
-    echo "   (This may take 20-30 seconds due to startup delay)"
-    exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+P="{.spec.template.spec.containers[0].readinessProbe.httpGet"
+check 2 "readiness probe is HTTP GET on /" field_eq ckaquest deploy/slow-startup-app "$P.path}" /
+check "readiness probe uses port 80" field_eq ckaquest deploy/slow-startup-app "$P.port}" 80
+check 2 "all replicas of slow-startup-app are ready" deploy_ready ckaquest slow-startup-app
+finish

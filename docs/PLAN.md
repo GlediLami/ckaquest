@@ -73,7 +73,7 @@ About 110 levels in total. Every curriculum bullet gets at least 2 levels.
 2. Add `domain`, `task`, `docs`, `course_section` to every `mission.yaml`.
 3. Rewrite the loose validators with `lib/validate.sh`. Level 1 example: it passes if the command line is just deleted.
 4. Add an "Exam angle" section to each debrief: the fastest imperative command and the doc page.
-5. Move each level from the shared `ckaquest` namespace to its own namespace. Then the exam simulator can reuse them.
+5. Dropped (2026-10-21): base levels stay in `ckaquest`. The engine resets it between levels, which fixes the leaks. New levels and the exam simulator use their own namespaces, to train the `-n` habit.
 
 ### 3.4 Game mechanics
 

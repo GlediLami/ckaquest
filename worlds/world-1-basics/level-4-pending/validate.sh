@@ -1,18 +1,7 @@
-#!/bin/bash
-
-echo "🔍 Checking pod status..."
-
-POD_STATUS=$(kubectl get pod hungry-app -n ckaquest -o jsonpath='{.status.phase}' 2>/dev/null)
-READY=$(kubectl get pod hungry-app -n ckaquest -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null)
-
-echo "   Phase: $POD_STATUS"
-echo "   Ready: $READY"
-
-if [[ "$POD_STATUS" == "Running" ]] && [[ "$READY" == "true" ]]; then
-    echo "✅ Pod successfully scheduled and running"
-    exit 0
-else
-    echo "❌ Pod is not running properly"
-    echo "💡 Hint: Check 'kubectl describe pod hungry-app -n ckaquest' for scheduling issues"
-    exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+check "hungry-app still has a CPU request" field_ne ckaquest pod/hungry-app "{.spec.containers[0].resources.requests.cpu}" ""
+check "hungry-app still has a memory request" field_ne ckaquest pod/hungry-app "{.spec.containers[0].resources.requests.memory}" ""
+check "hungry-app was scheduled to a node" field_ne ckaquest pod/hungry-app "{.spec.nodeName}" ""
+check 2 "hungry-app is Ready" pod_ready ckaquest hungry-app
+finish

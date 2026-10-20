@@ -34,5 +34,5 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  NetworkPolicy **deny-all** in namespace **ckaquest** blocks pod **backend** from the database.
-  Allow ingress to the **database** pods on TCP 5432 from the backend pods only. All other ingress to the database must stay blocked.
+  NetworkPolicy **deny-all** in namespace **ckaquest** blocks all ingress and egress. Pod **backend** cannot reach Service **database** on TCP 5432.
+  Keep deny-all. Add NetworkPolicies so backend pods can reach the database pods on TCP 5432. Backend also needs DNS. Nothing else may reach the database.

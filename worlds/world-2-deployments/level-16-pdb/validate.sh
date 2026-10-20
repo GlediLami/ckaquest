@@ -1,27 +1,8 @@
-#!/bin/bash
-
-# Check PDB configuration
-MIN_AVAILABLE=$(kubectl get pdb db-proxy-pdb -n ckaquest -o jsonpath='{.spec.minAvailable}' 2>/dev/null)
-REPLICAS=$(kubectl get deployment database-proxy -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
-
-# Check if PDB allows evictions
-ALLOWED=$(kubectl get pdb db-proxy-pdb -n ckaquest -o jsonpath='{.status.disruptionsAllowed}' 2>/dev/null)
-
-if [ "$MIN_AVAILABLE" -ge "$REPLICAS" ]; then
-    echo "❌ PDB is too restrictive!"
-    echo "   minAvailable: $MIN_AVAILABLE >= replicas: $REPLICAS"
-    echo "   This blocks ALL evictions - node drains will fail!"
-    exit 1
-fi
-
-if [ "$ALLOWED" -gt 0 ]; then
-    echo "✅ PDB allows evictions"
-    echo "   minAvailable: $MIN_AVAILABLE (keeps $MIN_AVAILABLE pods running)"
-    echo "   Replicas: $REPLICAS"
-    echo "   Disruptions allowed: $ALLOWED"
-    exit 0
-else
-    echo "❌ PDB currently blocks all disruptions"
-    echo "   Disruptions allowed: $ALLOWED"
-    exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+allows_one() { [ "$(jp ckaquest pdb/db-proxy-pdb "{.status.disruptionsAllowed}")" = 1 ]; }
+keeps_two() { [ "$(jp ckaquest pdb/db-proxy-pdb "{.spec.minAvailable}")" = 2 ] || [ "$(jp ckaquest pdb/db-proxy-pdb "{.spec.maxUnavailable}")" = 1 ]; }
+check 2 "db-proxy-pdb keeps 2 pods available" keeps_two
+check "the PDB allows exactly 1 disruption" allows_one
+check "database-proxy has 3/3 ready replicas" deploy_ready ckaquest database-proxy 3
+finish

@@ -1,20 +1,7 @@
-#!/bin/bash
-
-# Check if service has endpoints
-ENDPOINTS=$(kubectl get endpoints backend-service -n ckaquest -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null)
-
-if [[ -z "$ENDPOINTS" ]]; then
-  echo "❌ Service has no endpoints. Check the selector!"
-  exit 1
-fi
-
-# Test connectivity from test-client pod
-RESPONSE=$(kubectl exec test-client -n ckaquest -- curl -s -o /dev/null -w "%{http_code}" http://backend-service 2>/dev/null)
-
-if [[ "$RESPONSE" == "200" ]]; then
-  echo "✅ Level complete! Service is routing traffic correctly"
-  exit 0
-else
-  echo "❌ Service unreachable. Response code: $RESPONSE"
-  exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+endpoint_has() { local ip; ip="$(jp ckaquest "pod/$2" "{.status.podIP}")"; [ -n "$ip" ] && kubectl get endpointslices -n ckaquest -l kubernetes.io/service-name="$1" -o jsonpath="{.items[*].endpoints[*].addresses[*]}" | grep -qw "$ip"; }
+check "backend-pod labels are unchanged (app=backend)" field_eq ckaquest pod/backend-pod "{.metadata.labels.app}" backend
+check 2 "backend-service has backend-pod as endpoint" endpoint_has backend-service backend-pod
+check "test-client gets an answer from backend-service" kubectl exec -n ckaquest test-client -- curl -s -o /dev/null -m 5 http://backend-service
+finish
