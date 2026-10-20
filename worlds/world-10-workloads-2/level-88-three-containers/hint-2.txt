@@ -1,0 +1,1 @@
+One `volumes:` entry, mounted by two containers.

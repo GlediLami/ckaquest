@@ -1,0 +1,1 @@
+`resourcePolicy.containerPolicies` with `containerName: "*"`.

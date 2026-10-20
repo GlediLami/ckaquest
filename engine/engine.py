@@ -734,6 +734,13 @@ class CKAQuest:
             result = self.run_level_script(level_path, "cleanup.sh", mission)
             if result and result.returncode != 0:
                 console.print(f"[yellow]Cleanup reported a problem:[/yellow]\n[dim]{result.stdout}{result.stderr}[/dim]")
+        namespace = level_namespace(mission)
+        if namespace not in (DEFAULT_NAMESPACE, "default", "kube-system"):
+            # Free the RAM. --wait=false so the next level does not wait for it.
+            subprocess.run(
+                ["kubectl", "delete", "namespace", namespace, "--ignore-not-found", "--wait=false"],
+                capture_output=True, text=True,
+            )
         if self.progress.get("dirty_level") == str(level_path.relative_to(CQ_ROOT)):
             self.progress["dirty_level"] = None
             self.save_progress()
@@ -796,12 +803,16 @@ class CKAQuest:
             task = progress.add_task("Cleaning up...", total=3)
             # Clean state first, also for a level replayed after a quit
             self.run_level_script(level_path, "cleanup.sh", mission)
-            subprocess.run(
-                ["kubectl", "create", "namespace", namespace],
-                capture_output=True, text=True,
-            )
             if namespace == DEFAULT_NAMESPACE:
+                subprocess.run(["kubectl", "create", "namespace", namespace], capture_output=True, text=True)
                 self.reset_namespace(namespace)
+            else:
+                # Own namespace per level: start from an empty one, also on a replay
+                subprocess.run(
+                    ["kubectl", "delete", "namespace", namespace, "--ignore-not-found", "--timeout=120s"],
+                    capture_output=True, text=True,
+                )
+                subprocess.run(["kubectl", "create", "namespace", namespace], capture_output=True, text=True)
             progress.advance(task)
 
             progress.update(task, description="Deploying the scenario...")

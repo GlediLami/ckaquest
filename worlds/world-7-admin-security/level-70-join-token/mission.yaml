@@ -1,0 +1,22 @@
+name: "A Ticket to Join"
+description: "A new worker needs a join command"
+objective: "Create a bootstrap token with a short TTL and save the join command"
+xp: 200
+difficulty: intermediate
+expected_time: 5m
+domain: architecture
+course_section: 11
+namespace: join-lab
+exam: true
+concepts:
+  - kubeadm token
+  - bootstrap tokens
+  - kubeadm join
+task: |
+  Context: `kind-ckaquest`
+
+  On node **controlplane**, create a new bootstrap token that expires after **2 hours** and print the full join command.
+
+  Save the join command to `/opt/course/70/join.sh`.
+docs:
+  - https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-token/

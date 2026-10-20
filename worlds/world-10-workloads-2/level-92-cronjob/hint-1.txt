@@ -1,0 +1,1 @@
+`k create cronjob cleanup --image=busybox:1.36 --schedule='*/5 * * * *' $do -- echo cleaning > cj.yaml`.

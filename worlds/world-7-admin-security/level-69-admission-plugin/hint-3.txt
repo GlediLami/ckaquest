@@ -1,0 +1,1 @@
+Saving the manifest restarts the API server. Wait until `kubectl get nodes` works, then `k run probe -n auto-created --image=busybox:1.36 -- sleep 3600`.

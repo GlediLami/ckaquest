@@ -1,0 +1,1 @@
+`k autoscale deploy api -n hpa-lab --min=2 --max=6 --cpu-percent=60 $do > hpa.yaml` gives the base.

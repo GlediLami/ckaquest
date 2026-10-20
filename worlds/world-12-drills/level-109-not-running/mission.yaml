@@ -1,0 +1,24 @@
+name: "Drill: What Is Not Running"
+description: "Find every unhealthy pod across a set of namespaces"
+objective: "Use field selectors across namespaces"
+xp: 150
+difficulty: intermediate
+expected_time: 3m
+domain: troubleshooting
+course_section: 14
+namespace: drill-109
+exam: true
+concepts:
+  - --field-selector
+  - -A
+  - status.phase
+task: |
+  Context: `kind-ckaquest`
+
+  Across **all namespaces**, find the pods whose phase is **not Running** and **not Succeeded**.
+
+  Write them to `~/ckaquest-work/109/broken.txt`, one per line as `namespace/name`. Ignore pods in kube-system.
+
+  Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/

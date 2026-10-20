@@ -1,0 +1,25 @@
+name: "The Route Goes Nowhere"
+description: "An HTTPRoute exists, but blog.example.com returns 404 or 500"
+objective: "Fix the HTTPRoute so the blog is reachable through the Gateway"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: troubleshooting
+course_section: 9
+namespace: blog
+requires:
+  - gateway
+exam: true
+concepts:
+  - HTTPRoute status
+  - ResolvedRefs
+  - parentRefs
+task: |
+  Context: `kind-ckaquest`
+
+  Requests for `blog.example.com` through Gateway **web-gw** in namespace **blog** do not reach the blog.
+
+  HTTPRoute **blog-route** should send them to Service **blog** on port 80. Find what is wrong with the route and fix it. Do not change the Gateway or the Service.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/gateway/
+  - https://gateway-api.sigs.k8s.io/reference/spec/#httproute

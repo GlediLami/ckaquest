@@ -1,0 +1,1 @@
+Defaults apply only when a pod is created. Create the pod after the LimitRange.

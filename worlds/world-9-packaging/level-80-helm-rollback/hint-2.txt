@@ -1,0 +1,1 @@
+Revision 3 set a broken image tag. Revision 2 was the last good one, not revision 1.

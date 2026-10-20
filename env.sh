@@ -8,6 +8,7 @@
 _cq_root="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")" && pwd)"
 export CQ_ROOT="$_cq_root"
 export KUBECONFIG="${CKAQUEST_KUBECONFIG:-$HOME/.ckaquest/kubeconfig}"
+export HELM_CONFIG_HOME="$HOME/.ckaquest/helm/config" HELM_CACHE_HOME="$HOME/.ckaquest/helm/cache" HELM_DATA_HOME="$HOME/.ckaquest/helm/data"
 export CQ_WORK="${CQ_WORK:-$HOME/ckaquest-work}"
 mkdir -p "$CQ_WORK"
 

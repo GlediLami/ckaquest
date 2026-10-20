@@ -1,0 +1,1 @@
+`kubectl config use-context <real name>`, and fix the port in the `server:` line. The API server listens on 6443 (`ss -lntp | grep apiserver`).

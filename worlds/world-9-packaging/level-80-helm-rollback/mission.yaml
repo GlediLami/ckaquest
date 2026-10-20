@@ -1,0 +1,23 @@
+name: "Bad Upgrade"
+description: "An upgrade broke the release"
+objective: "Roll the Helm release back to the last working revision"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: architecture
+course_section: 12
+namespace: helm-blog
+exam: true
+concepts:
+  - helm history
+  - helm rollback
+  - revisions
+task: |
+  Context: `kind-ckaquest`
+
+  Release **blog** in namespace **helm-blog** was upgraded and its pods no longer start.
+
+  Roll it back to the last revision that worked. Use Helm, not kubectl.
+docs:
+  - https://helm.sh/docs/helm/helm_rollback/
+  - https://helm.sh/docs/helm/helm_history/

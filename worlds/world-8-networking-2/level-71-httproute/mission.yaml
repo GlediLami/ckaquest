@@ -1,0 +1,26 @@
+name: "First Route Through the Gateway"
+description: "The shop has a Gateway and a frontend, but nothing connects them"
+objective: "Create an HTTPRoute that sends shop.example.com to the frontend"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: networking
+course_section: 9
+namespace: shop
+requires:
+  - gateway
+exam: true
+concepts:
+  - Gateway API
+  - HTTPRoute
+  - parentRefs
+  - hostnames
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **shop** has a Gateway **web-gw** (class `nginx`, HTTP listener on port 80) and a Service **shop-frontend** on port 80.
+
+  Create an HTTPRoute **shop-route** in namespace **shop** that attaches to **web-gw** and sends all requests for host `shop.example.com` to **shop-frontend** on port 80.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/gateway/
+  - https://gateway-api.sigs.k8s.io/guides/http-routing/

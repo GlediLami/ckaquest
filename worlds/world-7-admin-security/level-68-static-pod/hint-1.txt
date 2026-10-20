@@ -1,0 +1,1 @@
+Generate the YAML on your terminal: `k run static-web -n static-lab --image=nginx:1.27-alpine --port=80 -l app=static-web $do`.

@@ -1,0 +1,1 @@
+`k get gateway,svc -n shop`. A Gateway alone routes nothing. Routes attach to it.

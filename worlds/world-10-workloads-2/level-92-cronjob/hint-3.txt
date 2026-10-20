@@ -1,0 +1,1 @@
+`k create job cleanup-now --from=cronjob/cleanup -n cron-lab`.

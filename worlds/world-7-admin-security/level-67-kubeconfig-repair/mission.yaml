@@ -1,0 +1,23 @@
+name: "Broken kubeconfig"
+description: "kubectl on the control plane cannot talk to the cluster"
+objective: "Repair /root/.kube/config on the control plane"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: troubleshooting
+course_section: 7
+namespace: kubeconfig-lab
+exam: true
+concepts:
+  - kubeconfig
+  - contexts
+  - kubectl config
+task: |
+  Context: `kind-ckaquest`
+
+  On node **controlplane**, `kubectl get nodes` fails. The kubeconfig at `/root/.kube/config` was edited by hand.
+
+  Repair that file so `kubectl get nodes` works on controlplane again. Do not replace it with a different file and do not set `KUBECONFIG`.
+docs:
+  - https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/
+  - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_config/

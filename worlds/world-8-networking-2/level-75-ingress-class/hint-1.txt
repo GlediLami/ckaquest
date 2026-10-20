@@ -1,0 +1,1 @@
+`k get ingressclass`. How many are there, and is one marked default?

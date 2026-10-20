@@ -1,0 +1,1 @@
+`k annotate sc standard storageclass.kubernetes.io/is-default-class=false --overwrite`.

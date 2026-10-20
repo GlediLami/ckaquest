@@ -1,0 +1,23 @@
+name: "The Operator Cannot See"
+description: "A backup operator logs Forbidden for its own custom resources"
+objective: "Give an operator RBAC on a custom resource group"
+xp: 300
+difficulty: advanced
+expected_time: 8m
+domain: architecture
+course_section: 9
+namespace: backup-system
+exam: true
+concepts:
+  - ClusterRole
+  - custom resources
+  - apiGroups
+  - operators
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **backup-operator** in namespace **backup-system** runs as ServiceAccount **backup-operator** and must watch Backup objects (`backups.ops.example.com`) in **all** namespaces. It also updates their status.
+
+  It logs `Forbidden`. Create ClusterRole **backup-operator** and ClusterRoleBinding **backup-operator** that grant `get`, `list`, `watch`, `update` and `patch` on `backups` and `backups/status` in API group `ops.example.com`. Nothing else.
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-resources

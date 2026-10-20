@@ -1,0 +1,1 @@
+Watch it: `k get pods -n batch-lab -w`. Two at a time.

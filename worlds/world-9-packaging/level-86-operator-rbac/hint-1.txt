@@ -1,0 +1,1 @@
+The RBAC rule needs the API group of the CRD, not "". `k get crd backups.ops.example.com -o jsonpath='{.spec.group}'`.

@@ -1,0 +1,23 @@
+name: "Drill: Node IPs"
+description: "JSONPath range over nodes"
+objective: "Write every node name with its internal IP using JSONPath"
+xp: 150
+difficulty: intermediate
+expected_time: 3m
+domain: architecture
+course_section: 2
+namespace: drills
+exam: true
+concepts:
+  - jsonpath
+  - range
+  - filters
+task: |
+  Context: `kind-ckaquest`
+
+  Write one line per node to `~/ckaquest-work/103/nodes.txt`: the node name, a space, and its **InternalIP**.
+
+  Use kubectl with JSONPath. Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/jsonpath/
+  - https://kubernetes.io/docs/reference/kubectl/quick-reference/

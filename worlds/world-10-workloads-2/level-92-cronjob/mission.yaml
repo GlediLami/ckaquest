@@ -1,0 +1,23 @@
+name: "Every Five Minutes"
+description: "A cleanup job must run on a schedule, and once right now"
+objective: "Create a CronJob with history limits and trigger it by hand"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: workloads
+course_section: 5
+namespace: cron-lab
+exam: true
+concepts:
+  - CronJob
+  - history limits
+  - kubectl create job --from
+task: |
+  Context: `kind-ckaquest`
+
+  In namespace **cron-lab**:
+  1. Create CronJob **cleanup**: schedule every 5 minutes, image `busybox:1.36`, command `echo cleaning`. Keep **2** successful and **1** failed job in history. Each job gets at most **2** retries and must finish within **60** seconds.
+  2. Run it once now as Job **cleanup-now**, created from the CronJob.
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+  - https://kubernetes.io/docs/concepts/workloads/controllers/job/

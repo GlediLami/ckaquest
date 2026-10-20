@@ -1,0 +1,1 @@
+`openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -enddate > /opt/course/64/expiry-before.txt` before you renew.

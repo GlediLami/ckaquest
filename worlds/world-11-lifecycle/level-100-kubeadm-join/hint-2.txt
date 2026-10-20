@@ -1,0 +1,1 @@
+Run the printed command on bare-node01 as root.

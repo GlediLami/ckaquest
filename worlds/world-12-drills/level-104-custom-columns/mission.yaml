@@ -1,0 +1,22 @@
+name: "Drill: Custom Columns"
+description: "A table with exactly the columns ops asked for"
+objective: "Use custom-columns and sort-by"
+xp: 150
+difficulty: intermediate
+expected_time: 3m
+domain: architecture
+course_section: 2
+namespace: drill-104
+exam: true
+concepts:
+  - custom-columns
+  - --sort-by
+task: |
+  Context: `kind-ckaquest`
+
+  Write a table of all pods in namespace **drill-104** to `~/ckaquest-work/104/pods.txt` with the columns **POD**, **IMAGE** and **NODE** (pod name, image of the first container, node name), sorted by pod name.
+
+  Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/#custom-columns
+  - https://kubernetes.io/docs/reference/kubectl/quick-reference/

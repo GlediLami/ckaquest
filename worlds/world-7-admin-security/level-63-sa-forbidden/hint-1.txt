@@ -1,0 +1,1 @@
+`k logs deploy/report-gen -n reports`. The error names the user and the verb.

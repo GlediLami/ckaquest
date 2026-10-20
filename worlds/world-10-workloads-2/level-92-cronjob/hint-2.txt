@@ -1,0 +1,1 @@
+History limits are in `spec`. backoffLimit and activeDeadlineSeconds are in `spec.jobTemplate.spec`.

@@ -1,0 +1,1 @@
+`--ttl` sets the lifetime. Another flag prints the whole join command for you.

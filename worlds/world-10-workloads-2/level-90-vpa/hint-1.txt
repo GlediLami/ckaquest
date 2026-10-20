@@ -1,0 +1,1 @@
+`k explain vpa.spec` works because the CRD is installed.

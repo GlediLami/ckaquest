@@ -1,0 +1,28 @@
+name: "Migrate to Gateway API"
+description: "The team moves from Ingress to Gateway API"
+objective: "Replace an Ingress with an equivalent HTTPRoute"
+xp: 300
+difficulty: advanced
+expected_time: 10m
+domain: networking
+course_section: 9
+namespace: migrate-lab
+requires:
+  - gateway
+exam: true
+concepts:
+  - Ingress
+  - HTTPRoute
+  - path matches
+  - migration
+task: |
+  Context: `kind-ckaquest`
+
+  Ingress **legacy** in namespace **migrate-lab** has two rules for host `app.example.com`:
+  - path prefix `/api` to Service **api** port 80
+  - path prefix `/` to Service **web** port 80
+
+  Create HTTPRoute **app-route** on Gateway **web-gw** with the same behaviour. Then delete the Ingress.
+docs:
+  - https://gateway-api.sigs.k8s.io/guides/migrating-from-ingress/
+  - https://gateway-api.sigs.k8s.io/guides/http-routing/

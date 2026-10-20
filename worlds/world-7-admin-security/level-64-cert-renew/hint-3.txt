@@ -1,0 +1,1 @@
+kubeadm writes the new file, but the running API server still has the old cert in memory. Restart the static pod: move its manifest out of /etc/kubernetes/manifests, wait until the container is gone (`crictl ps`), move it back.

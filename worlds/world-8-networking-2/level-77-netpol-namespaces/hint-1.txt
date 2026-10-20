@@ -1,0 +1,1 @@
+Every namespace has the label `kubernetes.io/metadata.name=<name>`. Check with `k get ns --show-labels`.

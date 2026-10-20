@@ -1,0 +1,23 @@
+name: "Find the Old Release"
+description: "Security wants every release that still runs nginx 1.27 gone"
+objective: "Find releases across namespaces and uninstall the right ones"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 12
+namespace: helm-audit
+exam: true
+concepts:
+  - helm list -A
+  - helm uninstall
+  - chart versions
+task: |
+  Context: `kind-ckaquest`
+
+  Several Helm releases run in namespaces **helm-audit**, **helm-team-a** and **helm-team-b**.
+
+  Uninstall every release that uses chart **webapp-1.0.0**. Keep all other releases.
+docs:
+  - https://helm.sh/docs/helm/helm_list/
+  - https://helm.sh/docs/helm/helm_uninstall/

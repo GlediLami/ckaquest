@@ -1,0 +1,1 @@
+The HTTPRoute needs `parentRefs` (the Gateway), `hostnames`, and a rule with `backendRefs` (Service name and port).

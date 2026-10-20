@@ -1,0 +1,24 @@
+name: "Three in One"
+description: "Build a pod with three containers that share a volume"
+objective: "Write a multi-container pod from scratch"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: workloads
+course_section: 5
+namespace: trio-lab
+exam: true
+concepts:
+  - multi-container pods
+  - shared volumes
+  - env from fieldRef
+task: |
+  Context: `kind-ckaquest`
+
+  Create pod **trio** in namespace **trio-lab** with an emptyDir volume **shared** and three containers:
+  - **writer**: `busybox:1.36`, runs `while true; do date >> /data/dates; sleep 5; done`, mounts shared at `/data`
+  - **reader**: `busybox:1.36`, runs `tail -F /data/dates`, mounts shared at `/data`
+  - **info**: `busybox:1.36`, has env var `MY_NODE` set to the node name (from the pod spec), runs `sleep 3600`
+docs:
+  - https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+  - https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/

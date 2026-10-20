@@ -1,0 +1,25 @@
+name: "Your Own Resource Type"
+description: "The ops team ships a Backup resource"
+objective: "Install a CRD and create a custom resource that passes its schema"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 9
+namespace: crd-lab
+exam: true
+concepts:
+  - CustomResourceDefinition
+  - custom resources
+  - kubectl explain
+  - schema validation
+task: |
+  Context: `kind-ckaquest`
+
+  The CRD for **backups.ops.example.com** is in `~/ckaquest-work/85/backup-crd.yaml`.
+
+  1. Install it.
+  2. In namespace **crd-lab**, create a Backup **nightly** with schedule `0 2 * * *`, target `postgres` and retain `7`.
+  3. Write the short name of the Backup resource to `~/ckaquest-work/85/shortname.txt`.
+docs:
+  - https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/

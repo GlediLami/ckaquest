@@ -1,0 +1,1 @@
+If packages are held: `apt-mark unhold kubeadm` before and `apt-mark hold kubeadm` after. Here they are not held.

@@ -16,6 +16,8 @@ CQ_KIND="${CQ_KIND:-kind}"
 [ -x "$CQ_ROOT/.tools/kind" ] && CQ_KIND="$CQ_ROOT/.tools/kind"
 
 export KUBECONFIG="${CKAQUEST_KUBECONFIG:-$CQ_HOME/kubeconfig}"
+# Helm repos and releases cache stay inside CKAQuest, not in your own ~/.config/helm
+export HELM_CONFIG_HOME="$CQ_HOME/helm/config" HELM_CACHE_HOME="$CQ_HOME/helm/cache" HELM_DATA_HOME="$CQ_HOME/helm/data"
 export CQ_ROOT CQ_HOME CQ_WORK CQ_CLUSTER CQ_LAB_CLUSTER CQ_CONTEXT CQ_LAB_CONTEXT CQ_KIND
 
 # Exam-style node names mapped to kind node containers.
@@ -24,8 +26,10 @@ cq_node_container() {
     controlplane|cluster1-controlplane) echo "${CQ_CLUSTER}-control-plane" ;;
     node01|cluster1-node01)             echo "${CQ_CLUSTER}-worker" ;;
     node02|cluster1-node02)             echo "${CQ_CLUSTER}-worker2" ;;
-    lab-controlplane)                   echo "${CQ_LAB_CLUSTER}-control-plane" ;;
-    lab-node01)                         echo "${CQ_LAB_CLUSTER}-worker" ;;
+    lab-controlplane|cluster2-controlplane) echo "${CQ_LAB_CLUSTER}-control-plane" ;;
+    lab-node01|cluster2-node01)         echo "${CQ_LAB_CLUSTER}-worker" ;;
+    bare-controlplane)                  echo "${CQ_CLUSTER}-bare-cp" ;;
+    bare-node01)                        echo "${CQ_CLUSTER}-bare-worker" ;;
     "${CQ_CLUSTER}"-*|"${CQ_LAB_CLUSTER}"-*) echo "$1" ;;
     *) return 1 ;;
   esac

@@ -1,0 +1,1 @@
+`k get csr` shows Pending. `k certificate approve jane`. The cert is in `.status.certificate`, base64 encoded.

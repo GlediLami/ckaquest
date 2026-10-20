@@ -1,0 +1,1 @@
+The etcd static pod manifest has everything: `grep -E 'listen-client|cert|key|trusted' /etc/kubernetes/manifests/etcd.yaml`.

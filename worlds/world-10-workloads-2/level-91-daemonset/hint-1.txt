@@ -1,0 +1,1 @@
+No `k create daemonset`. Generate a Deployment with `$do`, change kind, remove replicas and strategy.

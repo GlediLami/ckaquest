@@ -1,0 +1,1 @@
+`k get csr jane -o jsonpath='{.status.certificate}' | base64 -d > jane.crt`. Then `k create role` and `k create rolebinding --user=jane`.

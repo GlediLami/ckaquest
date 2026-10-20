@@ -1,0 +1,1 @@
+`configMapGenerator` creates a ConfigMap with a hash suffix. Kustomize rewrites references to it in the same build.

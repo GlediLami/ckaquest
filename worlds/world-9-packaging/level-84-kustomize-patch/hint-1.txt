@@ -1,0 +1,1 @@
+A strategic merge patch is a partial Deployment: name, then only the path down to what you change. List it under `patches: - path: file.yaml`.

@@ -1,0 +1,1 @@
+`-A` for all namespaces, then JSONPath for `namespace/name`.

@@ -1,0 +1,1 @@
+`from: - namespaceSelector: ...` allows all pods in matching namespaces. Do not add a podSelector in the same item unless you want AND.

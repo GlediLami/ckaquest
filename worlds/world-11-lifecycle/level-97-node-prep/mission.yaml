@@ -1,0 +1,26 @@
+name: "Prepare the Nodes"
+description: "Two fresh machines must be ready for kubeadm"
+objective: "Load the kernel modules and sysctls Kubernetes needs, persistently"
+xp: 250
+difficulty: intermediate
+expected_time: 10m
+domain: architecture
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - kernel modules
+  - sysctl
+  - container runtime prerequisites
+task: |
+  Context: `bare-controlplane, bare-node01`
+
+  On **both** bare nodes, prepare the OS for Kubernetes so it survives a reboot:
+  - file `/etc/modules-load.d/k8s.conf` that loads `overlay` and `br_netfilter`
+  - file `/etc/sysctl.d/k8s.conf` that sets `net.ipv4.ip_forward = 1`, `net.bridge.bridge-nf-call-iptables = 1` and `net.bridge.bridge-nf-call-ip6tables = 1`
+  - apply the sysctl settings now
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://kubernetes.io/docs/setup/production-environment/container-runtimes/#prerequisite-ipv4-forwarding-optional
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/

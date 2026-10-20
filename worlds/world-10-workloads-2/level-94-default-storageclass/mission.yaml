@@ -1,0 +1,24 @@
+name: "A New Default"
+description: "New PVCs without a class should land on a Retain class"
+objective: "Create a StorageClass and make it the only default"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: storage
+course_section: 8
+namespace: sc-lab
+exam: true
+concepts:
+  - StorageClass
+  - default class annotation
+  - volumeBindingMode
+  - reclaimPolicy
+task: |
+  Context: `kind-ckaquest`
+
+  1. Create StorageClass **local-retain**: provisioner `rancher.io/local-path`, reclaim policy **Retain**, volume binding mode **WaitForFirstConsumer**.
+  2. Make it the default StorageClass. **standard** must no longer be default. There must be exactly one default.
+  3. In namespace **sc-lab**, create PVC **data** (1Gi, ReadWriteOnce) **without** a storageClassName, and pod **user** (`busybox:1.36`, `sleep 3600`) that mounts it at `/data`.
+docs:
+  - https://kubernetes.io/docs/concepts/storage/storage-classes/
+  - https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/

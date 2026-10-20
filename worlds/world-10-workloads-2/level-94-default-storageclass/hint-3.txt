@@ -1,0 +1,1 @@
+With WaitForFirstConsumer the PVC stays Pending until the pod is scheduled. That is expected.

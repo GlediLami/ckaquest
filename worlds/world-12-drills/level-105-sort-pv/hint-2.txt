@@ -1,0 +1,1 @@
+Print only names: `-o name` gives `persistentvolume/...`, JSONPath gives the bare name.

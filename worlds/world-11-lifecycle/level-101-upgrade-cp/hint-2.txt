@@ -1,0 +1,1 @@
+Order: install kubeadm 1.37.1, `kubeadm upgrade plan`, `kubeadm upgrade apply v1.37.1`, drain, install kubelet and kubectl 1.37.1, `systemctl daemon-reload && systemctl restart kubelet`, uncordon.

@@ -1,0 +1,26 @@
+name: "Patch It In"
+description: "Production needs limits and a config that the base does not have"
+objective: "Use a patch and a configMapGenerator in an overlay"
+xp: 300
+difficulty: advanced
+expected_time: 10m
+domain: architecture
+course_section: 13
+namespace: kustomize-patch
+exam: true
+concepts:
+  - patches
+  - strategic merge
+  - configMapGenerator
+task: |
+  Context: `kind-ckaquest`
+
+  Use the base in `~/ckaquest-work/84/base/`. Create the overlay `~/ckaquest-work/84/overlays/prod/` that:
+  - sets namespace **kustomize-patch**
+  - adds memory limit **128Mi** and CPU limit **200m** to container **web** with a patch
+  - generates a ConfigMap **web-config** with `MODE=production`, and the Deployment loads it with `envFrom`
+
+  Apply it with kubectl. Do not edit the base.
+docs:
+  - https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
+  - https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/

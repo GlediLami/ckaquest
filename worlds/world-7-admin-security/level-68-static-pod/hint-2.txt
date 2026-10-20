@@ -1,0 +1,1 @@
+The kubelet on node01 watches a folder. Find it: `ssh node01`, then `grep staticPodPath /var/lib/kubelet/config.yaml`.

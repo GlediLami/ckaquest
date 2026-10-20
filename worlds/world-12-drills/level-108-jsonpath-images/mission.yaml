@@ -1,0 +1,23 @@
+name: "Drill: Which Image Where"
+description: "Security asks which sidecar image each shop pod runs"
+objective: "JSONPath with a filter on container name"
+xp: 150
+difficulty: intermediate
+expected_time: 3m
+domain: workloads
+course_section: 2
+namespace: drill-108
+exam: true
+concepts:
+  - jsonpath filters
+  - label selectors
+task: |
+  Context: `kind-ckaquest`
+
+  Pods with label `app=shop` in namespace **drill-108** have a container named **sidecar**.
+
+  Write one line per such pod to `~/ckaquest-work/108/sidecars.txt`: pod name, a space, the image of its **sidecar** container.
+
+  Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/jsonpath/

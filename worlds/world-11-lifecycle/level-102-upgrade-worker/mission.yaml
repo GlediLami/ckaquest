@@ -1,0 +1,24 @@
+name: "Upgrade the Worker"
+description: "The control plane is on v1.37.1. The worker is still on v1.36."
+objective: "Upgrade a worker node with kubeadm upgrade node"
+xp: 350
+difficulty: advanced
+expected_time: 10m
+domain: architecture
+course_section: 6
+namespace: lifecycle
+exam: true
+concepts:
+  - kubeadm upgrade node
+  - drain from the control plane
+  - kubelet upgrade
+task: |
+  Context: `kind-ckaquest-lab`
+
+  The control plane of the lab cluster runs v1.37.1. Upgrade worker **lab-node01** to **v1.37.1** (kubeadm, kubelet, kubectl).
+
+  Drain it first and make it schedulable again at the end.
+
+  The lab cluster has nodes **lab-controlplane** and **lab-node01** (`ssh lab-controlplane`). The apt repository for Kubernetes v1.37 is already configured on both. On the nodes, kubectl uses the lab cluster. From your terminal use `--context kind-ckaquest-lab`.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/upgrading-linux-nodes/

@@ -1,0 +1,23 @@
+name: "Right-Size the Pods"
+description: "The team wants resource recommendations without restarts"
+objective: "Create a VerticalPodAutoscaler in recommendation mode"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: workloads
+course_section: 5
+namespace: vpa-lab
+exam: true
+concepts:
+  - VerticalPodAutoscaler
+  - updateMode
+  - resourcePolicy
+task: |
+  Context: `kind-ckaquest`
+
+  The VPA CRDs are installed. Create a VerticalPodAutoscaler **api-vpa** in namespace **vpa-lab** for Deployment **api**:
+  - update mode **Off** (recommendations only, no evictions)
+  - for all containers, minimum allowed CPU **25m** and memory **32Mi**, maximum CPU **500m** and memory **256Mi**
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/autoscaling/vertical-pod-autoscale/
+  - https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler

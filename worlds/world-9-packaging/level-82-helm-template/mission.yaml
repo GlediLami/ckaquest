@@ -1,0 +1,22 @@
+name: "Render, Don't Install"
+description: "Review a chart's output before it touches the cluster"
+objective: "Render a chart to a file with helm template"
+xp: 200
+difficulty: intermediate
+expected_time: 5m
+domain: architecture
+course_section: 12
+namespace: helm-render
+exam: true
+concepts:
+  - helm template
+  - values
+  - dry run
+task: |
+  Context: `kind-ckaquest`
+
+  Render chart **webapp** version **1.1.0** from `http://127.0.0.1:8879` as release **preview** with **3** replicas and service type **NodePort**.
+
+  Write the rendered manifests to `~/ckaquest-work/82/preview.yaml`. Do not install anything.
+docs:
+  - https://helm.sh/docs/helm/helm_template/

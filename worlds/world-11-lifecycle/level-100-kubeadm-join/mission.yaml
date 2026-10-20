@@ -1,0 +1,24 @@
+name: "Add a Worker"
+description: "bare-node01 must join the new cluster"
+objective: "Join a worker node with kubeadm"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - kubeadm join
+  - bootstrap token
+  - discovery hash
+task: |
+  Context: `bare-controlplane, bare-node01`
+
+  Join **bare-node01** as a worker to the cluster on **bare-controlplane**. Both nodes must be Ready.
+
+  Then run a pod **hello** (`nginx:1.27-alpine`) on bare-node01 in that cluster.
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/

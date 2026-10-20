@@ -1,0 +1,1 @@
+Once a policy selects the postgres pod for Ingress, everything not allowed is denied. You do not need a separate deny-all.

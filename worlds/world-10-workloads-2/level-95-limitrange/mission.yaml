@@ -1,0 +1,25 @@
+name: "Defaults for Everyone"
+description: "Pods without resources keep landing in the team namespace"
+objective: "Set default requests and limits with a LimitRange"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: workloads
+course_section: 3
+namespace: team-ns
+exam: true
+concepts:
+  - LimitRange
+  - default requests
+  - max limits
+task: |
+  Context: `kind-ckaquest`
+
+  Create LimitRange **container-defaults** in namespace **team-ns** for containers:
+  - default request: CPU **100m**, memory **64Mi**
+  - default limit: CPU **200m**, memory **128Mi**
+  - max: CPU **500m**, memory **256Mi**
+
+  Then create pod **plain** (`nginx:1.27-alpine`) with no resources in team-ns.
+docs:
+  - https://kubernetes.io/docs/concepts/policy/limit-range/

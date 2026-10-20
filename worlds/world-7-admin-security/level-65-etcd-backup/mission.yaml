@@ -1,0 +1,22 @@
+name: "Back Up etcd"
+description: "Take an etcd snapshot before a risky change"
+objective: "Save an etcd snapshot on the control plane"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 6
+namespace: backup-lab
+exam: true
+concepts:
+  - etcdctl snapshot save
+  - etcd certificates
+  - etcdutl snapshot status
+task: |
+  Context: `kind-ckaquest`
+
+  On node **controlplane**, save a snapshot of etcd to `/opt/course/65/etcd-snapshot.db`.
+
+  Find the endpoint and the certificate files yourself. Then write the output of `etcdutl snapshot status /opt/course/65/etcd-snapshot.db -w table` to `/opt/course/65/status.txt`.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster

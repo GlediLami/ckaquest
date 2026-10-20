@@ -1,0 +1,1 @@
+Change the `etcd-data` hostPath to /var/lib/etcd-restore. The kubelet restarts etcd. The API server needs a minute to come back. `watch crictl ps`.

@@ -1,0 +1,25 @@
+name: "Batch Work in Parallel"
+description: "Six work items, two workers at a time"
+objective: "Write a Job with completions and parallelism"
+xp: 200
+difficulty: beginner
+expected_time: 6m
+domain: workloads
+course_section: 5
+namespace: batch-lab
+exam: true
+concepts:
+  - Job
+  - completions
+  - parallelism
+  - backoffLimit
+  - ttlSecondsAfterFinished
+task: |
+  Context: `kind-ckaquest`
+
+  Create Job **process** in namespace **batch-lab** (image `busybox:1.36`, command `sh -c 'echo processing; sleep 5'`):
+  - **6** completions, **2** pods in parallel
+  - at most **3** retries
+  - delete the Job automatically **600** seconds after it finishes
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/controllers/job/

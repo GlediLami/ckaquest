@@ -1,0 +1,27 @@
+name: "kubeadm init"
+description: "Turn bare-controlplane into a control plane"
+objective: "Initialise a cluster with kubeadm and a custom pod CIDR"
+xp: 350
+difficulty: advanced
+expected_time: 10m
+domain: architecture
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - kubeadm init
+  - pod network CIDR
+  - admin kubeconfig
+task: |
+  Context: `bare-controlplane`
+
+  On **bare-controlplane**, create a new cluster with kubeadm:
+  - pod network CIDR **10.50.0.0/16**
+  - after init, set up `/root/.kube/config` so `kubectl` works for root on that node
+
+  Do not install a CNI yet.
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+  - https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/

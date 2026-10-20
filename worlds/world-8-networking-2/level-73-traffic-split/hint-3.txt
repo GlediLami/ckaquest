@@ -1,0 +1,1 @@
+See 'Traffic splitting' in the Gateway API guides. Test: `for i in $(seq 20); do curl -s -H 'Host: api.example.com' <gateway>; done`.

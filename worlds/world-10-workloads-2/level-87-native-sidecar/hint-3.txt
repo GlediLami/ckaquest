@@ -1,0 +1,1 @@
+Mount volume `logs` at /var/log/app in the sidecar too. Check with `k logs app -c log-shipper`.

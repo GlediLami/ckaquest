@@ -1,0 +1,1 @@
+Volume `secret: secretName: db-creds, defaultMode: 0400`, mount with `readOnly: true`.

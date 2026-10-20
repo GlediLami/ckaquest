@@ -1,0 +1,1 @@
+Redirect stdout to the file.

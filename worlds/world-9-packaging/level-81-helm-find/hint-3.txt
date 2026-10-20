@@ -1,0 +1,1 @@
+`helm uninstall <release> -n <ns>` for each one with webapp-1.0.0.

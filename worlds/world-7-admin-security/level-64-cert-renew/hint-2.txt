@@ -1,0 +1,1 @@
+`kubeadm certs check-expiration` lists every cert. `kubeadm certs renew apiserver` renews one.

@@ -1,0 +1,1 @@
+Read the end of the init output. It prints the three commands to set up kubectl for your user.

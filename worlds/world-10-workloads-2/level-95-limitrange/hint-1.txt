@@ -1,0 +1,1 @@
+LimitRange fields: `default` (limits), `defaultRequest`, `max`, `min`, under `limits: - type: Container`.

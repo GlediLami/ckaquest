@@ -1,0 +1,24 @@
+name: "403 From Inside the Pod"
+description: "A report job logs Forbidden when it reads ConfigMaps"
+objective: "Find the ServiceAccount the job uses and give it exactly the access it needs"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 7
+namespace: reports
+exam: true
+concepts:
+  - ServiceAccount
+  - Forbidden
+  - Role
+  - kubectl logs
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **report-gen** in namespace **reports** logs `Forbidden` errors.
+
+  Find out which ServiceAccount it runs as and what it tries to do. Give that ServiceAccount exactly that access in namespace **reports** with a Role **cm-reader** and a RoleBinding **cm-reader-binding**. Do not change the Deployment.
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/

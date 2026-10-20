@@ -1,0 +1,1 @@
+`k describe httproute blog-route -n blog`. Read the Conditions under Status.

@@ -1,0 +1,1 @@
+Check the output first with `k kustomize overlays/prod`, then `k apply -k overlays/prod`.

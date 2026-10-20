@@ -1,0 +1,1 @@
+`k get gateway -n blog` for the real name. `k get svc blog -n blog` for the real port. Then `k edit httproute blog-route -n blog`.

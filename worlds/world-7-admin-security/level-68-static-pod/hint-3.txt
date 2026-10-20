@@ -1,0 +1,1 @@
+Put the YAML file in that folder on node01. The mirror pod is called static-web-<node name>.

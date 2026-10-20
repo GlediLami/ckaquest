@@ -1,0 +1,1 @@
+`helm list` only shows one namespace. Add `-A`.

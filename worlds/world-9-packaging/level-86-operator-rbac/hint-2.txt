@@ -1,0 +1,1 @@
+Subresources like status are written as `backups/status` in `resources`.

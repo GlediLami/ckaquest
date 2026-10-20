@@ -1,0 +1,1 @@
+`k describe node <control plane>` shows a NoSchedule taint.

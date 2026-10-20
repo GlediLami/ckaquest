@@ -1,0 +1,1 @@
+The user is `system:serviceaccount:reports:report-sa`. It wants to list configmaps.

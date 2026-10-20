@@ -1,0 +1,1 @@
+Read the error carefully. `kubectl config view` and `kubectl config get-contexts` work even when the server is unreachable.

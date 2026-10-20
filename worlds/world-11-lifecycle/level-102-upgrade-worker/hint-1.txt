@@ -1,0 +1,1 @@
+Drain from the control plane (or your terminal with the lab context), not from the worker.

@@ -1,0 +1,1 @@
+`k create rolebinding ... --serviceaccount=drill-106:bot`

@@ -1,0 +1,1 @@
+`etcdutl snapshot restore <file> --data-dir <new dir>` writes a fresh data directory. No certs needed, it works on files.

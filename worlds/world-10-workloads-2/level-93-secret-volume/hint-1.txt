@@ -1,0 +1,1 @@
+Quote the password in the shell: `--from-literal='password=S3cure!'`. `!` is special in bash.

@@ -1,0 +1,1 @@
+The plugins are a flag in /etc/kubernetes/manifests/kube-apiserver.yaml on controlplane.

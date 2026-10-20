@@ -1,0 +1,24 @@
+name: "Drill: Sort by Capacity"
+description: "Which volumes are the biggest?"
+objective: "Sort cluster-scoped objects by a nested field"
+xp: 150
+difficulty: intermediate
+expected_time: 3m
+domain: storage
+course_section: 8
+namespace: drills
+exam: true
+concepts:
+  - --sort-by
+  - PersistentVolumes
+  - jsonpath
+task: |
+  Context: `kind-ckaquest`
+
+  The cluster has PersistentVolumes whose names start with **drill-pv-**.
+
+  Write their names, one per line, sorted by capacity from **smallest to largest**, to `~/ckaquest-work/105/pvs.txt`. Only the drill-pv volumes.
+
+  Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/quick-reference/

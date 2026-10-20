@@ -1,0 +1,1 @@
+Write the CSR object yourself. The docs page has a full example under 'Create a CertificateSigningRequest'. The request field is the CSR file in base64 on one line: `base64 -w0 jane.csr`.

@@ -1,0 +1,1 @@
+An Ingress without a class is only served if an IngressClass has the default annotation.

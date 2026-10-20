@@ -1,0 +1,1 @@
+Kustomize has fields for each change: `namespace`, `namePrefix`, `replicas`, `images`. No patches needed.

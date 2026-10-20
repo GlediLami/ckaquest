@@ -1,0 +1,25 @@
+name: "Install From a Repo"
+description: "Install the webapp chart from the team's chart repository"
+objective: "Add a Helm repo and install a pinned chart version with custom values"
+xp: 200
+difficulty: beginner
+expected_time: 6m
+domain: architecture
+course_section: 12
+namespace: helm-shop
+exam: true
+concepts:
+  - helm repo add
+  - helm install
+  - --version
+  - --set
+task: |
+  Context: `kind-ckaquest`
+
+  The team's chart repository is at `http://127.0.0.1:8879`.
+
+  1. Add it as repo **cq**.
+  2. Install chart **cq/webapp** version **1.0.0** as release **shop** in namespace **helm-shop**, with **2** replicas.
+docs:
+  - https://helm.sh/docs/helm/helm_install/
+  - https://helm.sh/docs/helm/helm_repo_add/

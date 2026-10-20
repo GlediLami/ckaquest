@@ -1,0 +1,1 @@
+A native sidecar is an entry under `initContainers` with `restartPolicy: Always`.

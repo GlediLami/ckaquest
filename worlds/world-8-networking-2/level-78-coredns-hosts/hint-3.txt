@@ -1,0 +1,1 @@
+Put the `hosts { ... }` block before `kubernetes cluster.local`. CoreDNS reloads on its own after a minute, or `k rollout restart deploy coredns -n kube-system`.

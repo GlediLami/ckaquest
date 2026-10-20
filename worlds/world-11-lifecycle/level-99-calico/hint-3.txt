@@ -1,0 +1,1 @@
+`kubectl apply -f /root/calico.yaml`, then `kubectl get pods -n kube-system -w`.

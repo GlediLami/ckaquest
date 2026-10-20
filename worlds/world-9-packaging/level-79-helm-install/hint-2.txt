@@ -1,0 +1,1 @@
+`helm show values cq/webapp` lists what you can set. The replica count is a top-level value.

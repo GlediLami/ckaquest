@@ -1,0 +1,1 @@
+`{range .items[*]}...{end}` loops. `{"\n"}` adds a newline.

@@ -1,0 +1,1 @@
+Add a toleration for `node-role.kubernetes.io/control-plane` with operator Exists.

@@ -1,0 +1,1 @@
+Follow the docs page 'Upgrading kubeadm clusters' top to bottom. Start with `apt-cache madison kubeadm`.

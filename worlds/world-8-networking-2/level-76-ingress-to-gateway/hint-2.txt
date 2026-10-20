@@ -1,0 +1,1 @@
+Each Ingress path becomes one HTTPRoute rule with `matches: - path: {type: PathPrefix, value: ...}`.

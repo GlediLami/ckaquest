@@ -1,0 +1,1 @@
+`k create clusterrole node-reader --verb=get,list,watch --resource=nodes` and `k create clusterrolebinding ... --serviceaccount=monitoring:node-inspector`.

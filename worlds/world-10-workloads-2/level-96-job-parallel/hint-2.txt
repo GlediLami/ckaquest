@@ -1,0 +1,1 @@
+All four fields go directly under the Job's `spec`.

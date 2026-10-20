@@ -1,0 +1,25 @@
+name: "Drill: Know Your Resources"
+description: "Short names, groups and scope from the API itself"
+objective: "Answer API questions with api-resources and explain"
+xp: 150
+difficulty: beginner
+expected_time: 3m
+domain: architecture
+course_section: 2
+namespace: drills
+exam: true
+concepts:
+  - kubectl api-resources
+  - kubectl explain
+  - API groups
+task: |
+  Context: `kind-ckaquest`
+
+  Write to `~/ckaquest-work/110/answers.txt` exactly three lines:
+  1. the short name of **poddisruptionbudgets**
+  2. the API group of **ingressclasses**
+  3. `true` or `false`: is **persistentvolumes** namespaced?
+
+  Par time: 3 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_api-resources/

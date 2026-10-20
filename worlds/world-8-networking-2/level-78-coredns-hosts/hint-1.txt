@@ -1,0 +1,1 @@
+`k edit cm coredns -n kube-system`. The Corefile is a list of plugins inside `.:53 { ... }`.

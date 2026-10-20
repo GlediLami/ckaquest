@@ -1,0 +1,1 @@
+`--sort-by=.spec.capacity.storage` understands quantities (500Mi < 1Gi).

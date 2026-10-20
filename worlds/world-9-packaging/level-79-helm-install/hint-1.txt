@@ -1,0 +1,1 @@
+`helm repo add <name> <url>`, then `helm search repo cq --versions`.

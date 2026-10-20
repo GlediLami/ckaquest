@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Local Helm chart repo for the Helm levels. No internet needed.
+#   cq-helm-repo ensure   package the charts (if needed) and serve them on http://127.0.0.1:8879
+#   cq-helm-repo stop     stop the server
+set -euo pipefail
+source "$(dirname "$0")/../lib/common.sh"
+REPO="$CQ_HOME/helm-repo"
+PORT=8879
+
+package() {
+  mkdir -p "$REPO"
+  [ -f "$REPO/webapp-1.0.0.tgz" ] && [ -f "$REPO/webapp-1.1.0.tgz" ] && return 0
+  local tmp="$CQ_HOME/helm-build"
+  mkdir -p "$tmp"
+  cp -r "$CQ_ROOT/charts/webapp" "$tmp/"
+  helm package "$tmp/webapp" -d "$REPO" >/dev/null
+  sed -i -e 's/^version: .*/version: 1.1.0/' -e 's/^appVersion: .*/appVersion: "1.28"/' "$tmp/webapp/Chart.yaml"
+  sed -i 's/tag: .*/tag: "1.28-alpine"/' "$tmp/webapp/values.yaml"
+  helm package "$tmp/webapp" -d "$REPO" >/dev/null
+  helm repo index "$REPO" --url "http://127.0.0.1:$PORT" >/dev/null
+}
+
+running() { curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/index.yaml"; }
+
+case "${1:-ensure}" in
+  ensure)
+    package
+    if ! running; then
+      nohup python3 -m http.server "$PORT" --bind 127.0.0.1 --directory "$REPO" >"$CQ_HOME/helm-repo.log" 2>&1 &
+      echo $! > "$CQ_HOME/helm-repo.pid"
+      cq_wait 10 running
+    fi ;;
+  stop)
+    [ -f "$CQ_HOME/helm-repo.pid" ] && kill "$(cat "$CQ_HOME/helm-repo.pid")" 2>/dev/null || true ;;
+esac

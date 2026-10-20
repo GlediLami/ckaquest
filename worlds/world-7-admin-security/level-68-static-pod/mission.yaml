@@ -1,0 +1,22 @@
+name: "A Pod Without the API"
+description: "Run a pod on node01 that the kubelet manages by itself"
+objective: "Create a static pod on node01"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: architecture
+course_section: 3
+namespace: static-lab
+exam: true
+concepts:
+  - static pods
+  - staticPodPath
+  - mirror pods
+task: |
+  Context: `kind-ckaquest`
+
+  Create a static pod **static-web** on node **node01** in namespace **static-lab**. Image `nginx:1.27-alpine`, container port 80, label `app=static-web`.
+
+  The pod must show up in `kubectl get pods -n static-lab`.
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/

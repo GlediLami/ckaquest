@@ -1,0 +1,25 @@
+name: "80/20"
+description: "v2 of the API is ready for a small share of the traffic"
+objective: "Split traffic between two versions with HTTPRoute weights"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: networking
+course_section: 9
+namespace: api-split
+requires:
+  - gateway
+exam: true
+concepts:
+  - HTTPRoute
+  - weights
+  - canary
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **api-split** has Services **api-v1** and **api-v2** (both port 80) and Gateway **web-gw**.
+
+  Create HTTPRoute **api-route** for host `api.example.com` that sends **80%** of requests to api-v1 and **20%** to api-v2.
+docs:
+  - https://gateway-api.sigs.k8s.io/guides/traffic-splitting/
+  - https://kubernetes.io/docs/concepts/services-networking/gateway/

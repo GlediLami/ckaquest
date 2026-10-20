@@ -1,0 +1,22 @@
+name: "A Sidecar That Starts First"
+description: "The log shipper must run for the whole life of the pod"
+objective: "Add a native sidecar container"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: workloads
+course_section: 5
+namespace: sidecar-lab
+exam: true
+concepts:
+  - native sidecar
+  - initContainers restartPolicy Always
+  - emptyDir
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **app** in namespace **sidecar-lab** writes logs to `/var/log/app/app.log` on an emptyDir volume **logs**.
+
+  Recreate the pod with a **native sidecar** container **log-shipper** (image `busybox:1.36`) that runs `tail -F /var/log/app/app.log` and mounts the same volume. It must start before the app container and keep running.
+docs:
+  - https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/

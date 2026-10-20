@@ -1,0 +1,23 @@
+name: "A Name CoreDNS Does Not Know"
+description: "Pods must resolve legacy.internal, which is not in any DNS zone"
+objective: "Add a static entry to CoreDNS"
+xp: 350
+difficulty: advanced
+expected_time: 10m
+domain: networking
+course_section: 9
+namespace: dns-custom
+exam: true
+concepts:
+  - CoreDNS
+  - Corefile
+  - hosts plugin
+task: |
+  Context: `kind-ckaquest`
+
+  Pods must resolve `legacy.internal` to `10.10.10.10`.
+
+  Add this to the cluster DNS (the CoreDNS ConfigMap in kube-system) with the `hosts` plugin. All other names, including `kubernetes.default`, must keep resolving.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
+  - https://coredns.io/plugins/hosts/

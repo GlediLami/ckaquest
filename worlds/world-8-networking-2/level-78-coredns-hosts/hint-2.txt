@@ -1,0 +1,1 @@
+The hosts plugin takes lines like in /etc/hosts. Add `fallthrough` so other names go on to the next plugins.

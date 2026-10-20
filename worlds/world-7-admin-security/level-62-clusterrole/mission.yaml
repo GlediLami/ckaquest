@@ -1,0 +1,22 @@
+name: "Nodes Are Cluster-Wide"
+description: "A monitoring agent must read nodes but a Role cannot grant that"
+objective: "Grant cluster-wide read access to nodes with a ClusterRole"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: architecture
+course_section: 7
+namespace: monitoring
+exam: true
+concepts:
+  - ClusterRole
+  - ClusterRoleBinding
+  - cluster-scoped resources
+task: |
+  Context: `kind-ckaquest`
+
+  ServiceAccount **node-inspector** in namespace **monitoring** must be able to `get`, `list` and `watch` nodes.
+
+  Create a ClusterRole **node-reader** and a ClusterRoleBinding **node-inspector-binding** for it. Grant nothing else.
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/#clusterrole-example

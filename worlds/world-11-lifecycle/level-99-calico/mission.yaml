@@ -1,0 +1,26 @@
+name: "Install the CNI"
+description: "The new control plane is NotReady because there is no pod network"
+objective: "Install Calico with a pool that matches the cluster's pod CIDR"
+xp: 350
+difficulty: advanced
+expected_time: 10m
+domain: networking
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - CNI
+  - Calico
+  - IP pool
+  - CoreDNS Pending
+task: |
+  Context: `bare-controlplane`
+
+  The cluster on **bare-controlplane** has pod CIDR **10.50.0.0/16** and no CNI. The Calico manifest is at `/root/calico.yaml` on that node.
+
+  Install Calico so that its IP pool is **10.50.0.0/16**. The node must become Ready and CoreDNS must run with an IP from that range.
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
+  - https://kubernetes.io/docs/concepts/cluster-administration/addons/

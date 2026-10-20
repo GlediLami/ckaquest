@@ -1,0 +1,1 @@
+`k get ingress legacy -n migrate-lab -o yaml`. Note each path and backend.

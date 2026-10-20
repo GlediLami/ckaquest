@@ -1,0 +1,1 @@
+You need `--endpoints`, `--cacert`, `--cert` and `--key`. The CA is etcd's own CA, not the cluster CA.

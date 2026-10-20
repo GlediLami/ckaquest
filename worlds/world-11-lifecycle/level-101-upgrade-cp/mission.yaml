@@ -1,0 +1,25 @@
+name: "Upgrade the Control Plane"
+description: "The lab cluster runs v1.36. Move the control plane to v1.37.1."
+objective: "Upgrade the control plane node with kubeadm, the exam way"
+xp: 450
+difficulty: expert
+expected_time: 15m
+domain: architecture
+course_section: 6
+namespace: lifecycle
+exam: true
+concepts:
+  - kubeadm upgrade plan
+  - kubeadm upgrade apply
+  - drain
+  - apt-mark
+task: |
+  Context: `kind-ckaquest-lab`
+
+  Upgrade the control plane node **lab-controlplane** from v1.36 to exactly **v1.37.1**: kubeadm, the control plane components, kubelet and kubectl.
+
+  Drain the node before you upgrade the kubelet and make it schedulable again afterwards. Do not upgrade lab-node01.
+
+  The lab cluster has nodes **lab-controlplane** and **lab-node01** (`ssh lab-controlplane`). The apt repository for Kubernetes v1.37 is already configured on both. On the nodes, kubectl uses the lab cluster. From your terminal use `--context kind-ckaquest-lab`.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/

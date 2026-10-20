@@ -1,0 +1,1 @@
+`k api-resources` has the columns SHORTNAMES, APIVERSION, NAMESPACED.

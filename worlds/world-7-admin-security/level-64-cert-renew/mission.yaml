@@ -1,0 +1,24 @@
+name: "Certificate Renewal"
+description: "The API server certificate must be renewed"
+objective: "Record the old expiry date, renew the apiserver certificate and make the API server use it"
+xp: 350
+difficulty: advanced
+expected_time: 12m
+domain: architecture
+course_section: 7
+namespace: cert-lab
+exam: true
+concepts:
+  - kubeadm certs
+  - openssl x509
+  - static pod restart
+task: |
+  Context: `kind-ckaquest`
+
+  On node **controlplane**:
+
+  1. Write the current expiry date of the kube-apiserver serving certificate to `/opt/course/64/expiry-before.txt`. Use the exact output of `openssl x509 -noout -enddate` (one line, starts with `notAfter=`).
+  2. Renew only the **apiserver** certificate with kubeadm.
+  3. Make sure the running API server serves the new certificate.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/

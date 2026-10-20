@@ -1,0 +1,24 @@
+name: "Ingress Without a Class"
+description: "The Ingress has no address and the controller ignores it"
+objective: "Make the ingress-nginx controller serve the Ingress"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: networking
+course_section: 9
+namespace: ingress-lab
+requires:
+  - ingress
+exam: true
+concepts:
+  - IngressClass
+  - ingressClassName
+  - ingress-nginx
+task: |
+  Context: `kind-ckaquest`
+
+  Ingress **docs-ingress** in namespace **ingress-lab** routes `docs.example.com` to Service **docs** on port 80. It never gets an address and requests return 404 from the controller.
+
+  Fix the Ingress so the ingress-nginx controller serves it.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class

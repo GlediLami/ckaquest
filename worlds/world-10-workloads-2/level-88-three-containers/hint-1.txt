@@ -1,0 +1,1 @@
+Start with `k run trio -n trio-lab --image=busybox:1.36 $do -- sh -c '...' > trio.yaml` and copy the container block twice.

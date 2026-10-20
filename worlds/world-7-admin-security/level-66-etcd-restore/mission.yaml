@@ -1,0 +1,22 @@
+name: "Restore etcd"
+description: "Someone deleted the ledger. A snapshot from before exists."
+objective: "Restore etcd from the snapshot so the deleted data comes back"
+xp: 450
+difficulty: expert
+expected_time: 15m
+domain: architecture
+course_section: 6
+namespace: payments
+exam: true
+concepts:
+  - etcdutl snapshot restore
+  - etcd data dir
+  - static pod hostPath
+task: |
+  Context: `kind-ckaquest`
+
+  ConfigMap **ledger** in namespace **payments** was deleted by mistake. A snapshot taken before that is at `/opt/course/66/etcd-backup.db` on node **controlplane**.
+
+  Restore the snapshot into the data directory `/var/lib/etcd-restore` and make etcd run from it. ConfigMap **ledger** must exist again and the API server must work.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#restoring-an-etcd-cluster

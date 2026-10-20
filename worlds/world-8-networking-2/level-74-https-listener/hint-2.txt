@@ -1,0 +1,1 @@
+A listener with `protocol: HTTPS` needs a `tls:` block with `mode: Terminate` and `certificateRefs` pointing to the Secret.

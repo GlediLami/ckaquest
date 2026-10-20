@@ -1,0 +1,1 @@
+`k create deploy shop -n drill-107 --image=nginx:1.27-alpine --replicas=2 $do > deploy.yaml`

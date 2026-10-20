@@ -1,0 +1,27 @@
+name: "HTTPS on the Gateway"
+description: "The shop must serve HTTPS"
+objective: "Add an HTTPS listener with a TLS Secret to the Gateway"
+xp: 350
+difficulty: advanced
+expected_time: 12m
+domain: networking
+course_section: 9
+namespace: secure-shop
+requires:
+  - gateway
+exam: true
+concepts:
+  - TLS Secret
+  - Gateway listener
+  - certificateRefs
+task: |
+  Context: `kind-ckaquest`
+
+  A certificate and key for `secure.example.com` are in `~/ckaquest-work/74/` (`tls.crt`, `tls.key`).
+
+  1. Create a TLS Secret **secure-tls** in namespace **secure-shop** from them.
+  2. Add a listener **https** to Gateway **web-gw**: protocol HTTPS, port 443, hostname `secure.example.com`, TLS mode Terminate with that Secret.
+  3. Attach HTTPRoute **secure-route** (it exists) to the new listener as well, so `https://secure.example.com` reaches Service **secure-app**.
+docs:
+  - https://gateway-api.sigs.k8s.io/guides/tls/
+  - https://kubernetes.io/docs/concepts/services-networking/gateway/

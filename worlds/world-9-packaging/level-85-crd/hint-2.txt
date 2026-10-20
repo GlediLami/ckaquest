@@ -1,0 +1,1 @@
+`k explain backup.spec` shows the fields once the CRD is installed.

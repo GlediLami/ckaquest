@@ -123,3 +123,16 @@ in_cluster_ok() {
     --pod-running-timeout=60s --command -- "$@" >/dev/null 2>&1
 }
 in_cluster_fails() { ! in_cluster_ok "$@"; }
+
+# Like in_cluster_ok but prints what the command wrote: in_cluster_out <ns> <image> <cmd...>
+in_cluster_out() {
+  local ns="$1" image="$2"; shift 2
+  kubectl run "cq-probe-$RANDOM" -n "$ns" --image="$image" --restart=Never --rm -i --quiet \
+    --pod-running-timeout=60s --command -- "$@" 2>/dev/null
+}
+
+# "<service>.<namespace>" of the data plane Service that serves a Gateway
+gw_addr() {
+  kubectl get svc -A -l "gateway.networking.k8s.io/gateway-name=$1" \
+    -o jsonpath='{.items[0].metadata.name}.{.items[0].metadata.namespace}' 2>/dev/null
+}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: webapp
+description: Small web app chart used by the CKAQuest Helm levels
+type: application
+version: 1.0.0
+appVersion: "1.27"

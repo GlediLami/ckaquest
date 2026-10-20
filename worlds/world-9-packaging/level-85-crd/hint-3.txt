@@ -1,0 +1,1 @@
+apiVersion of the object is `<group>/<version>`: ops.example.com/v1, kind Backup. Quote the schedule string.

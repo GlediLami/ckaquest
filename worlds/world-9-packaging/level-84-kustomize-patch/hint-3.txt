@@ -1,0 +1,1 @@
+Put `envFrom: - configMapRef: name: web-config` in the patch next to the limits. Kustomize adds the hash.

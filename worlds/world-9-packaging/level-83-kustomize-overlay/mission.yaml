@@ -1,0 +1,31 @@
+name: "A Production Overlay"
+description: "The same app needs a production variant"
+objective: "Write a Kustomize overlay and apply it"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: architecture
+course_section: 13
+namespace: kustomize-prod
+exam: true
+concepts:
+  - kustomization.yaml
+  - overlays
+  - namePrefix
+  - images
+  - replicas
+task: |
+  Context: `kind-ckaquest`
+
+  `~/ckaquest-work/83/base/` holds a Kustomize base (Deployment and Service **web**).
+
+  Create an overlay in `~/ckaquest-work/83/overlays/prod/` that:
+  - uses the base
+  - sets namespace **kustomize-prod**
+  - adds the name prefix **prod-**
+  - sets **3** replicas for the Deployment
+  - changes the nginx image tag to **1.28-alpine**
+
+  Apply the overlay with kubectl. Do not edit the base.
+docs:
+  - https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/

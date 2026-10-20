@@ -1,0 +1,1 @@
+`k api-resources | grep -E 'poddisruption|ingressclass|persistentvolumes'`

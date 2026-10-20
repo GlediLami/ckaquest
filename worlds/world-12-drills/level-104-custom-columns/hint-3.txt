@@ -1,0 +1,1 @@
+Image of the first container: `.spec.containers[0].image`.

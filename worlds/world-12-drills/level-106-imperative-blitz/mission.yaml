@@ -1,0 +1,30 @@
+name: "Drill: Imperative Blitz"
+description: "Eight objects, no YAML editor"
+objective: "Create common objects with imperative kubectl only"
+xp: 200
+difficulty: intermediate
+expected_time: 5m
+domain: workloads
+course_section: 2
+namespace: drill-106
+exam: true
+concepts:
+  - kubectl run
+  - create deployment
+  - expose
+  - create configmap/secret/sa/role/rolebinding
+task: |
+  Context: `kind-ckaquest`
+
+  In namespace **drill-106**, using only imperative commands:
+  1. Pod **web**, image `nginx:1.27-alpine`, label `tier=web`
+  2. Deployment **api**, image `nginx:1.27-alpine`, 3 replicas
+  3. Service **api**, ClusterIP, port 80, for the Deployment api
+  4. ConfigMap **cfg** with `mode=fast`
+  5. Secret **token** with `t=abc123`
+  6. ServiceAccount **bot**
+  7. Role **pod-reader** (get, list on pods) and RoleBinding **bot-pod-reader** for bot
+
+  Par time: 5 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/quick-reference/

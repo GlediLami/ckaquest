@@ -1,0 +1,1 @@
+On the worker: install kubeadm 1.37.1, then `kubeadm upgrade node`. Not `apply`.

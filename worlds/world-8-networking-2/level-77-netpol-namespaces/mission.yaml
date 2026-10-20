@@ -1,0 +1,22 @@
+name: "Only the Frontend Team"
+description: "The database must only accept traffic from the frontend namespace"
+objective: "Write a NetworkPolicy with a namespaceSelector"
+xp: 300
+difficulty: advanced
+expected_time: 10m
+domain: networking
+course_section: 7
+namespace: db-ns
+exam: true
+concepts:
+  - NetworkPolicy
+  - namespaceSelector
+  - kubernetes.io/metadata.name
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **db-ns** runs pod **postgres** (label `app=postgres`, port 5432, Service **postgres**).
+
+  Create NetworkPolicy **allow-frontend** in **db-ns** so that the postgres pods accept ingress on TCP 5432 **only** from pods in namespace **frontend-ns**. Pods in any other namespace, and other pods in db-ns, must be blocked.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/network-policies/#behavior-of-to-and-from-selectors

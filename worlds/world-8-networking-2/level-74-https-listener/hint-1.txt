@@ -1,0 +1,1 @@
+`k create secret tls secure-tls --cert=... --key=... -n secure-shop`.

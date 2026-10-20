@@ -1,0 +1,1 @@
+Filter containers by name: `.spec.containers[?(@.name=="sidecar")].image`.

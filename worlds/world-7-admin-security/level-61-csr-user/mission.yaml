@@ -1,0 +1,27 @@
+name: "A New User Called Jane"
+description: "Jane needs a client certificate and read access to pods"
+objective: "Sign Jane's CSR through the Kubernetes API and give her read access to pods"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: architecture
+course_section: 7
+namespace: dev-team
+exam: true
+concepts:
+  - CertificateSigningRequest
+  - kubectl certificate approve
+  - Role
+  - RoleBinding
+task: |
+  Context: `kind-ckaquest`
+
+  Jane has a private key and a CSR in `~/ckaquest-work/61/` (`jane.key`, `jane.csr`).
+
+  1. Create a CertificateSigningRequest called **jane** from `jane.csr`. Use signer `kubernetes.io/kube-apiserver-client` and usage `client auth`.
+  2. Approve it.
+  3. Save the issued certificate to `~/ckaquest-work/61/jane.crt` (PEM, not base64).
+  4. Create a Role **pod-reader** in namespace **dev-team** that allows `get`, `list` and `watch` on pods. Bind it to user **jane** with a RoleBinding **jane-pod-reader**.
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/

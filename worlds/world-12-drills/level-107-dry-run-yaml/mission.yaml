@@ -1,0 +1,28 @@
+name: "Drill: $do and Edit"
+description: "Generate YAML, add what kubectl create cannot set, apply"
+objective: "Use --dry-run=client -o yaml as a starting point"
+xp: 150
+difficulty: intermediate
+expected_time: 4m
+domain: workloads
+course_section: 2
+namespace: drill-107
+exam: true
+concepts:
+  - --dry-run=client -o yaml
+  - env
+  - resources
+  - probes
+task: |
+  Context: `kind-ckaquest`
+
+  Save a Deployment manifest to `~/ckaquest-work/107/deploy.yaml` and apply it:
+  - Deployment **shop** in namespace **drill-107**, image `nginx:1.27-alpine`, 2 replicas
+  - env var `MODE=prod`
+  - requests CPU **50m**, memory **32Mi**
+  - readiness probe: HTTP GET `/` on port 80
+
+  Par time: 4 minutes.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/quick-reference/
+  - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/

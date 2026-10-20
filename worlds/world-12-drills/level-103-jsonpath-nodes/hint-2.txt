@@ -1,0 +1,1 @@
+A filter: `.status.addresses[?(@.type=="InternalIP")].address`.

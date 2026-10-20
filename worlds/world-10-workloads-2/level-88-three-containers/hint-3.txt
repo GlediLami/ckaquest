@@ -1,0 +1,1 @@
+`valueFrom: fieldRef: fieldPath: spec.nodeName` is the Downward API.

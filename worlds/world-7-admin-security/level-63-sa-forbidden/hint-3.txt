@@ -1,0 +1,1 @@
+`k create role cm-reader --verb=get,list --resource=configmaps -n reports`, then a rolebinding with `--serviceaccount=reports:report-sa`.

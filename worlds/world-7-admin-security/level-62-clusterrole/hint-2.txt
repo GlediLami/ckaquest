@@ -1,0 +1,1 @@
+A Role lives in a namespace and can only grant namespaced resources. You need the cluster-wide versions.
