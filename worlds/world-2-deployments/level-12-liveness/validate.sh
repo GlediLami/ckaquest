@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if pods are running and NOT constantly restarting
-RESTART_COUNT=$(kubectl get pods -n k8squest -l app=api -o jsonpath='{.items[*].status.containerStatuses[*].restartCount}' 2>/dev/null | awk '{for(i=1;i<=NF;i++) sum+=$i} END {print sum}')
-RUNNING_PODS=$(kubectl get pods -n k8squest -l app=api -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}' 2>/dev/null | wc -w | tr -d ' ')
+RESTART_COUNT=$(kubectl get pods -n ckaquest -l app=api -o jsonpath='{.items[*].status.containerStatuses[*].restartCount}' 2>/dev/null | awk '{for(i=1;i<=NF;i++) sum+=$i} END {print sum}')
+RUNNING_PODS=$(kubectl get pods -n ckaquest -l app=api -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}' 2>/dev/null | wc -w | tr -d ' ')
 
 # Give a grace period - if restarts are low (< 3 total) and pods are running, consider it fixed
 if [ "$RUNNING_PODS" -eq 2 ] && [ "$RESTART_COUNT" -lt 3 ]; then

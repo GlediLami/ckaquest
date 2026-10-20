@@ -5,7 +5,7 @@
 
 set -e
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 SERVICE_NAME="session-service"
 CLIENT_POD="client"
 

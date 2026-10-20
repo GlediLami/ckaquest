@@ -3,13 +3,13 @@
 Fix the service selector:
 
 ```bash
-kubectl delete svc backend-service -n k8squest
-kubectl apply -f solution.yaml -n k8squest
+kubectl delete svc backend-service -n ckaquest
+kubectl apply -f solution.yaml -n ckaquest
 ```
 
 Or edit it directly:
 ```bash
-kubectl edit svc backend-service -n k8squest
+kubectl edit svc backend-service -n ckaquest
 ```
 
 Change the selector from:
@@ -28,5 +28,5 @@ selector:
 
 Then verify endpoints appear:
 ```bash
-kubectl get endpoints backend-service -n k8squest
+kubectl get endpoints backend-service -n ckaquest
 ```

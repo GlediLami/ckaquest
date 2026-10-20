@@ -427,10 +427,10 @@ Does NOT match:
 
 ```bash
 # View Ingress details
-kubectl describe ingress web-ingress -n k8squest
+kubectl describe ingress web-ingress -n ckaquest
 
 # Check path configuration
-kubectl get ingress web-ingress -n k8squest -o yaml
+kubectl get ingress web-ingress -n ckaquest -o yaml
 ```
 
 Look for:
@@ -484,13 +484,13 @@ Look for:
 
 ```bash
 # Check service exists
-kubectl get service web-service -n k8squest
+kubectl get service web-service -n ckaquest
 
 # Check service has endpoints
-kubectl get endpoints web-service -n k8squest
+kubectl get endpoints web-service -n ckaquest
 
 # Describe service
-kubectl describe service web-service -n k8squest
+kubectl describe service web-service -n ckaquest
 ```
 
 If endpoints are empty, the service selector might not match any pods.
@@ -499,7 +499,7 @@ If endpoints are empty, the service selector might not match any pods.
 
 ```bash
 # Port-forward to service
-kubectl port-forward -n k8squest service/web-service 8080:80
+kubectl port-forward -n ckaquest service/web-service 8080:80
 
 # Test in another terminal
 curl http://localhost:8080/
@@ -623,7 +623,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: test-ingress
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   rules:
   - host: test.myapp.local
@@ -733,7 +733,7 @@ You've mastered Ingress path-based routing! You now understand:
 
 In the next levels, you'll explore more advanced networking concepts like NetworkPolicy for controlling traffic between pods, session affinity for stateful applications, and cross-namespace service communication.
 
-**Continue your K8sQuest journey to unlock the next challenge!** 🚀
+**Continue your CKAQuest journey to unlock the next challenge!** 🚀
 
 ---
 

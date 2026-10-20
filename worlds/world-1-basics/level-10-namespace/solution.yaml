@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: client-app
-  namespace: k8squest
+  namespace: ckaquest
   labels:
     app: client
 spec:
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   selector:
     app: backend

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 
 echo "🔍 VALIDATION STAGE 1: Checking PriorityClasses exist..."
 if ! kubectl get priorityclass high-priority &>/dev/null; then

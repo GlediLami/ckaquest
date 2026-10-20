@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-K8sQuest Retro Gaming UI - Contra/Mario Style
+CKAQuest Retro Gaming UI - Contra/Mario Style
 ASCII art, animations, and classic arcade aesthetics
 """
 
@@ -207,7 +207,7 @@ def show_victory(xp_earned, total_xp):
     # XP Animation - cycles through coin emojis
     for coin in COIN_ANIMATION:
         # Clear screen using both methods for compatibility
-        os.system('clear' if os.name != 'nt' else 'cls')
+        os.system('clear')
         console.print(VICTORY_SCREEN, style="bold green")
         console.print()
         console.print(Align.center("🎊 MISSION COMPLETE! 🎊"), style="bold yellow")
@@ -216,7 +216,7 @@ def show_victory(xp_earned, total_xp):
         time.sleep(0.4)
     
     # Final victory screen (no more animation)
-    os.system('clear' if os.name != 'nt' else 'cls')
+    os.system('clear')
     console.print(VICTORY_SCREEN, style="bold green")
     console.print()
     console.print(Align.center("🎊 MISSION COMPLETE! 🎊"), style="bold yellow")
@@ -233,7 +233,7 @@ def show_game_complete():
     console.print()
     console.print(Align.center("🏆🏆🏆 KUBERNETES MASTER! 🏆🏆🏆"), style="bold yellow")
     console.print()
-    console.print(Align.center("YOU'VE CONQUERED ALL 50 LEVELS!"), style="bold green")
+    console.print(Align.center("YOU'VE CONQUERED EVERY LEVEL! NOW BOOK THE EXAM."), style="bold green")
     console.print(Align.center("⎈⎈⎈ PERFECT! ⎈⎈⎈"), style="bold cyan")
     console.print()
     
@@ -259,11 +259,13 @@ def show_command_menu():
     """Show retro-style command menu"""
     menu = Panel(
         "[bold cyan]🎮 GAME COMMANDS 🎮[/bold cyan]\n\n"
-        "[yellow]check[/yellow]     - 👁️  Monitor resources\n"
-        "[yellow]guide[/yellow]     - 📖 Step-by-step solution\n"
-        "[yellow]hints[/yellow]     - 💡 Progressive hints\n"
-        "[yellow]solution[/yellow]  - 📄 View solution.yaml\n"
-        "[yellow]validate[/yellow]  - ✅ Test your fix\n"
+        "[yellow]validate[/yellow]  - ✅ Check your work\n"
+        "[yellow]task[/yellow]      - 📝 Show the exam task again\n"
+        "[yellow]check[/yellow]     - 👁️  Watch the namespace\n"
+        "[yellow]hints[/yellow]     - 💡 Next hint\n"
+        "[yellow]guide[/yellow]     - 📖 Step-by-step guide\n"
+        "[yellow]solution[/yellow]  - 📄 Reference solution\n"
+        "[yellow]reset[/yellow]     - 🔄 Restore and re-deploy the level\n"
         "[yellow]skip[/yellow]      - ⏭️  Skip level\n"
         "[yellow]quit[/yellow]      - 🚪 Save & exit",
         border_style="cyan",
@@ -323,7 +325,7 @@ def show_retro_header(level_name, xp, total_xp):
     """Show retro-style header with stats"""
     header = (
         f"[bold cyan]═══════════════════════════════════════════════════════════[/bold cyan]\n"
-        f"[bold yellow]🎮 K8SQUEST[/bold yellow]  │  "
+        f"[bold yellow]🎮 CKAQUEST[/bold yellow]  │  "
         f"[cyan]Level: {level_name}[/cyan]  │  "
         f"[green]XP: {total_xp}[/green]  │  "
         f"[yellow]⭐ Reward: +{xp}[/yellow]\n"

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet  # Fixed: Use StatefulSet for stateful workloads
 metadata:
   name: database
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   serviceName: "database-service"  # Required for StatefulSet
   replicas: 3
@@ -38,7 +38,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: database-service
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   selector:
     app: database

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Check PDB configuration
-MIN_AVAILABLE=$(kubectl get pdb db-proxy-pdb -n k8squest -o jsonpath='{.spec.minAvailable}' 2>/dev/null)
-REPLICAS=$(kubectl get deployment database-proxy -n k8squest -o jsonpath='{.spec.replicas}' 2>/dev/null)
+MIN_AVAILABLE=$(kubectl get pdb db-proxy-pdb -n ckaquest -o jsonpath='{.spec.minAvailable}' 2>/dev/null)
+REPLICAS=$(kubectl get deployment database-proxy -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
 
 # Check if PDB allows evictions
-ALLOWED=$(kubectl get pdb db-proxy-pdb -n k8squest -o jsonpath='{.status.disruptionsAllowed}' 2>/dev/null)
+ALLOWED=$(kubectl get pdb db-proxy-pdb -n ckaquest -o jsonpath='{.status.disruptionsAllowed}' 2>/dev/null)
 
 if [ "$MIN_AVAILABLE" -ge "$REPLICAS" ]; then
     echo "❌ PDB is too restrictive!"

@@ -1,5 +1,5 @@
 🔍 Observation Hint:
 
-Run `kubectl describe pod web-app -n k8squest` and look at the Events section at the bottom.
+Run `kubectl describe pod web-app -n ckaquest` and look at the Events section at the bottom.
 
 You'll see messages about pulling an image. What error do you see?

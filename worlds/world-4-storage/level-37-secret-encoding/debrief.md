@@ -16,10 +16,10 @@ data:
 **What Actually Happens:**
 ```bash
 # Anyone with kubectl access can decode instantly:
-$ kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}' | base64 -d
+$ kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.username}' | base64 -d
 admin
 
-$ kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.password}' | base64 -d
+$ kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.password}' | base64 -d
 secretpass123
 ```
 

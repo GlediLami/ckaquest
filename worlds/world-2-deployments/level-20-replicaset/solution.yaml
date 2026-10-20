@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment  # Fixed: Use Deployment (manages ReplicaSets for you)
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 3
   selector:

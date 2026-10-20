@@ -1,4 +1,4 @@
-# K8sQuest - Git Line Ending Configuration
+# CKAQuest - Git Line Ending Configuration
 # Ensures shell scripts work correctly across platforms (Windows/Mac/Linux)
 
 # Shell scripts must use LF (Unix line endings) to work properly

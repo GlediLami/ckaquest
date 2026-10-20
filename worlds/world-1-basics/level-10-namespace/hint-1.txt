@@ -1,7 +1,7 @@
 🔍 Observation Hint:
 
-Check what resources exist in the k8squest namespace:
-`kubectl get all -n k8squest`
+Check what resources exist in the ckaquest namespace:
+`kubectl get all -n ckaquest`
 
 Now check the default namespace:
 `kubectl get all -n default`

@@ -1,4 +1,4 @@
-# 🎮 K8sQuest Retro Gaming UI - Contra/Mario Style
+# 🎮 CKAQuest Retro Gaming UI - Contra/Mario Style
 
 ## ✨ New Features Added!
 
@@ -9,7 +9,7 @@ The terminal UI now features classic gaming aesthetics inspired by Contra and Su
 ### 🎨 Visual Enhancements
 
 #### ASCII Art Banners
-- **Welcome Screen**: Retro K8sQuest logo with arcade game styling
+- **Welcome Screen**: Retro CKAQuest logo with arcade game styling
 - **Level Start**: "MISSION READY PLAYER ONE!" banners
 - **Victory Screen**: Massive "VICTORY!" ASCII art with celebration
 - **Game Over**: Classic "GAME OVER" screen (if you quit)

@@ -1,7 +1,7 @@
-# K8sQuest - 50 Challenge Blueprint
+# CKAQuest - 50 Challenge Blueprint
 
 
-This document provides the complete reference for all 50 K8sQuest challenges across 5 worlds.
+This document provides the complete reference for all 50 CKAQuest challenges across 5 worlds.
 
 **Total Levels**: 50 
 **Total XP**: 10,200  

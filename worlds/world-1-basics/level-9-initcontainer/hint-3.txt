@@ -9,7 +9,7 @@ Steps to fix:
    kind: Service
    metadata:
      name: backend-service
-     namespace: k8squest
+     namespace: ckaquest
    spec:
      selector:
        app: backend

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: database-proxy
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 3
   selector:
@@ -24,7 +24,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: db-proxy-pdb
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   minAvailable: 3  # PROBLEM! Requires ALL 3 pods available, blocks ALL evictions!
   selector:

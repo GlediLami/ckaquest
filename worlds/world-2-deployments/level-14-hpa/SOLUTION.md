@@ -35,12 +35,12 @@ kubectl wait --for=condition=ready pod -l k8s-app=metrics-server -n kube-system 
 Check if metrics are available:
 ```bash
 kubectl top nodes
-kubectl top pods -n k8squest
+kubectl top pods -n ckaquest
 ```
 
 Check HPA status:
 ```bash
-kubectl get hpa web-backend-hpa -n k8squest
+kubectl get hpa web-backend-hpa -n ckaquest
 ```
 
 The HPA should now show CPU metrics and be able to scale!

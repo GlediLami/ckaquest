@@ -9,7 +9,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: nginx
@@ -62,14 +62,14 @@ Since we're running as non-root user:
 kubectl apply -f solution.yaml
 
 # Verify pod is running
-kubectl get pod web-app -n k8squest
+kubectl get pod web-app -n ckaquest
 
 # Check what user it's running as
-kubectl exec web-app -n k8squest -- id
+kubectl exec web-app -n ckaquest -- id
 # Should show: uid=1000 gid=0
 
 # Check security context was applied
-kubectl get pod web-app -n k8squest -o jsonpath='{.spec.containers[0].securityContext}' | jq
+kubectl get pod web-app -n ckaquest -o jsonpath='{.spec.containers[0].securityContext}' | jq
 ```
 
 ## Verification

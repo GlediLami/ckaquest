@@ -8,7 +8,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: db-credentials
-  namespace: k8squest
+  namespace: ckaquest
 type: Opaque
 data:
   username: YWRtaW4=  # ✅ base64 of "admin"
@@ -28,7 +28,7 @@ echo -n "secretpass123" | base64
 ```bash
 kubectl delete -f broken.yaml
 kubectl apply -f solution.yaml
-kubectl logs database-client -n k8squest
+kubectl logs database-client -n ckaquest
 # Should show "Connected successfully!"
 ```
 

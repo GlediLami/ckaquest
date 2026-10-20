@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if HPA can get metrics
-HPA_STATUS=$(kubectl get hpa web-backend-hpa -n k8squest -o jsonpath='{.status.conditions[?(@.type=="ScalingActive")].status}' 2>/dev/null)
+HPA_STATUS=$(kubectl get hpa web-backend-hpa -n ckaquest -o jsonpath='{.status.conditions[?(@.type=="ScalingActive")].status}' 2>/dev/null)
 
 if [ "$HPA_STATUS" = "True" ]; then
     echo "✅ HPA is able to scale (metrics available)"
@@ -13,7 +13,7 @@ if [ "$HPA_STATUS" = "True" ]; then
     fi
     
     # Verify we can get pod metrics
-    if kubectl top pods -n k8squest &>/dev/null; then
+    if kubectl top pods -n ckaquest &>/dev/null; then
         echo "✅ Pod metrics are available (kubectl top works)"
     fi
     

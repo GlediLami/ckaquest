@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Check if it's a StatefulSet (not Deployment)
-if kubectl get statefulset database -n k8squest &>/dev/null; then
-    READY=$(kubectl get statefulset database -n k8squest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    DESIRED=$(kubectl get statefulset database -n k8squest -o jsonpath='{.spec.replicas}' 2>/dev/null)
+if kubectl get statefulset database -n ckaquest &>/dev/null; then
+    READY=$(kubectl get statefulset database -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
+    DESIRED=$(kubectl get statefulset database -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
     
     if [ "$READY" = "$DESIRED" ]; then
         echo "✅ StatefulSet is correctly configured"
         echo "   Ready: $READY/$DESIRED"
         
         # Verify pod names are stable (database-0, database-1, database-2)
-        POD_NAMES=$(kubectl get pods -n k8squest -l app=database -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+        POD_NAMES=$(kubectl get pods -n ckaquest -l app=database -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
         echo "   Pod names: $POD_NAMES"
         
         # Check if pods have stable names (should contain "-0", "-1", "-2")
@@ -26,7 +26,7 @@ if kubectl get statefulset database -n k8squest &>/dev/null; then
     fi
 else
     # Check if it's still a Deployment
-    if kubectl get deployment database -n k8squest &>/dev/null; then
+    if kubectl get deployment database -n ckaquest &>/dev/null; then
         echo "❌ Still using Deployment (should be StatefulSet)"
         echo "   Deployments are for stateless apps"
         echo "   Databases need StatefulSets for:"

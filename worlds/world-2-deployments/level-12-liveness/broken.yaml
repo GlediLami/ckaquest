@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-server
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 2
   selector:

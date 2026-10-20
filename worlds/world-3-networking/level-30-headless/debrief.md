@@ -62,12 +62,12 @@ spec:
 **DNS Resolution:**
 ```
 # Headless service DNS:
-web-0.web-cluster.k8squest.svc.cluster.local → 10.244.1.5 (web-0 pod)
-web-1.web-cluster.k8squest.svc.cluster.local → 10.244.1.6 (web-1 pod)
-web-2.web-cluster.k8squest.svc.cluster.local → 10.244.1.7 (web-2 pod)
+web-0.web-cluster.ckaquest.svc.cluster.local → 10.244.1.5 (web-0 pod)
+web-1.web-cluster.ckaquest.svc.cluster.local → 10.244.1.6 (web-1 pod)
+web-2.web-cluster.ckaquest.svc.cluster.local → 10.244.1.7 (web-2 pod)
 
 # Service DNS (returns all pod IPs):
-web-cluster.k8squest.svc.cluster.local → [10.244.1.5, 10.244.1.6, 10.244.1.7]
+web-cluster.ckaquest.svc.cluster.local → [10.244.1.5, 10.244.1.6, 10.244.1.7]
 ```
 
 ---

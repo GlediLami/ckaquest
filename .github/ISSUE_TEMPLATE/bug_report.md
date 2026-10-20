@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug or issue with K8sQuest
+about: Report a bug or issue with CKAQuest
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -46,7 +46,7 @@ Paste logs here
 - Kubernetes Version: `kubectl version --short`
 - Kind Version: `kind version`
 - Docker Version: `docker version`
-- K8sQuest Commit/Version: [e.g., latest main branch, specific commit hash]
+- CKAQuest Commit/Version: [e.g., latest main branch, specific commit hash]
 
 ## 📸 Screenshots (Optional)
 If applicable, add screenshots to help explain your problem.

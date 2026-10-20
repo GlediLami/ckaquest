@@ -97,7 +97,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: session-service
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   selector:
     app: session-app
@@ -114,7 +114,7 @@ spec:
 Then apply:
 ```bash
 kubectl apply -f broken.yaml
-kubectl get service session-service -n k8squest -o yaml | grep -A3 sessionAffinity
+kubectl get service session-service -n ckaquest -o yaml | grep -A3 sessionAffinity
 ```
 
 Verify:
@@ -122,7 +122,7 @@ Verify:
 
 Watch the client logs after applying:
 ```bash
-kubectl logs client -n k8squest -f
+kubectl logs client -n ckaquest -f
 ```
 
 You should see ALL responses coming from the SAME pod:

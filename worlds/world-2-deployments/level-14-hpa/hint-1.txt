@@ -1,16 +1,16 @@
 🔍 Observation Hint:
 
 Check the HPA status:
-`kubectl get hpa -n k8squest`
+`kubectl get hpa -n ckaquest`
 
 Look at the TARGETS column. Do you see "<unknown>/50%"?
 
 Describe the HPA:
-`kubectl describe hpa web-backend-hpa -n k8squest`
+`kubectl describe hpa web-backend-hpa -n ckaquest`
 
 Look at the Conditions section. What error message do you see?
 
 Try getting pod metrics:
-`kubectl top pods -n k8squest`
+`kubectl top pods -n ckaquest`
 
 Does it work?

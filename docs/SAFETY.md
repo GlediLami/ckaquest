@@ -1,8 +1,8 @@
-# K8sQuest Safety Guards 🛡️
+# CKAQuest Safety Guards 🛡️
 
 ## Overview
 
-K8sQuest includes comprehensive safety guards to protect you from accidentally breaking your Kubernetes cluster. These guards are **enabled by default** and strongly recommended for all users, especially beginners.
+CKAQuest includes comprehensive safety guards to protect you from accidentally breaking your Kubernetes cluster. These guards are **enabled by default** and strongly recommended for all users, especially beginners.
 
 ## What's Protected
 
@@ -50,13 +50,13 @@ K8sQuest includes comprehensive safety guards to protect you from accidentally b
 1. **Namespace Deletion**
    ```bash
    # ⚠️  Asks for confirmation
-   kubectl delete namespace k8squest
+   kubectl delete namespace ckaquest
    ```
 
 2. **Delete All Resources**
    ```bash
    # ⚠️  Asks for confirmation
-   kubectl delete pods --all -n k8squest
+   kubectl delete pods --all -n ckaquest
    ```
 
 3. **PersistentVolume Operations**
@@ -67,11 +67,11 @@ K8sQuest includes comprehensive safety guards to protect you from accidentally b
 
 ## RBAC Configuration
 
-K8sQuest uses Role-Based Access Control to limit what you can do:
+CKAQuest uses Role-Based Access Control to limit what you can do:
 
 ### Namespace-Level Permissions
 
-Full access within `k8squest` namespace to:
+Full access within `ckaquest` namespace to:
 - Pods, Services, ConfigMaps, Secrets
 - Deployments, ReplicaSets, StatefulSets, DaemonSets
 - Jobs, CronJobs
@@ -88,7 +88,7 @@ Full access within `k8squest` namespace to:
 
 ### What You CANNOT Do
 
-- Modify resources outside `k8squest` namespace
+- Modify resources outside `ckaquest` namespace
 - Create or delete namespaces (except with confirmation)
 - Modify cluster-level resources (CRDs, ClusterRoles, etc.)
 - Delete or modify nodes
@@ -110,7 +110,7 @@ RBAC is automatically configured when you run:
 ./rbac/setup-rbac.sh
 
 # Or manually:
-kubectl apply -f rbac/k8squest-rbac.yaml
+kubectl apply -f rbac/ckaquest-rbac.yaml
 ```
 
 ## Using Safety Guards
@@ -129,7 +129,7 @@ Test if a command would be blocked:
 python3 engine/safety.py kubectl delete namespace kube-system
 # Output: 🚨 BLOCKED: Cannot delete critical system namespaces!
 
-python3 engine/safety.py kubectl get pods -n k8squest
+python3 engine/safety.py kubectl get pods -n ckaquest
 # Output: ✅ Command passed safety checks
 ```
 
@@ -145,13 +145,13 @@ python3 engine/safety.py info
 
 ```bash
 # Temporary (current session only)
-export K8SQUEST_SAFETY=off
+export CKAQUEST_SAFETY=off
 ./play.sh
 
 # To re-enable
-unset K8SQUEST_SAFETY
+unset CKAQUEST_SAFETY
 # or
-export K8SQUEST_SAFETY=on
+export CKAQUEST_SAFETY=on
 ```
 
 ## Why Safety Guards Matter
@@ -161,10 +161,10 @@ export K8SQUEST_SAFETY=on
 **Scenario 1: The Accidental Namespace Delete**
 ```bash
 # Developer meant to type:
-kubectl delete deployment myapp -n k8squest
+kubectl delete deployment myapp -n ckaquest
 
 # But accidentally typed:
-kubectl delete namespace k8squest
+kubectl delete namespace ckaquest
 ```
 Without safety guards: Entire namespace gone, all work lost.
 With safety guards: Prompted for confirmation, given chance to cancel.
@@ -207,10 +207,10 @@ if matches_dangerous_pattern(command):
 Even if safety guard detection is bypassed, RBAC enforces limits:
 
 ```yaml
-# Role only allows operations in k8squest namespace
+# Role only allows operations in ckaquest namespace
 kind: Role
 metadata:
-  namespace: k8squest
+  namespace: ckaquest
 # Cannot affect other namespaces
 ```
 
@@ -220,48 +220,48 @@ metadata:
 
 This is working as intended! The command you tried is dangerous. Options:
 1. Review what you're trying to do
-2. Make sure you're using `-n k8squest` namespace
+2. Make sure you're using `-n ckaquest` namespace
 3. Check if you have a typo
 4. If you really need this operation, see "Disabling Safety Guards" (not recommended)
 
 ### "Permission denied" errors
 
-You may be trying to access resources outside the `k8squest` namespace:
+You may be trying to access resources outside the `ckaquest` namespace:
 
 ```bash
 # ❌ Won't work
 kubectl get pods -n default
 
 # ✅ Works
-kubectl get pods -n k8squest
+kubectl get pods -n ckaquest
 ```
 
 ### Safety guards not working
 
 Check if they're enabled:
 ```bash
-echo $K8SQUEST_SAFETY
+echo $CKAQUEST_SAFETY
 # Should be empty or "on"
 
 # If it says "off", re-enable:
-unset K8SQUEST_SAFETY
+unset CKAQUEST_SAFETY
 ```
 
 ## Best Practices
 
-1. **Always use `-n k8squest` flag**
+1. **Always use `-n ckaquest` flag**
    ```bash
-   kubectl get pods -n k8squest
-   kubectl apply -f myapp.yaml -n k8squest
+   kubectl get pods -n ckaquest
+   kubectl apply -f myapp.yaml -n ckaquest
    ```
 
 2. **Test changes before applying**
    ```bash
    # Dry-run first
-   kubectl apply -f deployment.yaml --dry-run=client -n k8squest
+   kubectl apply -f deployment.yaml --dry-run=client -n ckaquest
    
    # Then apply for real
-   kubectl apply -f deployment.yaml -n k8squest
+   kubectl apply -f deployment.yaml -n ckaquest
    ```
 
 3. **Use `kubectl apply` instead of `kubectl create`**
@@ -276,7 +276,7 @@ unset K8SQUEST_SAFETY
 4. **Check what will be deleted**
    ```bash
    # See what would be deleted
-   kubectl delete pod <name> --dry-run=client -n k8squest
+   kubectl delete pod <name> --dry-run=client -n ckaquest
    ```
 
 5. **Keep safety guards enabled**
@@ -286,7 +286,7 @@ unset K8SQUEST_SAFETY
 ## Contributing
 
 When creating new challenges:
-- Ensure they work within `k8squest` namespace
+- Ensure they work within `ckaquest` namespace
 - Don't require cluster-admin permissions
 - Test with safety guards enabled
 - Document any exceptions needed
@@ -294,16 +294,16 @@ When creating new challenges:
 ## FAQ
 
 **Q: Why can't I delete the default namespace?**
-A: The default namespace is critical to Kubernetes. Deleting it would break many system components. Use `k8squest` namespace instead.
+A: The default namespace is critical to Kubernetes. Deleting it would break many system components. Use `ckaquest` namespace instead.
 
 **Q: Can I practice RBAC challenges with safety guards?**
-A: Yes! You have full RBAC control within the `k8squest` namespace. You just can't modify cluster-level RBAC.
+A: Yes! You have full RBAC control within the `ckaquest` namespace. You just can't modify cluster-level RBAC.
 
 **Q: What if I'm an experienced user?**
 A: Safety guards still help prevent accidents. Even experts make typos. You can disable them if needed, but we recommend keeping them on.
 
 **Q: Will this work on production clusters?**
-A: K8sQuest is designed for LOCAL clusters only. Never run on production. Safety guards are an extra layer of protection, not a replacement for proper cluster isolation.
+A: CKAQuest is designed for LOCAL clusters only. Never run on production. Safety guards are an extra layer of protection, not a replacement for proper cluster isolation.
 
 ## Summary
 
@@ -311,10 +311,10 @@ Safety guards provide multiple layers of protection:
 
 1. **Command validation** - Blocks dangerous patterns before execution
 2. **RBAC enforcement** - Limits permissions at the cluster level
-3. **Namespace isolation** - Restricts operations to `k8squest`
+3. **Namespace isolation** - Restricts operations to `ckaquest`
 4. **User confirmation** - Prompts for risky but allowed operations
 
-Together, these make K8sQuest safe for beginners while still providing realistic Kubernetes experience.
+Together, these make CKAQuest safe for beginners while still providing realistic Kubernetes experience.
 
 ---
 

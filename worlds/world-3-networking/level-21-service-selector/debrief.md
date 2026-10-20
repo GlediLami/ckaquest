@@ -48,20 +48,20 @@ selector:
 
 ### Step 1: Check Service Status
 ```bash
-kubectl get svc backend-service -n k8squest
+kubectl get svc backend-service -n ckaquest
 # Shows: Name, Type, ClusterIP, Port
 # But doesn't show if endpoints exist!
 ```
 
 ### Step 2: Check Endpoints (Critical!)
 ```bash
-kubectl get endpoints backend-service -n k8squest
+kubectl get endpoints backend-service -n ckaquest
 # Empty = No pods match the selector
 ```
 
 ### Step 3: Describe the Service
 ```bash
-kubectl describe svc backend-service -n k8squest
+kubectl describe svc backend-service -n ckaquest
 # Shows:
 # - Selector labels
 # - Endpoints (IPs of backing pods)
@@ -70,7 +70,7 @@ kubectl describe svc backend-service -n k8squest
 
 ### Step 4: Compare with Pod Labels
 ```bash
-kubectl get pods -n k8squest --show-labels
+kubectl get pods -n ckaquest --show-labels
 # See actual labels on pods
 ```
 

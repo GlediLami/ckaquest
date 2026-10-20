@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test script for all K8sQuest levels (1-20)
+# Test script for all CKAQuest levels (1-20)
 # Validates that all required files exist and are properly configured
 
 set -e
@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "=================================================="
-echo "  K8sQuest Levels 1-20 Validation Test"
+echo "  CKAQuest Levels 1-20 Validation Test"
 echo "=================================================="
 echo ""
 

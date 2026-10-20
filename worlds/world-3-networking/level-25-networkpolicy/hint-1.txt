@@ -13,7 +13,7 @@ Check These Areas:
 1. **Frontend Pod Logs**
    Check what errors the frontend is seeing:
    ```bash
-   kubectl logs frontend -n k8squest
+   kubectl logs frontend -n ckaquest
    ```
 
    Look for:
@@ -24,7 +24,7 @@ Check These Areas:
 2. **NetworkPolicy Configuration**
    View the NetworkPolicy:
    ```bash
-   kubectl describe networkpolicy backend-network-policy -n k8squest
+   kubectl describe networkpolicy backend-network-policy -n ckaquest
    ```
 
    Look at:
@@ -35,7 +35,7 @@ Check These Areas:
 3. **Frontend Pod Labels**
    Check the frontend pod's labels:
    ```bash
-   kubectl get pod frontend -n k8squest --show-labels
+   kubectl get pod frontend -n ckaquest --show-labels
    ```
 
    What labels does the frontend have?

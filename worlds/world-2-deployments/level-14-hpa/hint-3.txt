@@ -18,6 +18,6 @@ Install metrics-server for kind/local clusters:
    `kubectl wait --for=condition=available --timeout=60s deployment/metrics-server -n kube-system`
 
 5. Verify HPA now works:
-   `kubectl get hpa -n k8squest`
+   `kubectl get hpa -n ckaquest`
    
 TARGETS should now show actual CPU percentage!

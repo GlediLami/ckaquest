@@ -9,7 +9,7 @@ Let's understand the reclaim policy issue:
    What is the RECLAIM POLICY?
 
 2️⃣ Check the PVC:
-   kubectl get pvc data-claim -n k8squest
+   kubectl get pvc data-claim -n ckaquest
    
    Is it Bound to the PV?
 

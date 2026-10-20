@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 CONFIGMAP="app-config"
 POD_NAME="web-app"
 

@@ -3,23 +3,23 @@
 Let's investigate the permission denied error:
 
 1️⃣ Check pod status:
-   kubectl get pod writer-app -n k8squest
-   kubectl logs writer-app -n k8squest
+   kubectl get pod writer-app -n ckaquest
+   kubectl logs writer-app -n ckaquest
    
    What error message do you see?
 
 2️⃣ Check the pod's security context:
-   kubectl get pod writer-app -n k8squest -o yaml | grep -A 5 securityContext
+   kubectl get pod writer-app -n ckaquest -o yaml | grep -A 5 securityContext
    
    What user/group is the container running as?
 
 3️⃣ Check the volume mount:
-   kubectl exec writer-app -n k8squest -- ls -la /data 2>/dev/null || echo "Pod not running"
+   kubectl exec writer-app -n ckaquest -- ls -la /data 2>/dev/null || echo "Pod not running"
    
    If pod runs briefly, check what permissions the volume has
 
 4️⃣ Look for fsGroup:
-   kubectl get pod writer-app -n k8squest -o jsonpath='{.spec.securityContext.fsGroup}'
+   kubectl get pod writer-app -n ckaquest -o jsonpath='{.spec.securityContext.fsGroup}'
    
    Is fsGroup configured?
 

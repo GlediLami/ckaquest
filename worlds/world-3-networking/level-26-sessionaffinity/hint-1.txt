@@ -13,7 +13,7 @@ Check These Areas:
 1. **Client Logs**
    Check what responses the client is getting:
    ```bash
-   kubectl logs client -n k8squest
+   kubectl logs client -n ckaquest
    ```
 
    Look for:
@@ -23,7 +23,7 @@ Check These Areas:
 2. **Service Configuration**
    View the Service:
    ```bash
-   kubectl describe service session-service -n k8squest
+   kubectl describe service session-service -n ckaquest
    ```
 
    Look for:

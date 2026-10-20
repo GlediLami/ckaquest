@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-K8sQuest is an educational project designed to run in isolated local Kind clusters. While we take security seriously, this is a learning platform meant for local development environments only.
+CKAQuest is an educational project designed to run in isolated local Kind clusters. While we take security seriously, this is a learning platform meant for local development environments only.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,7 +11,7 @@ K8sQuest is an educational project designed to run in isolated local Kind cluste
 
 ## Security Context
 
-**K8sQuest is designed for local, isolated learning environments only.**
+**CKAQuest is designed for local, isolated learning environments only.**
 
 - ✅ Safe for local Kind clusters
 - ✅ Runs in isolated namespaces

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-K8sQuest Progress Tracker
+CKAQuest Progress Tracker
 Displays completion status of all 50 levels
 """
 
@@ -74,7 +74,7 @@ def main():
 
     # Header
     console.print(Panel.fit(
-        "[bold cyan]🎮 K8sQuest - Progress Tracker[/bold cyan]\n"
+        "[bold cyan]🎮 CKAQuest - Progress Tracker[/bold cyan]\n"
         f"[yellow]Total XP:[/yellow] {total_xp:,} / 11,500\n"
         f"[yellow]Levels Completed:[/yellow] {len(completed_levels)} / 50",
         border_style="cyan"

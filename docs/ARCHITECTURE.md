@@ -1,8 +1,8 @@
-# K8sQuest Architecture Overview
+# CKAQuest Architecture Overview
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                        K8sQuest Platform                         │
+│                        CKAQuest Platform                         │
 │                 Kubernetes Training Game System                  │
 └──────────────────────────────────────────────────────────────────┘
                                 │
@@ -42,7 +42,7 @@
                         │  Kubernetes Cluster       │
                         │  (kind - Local)           │
                         │                           │
-                        │  • k8squest namespace     │
+                        │  • ckaquest namespace     │
                         │  • RBAC Isolation         │
                         │  • Safe Playground        │
                         └───────────────────────────┘
@@ -118,15 +118,15 @@ Layer 1: Command Pattern Validation (safety.py)
                             ↓ (if allowed)
 Layer 2: RBAC Enforcement (Kubernetes)
 ┌────────────────────────────────────────────────────────────┐
-│  • ServiceAccount: k8squest-player                         │
-│  • Namespace: k8squest (isolated)                          │
-│  • Role: Full access ONLY in k8squest namespace            │
+│  • ServiceAccount: ckaquest-player                         │
+│  • Namespace: ckaquest (isolated)                          │
+│  • Role: Full access ONLY in ckaquest namespace            │
 │  • ClusterRole: Read-only cluster-wide                     │
 └────────────────────────────────────────────────────────────┘
                             ↓
 Layer 3: Namespace Isolation (Kubernetes)
 ┌────────────────────────────────────────────────────────────┐
-│  • All operations scoped to 'k8squest' namespace           │
+│  • All operations scoped to 'ckaquest' namespace           │
 │  • System namespaces protected (kube-system, default)      │
 │  • Resource quotas can limit usage                         │
 └────────────────────────────────────────────────────────────┘
@@ -210,7 +210,7 @@ Layer 3: Namespace Isolation (Kubernetes)
                     Key Metrics Dashboard
 
 ┌────────────────────────────────────────────────────────────────┐
-│  📊 K8sQuest Statistics                                        │
+│  📊 CKAQuest Statistics                                        │
 ├────────────────────────────────────────────────────────────────┤
 │  Total Levels:              50 (10 complete, 40 blueprinted)  │
 │  Total XP Available:        11,500                            │

@@ -627,10 +627,10 @@ spec:
 
 ```bash
 # List all NetworkPolicies in namespace
-kubectl get networkpolicy -n k8squest
+kubectl get networkpolicy -n ckaquest
 
 # Describe specific NetworkPolicy
-kubectl describe networkpolicy backend-network-policy -n k8squest
+kubectl describe networkpolicy backend-network-policy -n ckaquest
 ```
 
 Look for:
@@ -642,10 +642,10 @@ Look for:
 
 ```bash
 # View pod labels
-kubectl get pod frontend -n k8squest --show-labels
+kubectl get pod frontend -n ckaquest --show-labels
 
 # Check if labels match NetworkPolicy selector
-kubectl get pod -n k8squest -l app=frontend
+kubectl get pod -n ckaquest -l app=frontend
 ```
 
 If no pods match the NetworkPolicy selector, it's not being applied!
@@ -654,7 +654,7 @@ If no pods match the NetworkPolicy selector, it's not being applied!
 
 ```bash
 # Try to connect from frontend to backend
-kubectl exec frontend -n k8squest -- wget -q -O- http://backend-service:8080 --timeout=5
+kubectl exec frontend -n ckaquest -- wget -q -O- http://backend-service:8080 --timeout=5
 
 # Success: Prints response
 # Failure: Timeout or connection refused
@@ -701,26 +701,26 @@ Create a test pod to diagnose connectivity:
 
 ```bash
 # Create test pod
-kubectl run test -n k8squest --image=nicolaka/netshoot -- sleep 3600
+kubectl run test -n ckaquest --image=nicolaka/netshoot -- sleep 3600
 
 # Test connection
-kubectl exec test -n k8squest -- curl http://backend-service:8080
+kubectl exec test -n ckaquest -- curl http://backend-service:8080
 
 # Check if NetworkPolicy affects test pod
-kubectl label pod test -n k8squest app=frontend
+kubectl label pod test -n ckaquest app=frontend
 
 # Try again (should work if NetworkPolicy allows app=frontend)
-kubectl exec test -n k8squest -- curl http://backend-service:8080
+kubectl exec test -n ckaquest -- curl http://backend-service:8080
 ```
 
 ### 7. Temporarily Remove NetworkPolicy
 
 ```bash
 # Delete NetworkPolicy to test if it's the issue
-kubectl delete networkpolicy backend-network-policy -n k8squest
+kubectl delete networkpolicy backend-network-policy -n ckaquest
 
 # Test connection (should work now)
-kubectl exec frontend -n k8squest -- wget -q -O- http://backend-service:8080
+kubectl exec frontend -n ckaquest -- wget -q -O- http://backend-service:8080
 
 # If it works now, NetworkPolicy was the problem
 # Reapply with correct configuration
@@ -905,7 +905,7 @@ You've mastered NetworkPolicy fundamentals! You now understand:
 
 In the next levels, you'll explore session affinity for stateful applications, cross-namespace service communication, and more advanced networking patterns.
 
-**Continue your K8sQuest journey to unlock the next challenge!** 🚀
+**Continue your CKAQuest journey to unlock the next challenge!** 🚀
 
 ---
 

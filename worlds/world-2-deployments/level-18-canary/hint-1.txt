@@ -1,16 +1,16 @@
 🔍 Observation Hint:
 
 Check the deployments:
-`kubectl get deployments -n k8squest`
+`kubectl get deployments -n ckaquest`
 
 Look at the READY column. How many stable pods? How many canary pods?
 
 Check the service endpoints:
-`kubectl get endpoints app-service -n k8squest`
+`kubectl get endpoints app-service -n ckaquest`
 
 Count the IPs - this shows ALL pods receiving traffic (both stable and canary).
 
 Test the traffic distribution:
-`for i in {1..20}; do kubectl run -it --rm test-$i --image=busybox --restart=Never -n k8squest -- wget -q -O- app-service; done`
+`for i in {1..20}; do kubectl run -it --rm test-$i --image=busybox --restart=Never -n ckaquest -- wget -q -O- app-service; done`
 
 Count how many times you see "Stable" vs "Canary". Is it close to 50/50? That's wrong for a canary!

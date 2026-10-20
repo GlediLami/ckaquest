@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check rollout strategy
-MAX_UNAVAILABLE=$(kubectl get deployment critical-api -n k8squest -o jsonpath='{.spec.strategy.rollingUpdate.maxUnavailable}' 2>/dev/null)
+MAX_UNAVAILABLE=$(kubectl get deployment critical-api -n ckaquest -o jsonpath='{.spec.strategy.rollingUpdate.maxUnavailable}' 2>/dev/null)
 
 # Convert percentage to number if needed
 if [[ "$MAX_UNAVAILABLE" == *"%"* ]]; then
@@ -14,7 +14,7 @@ if [[ "$MAX_UNAVAILABLE" == *"%"* ]]; then
 fi
 
 # Check if it's a safe absolute number (for 3 replicas, max 1 or 2 unavailable is safe)
-REPLICAS=$(kubectl get deployment critical-api -n k8squest -o jsonpath='{.spec.replicas}' 2>/dev/null)
+REPLICAS=$(kubectl get deployment critical-api -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$MAX_UNAVAILABLE" -ge "$REPLICAS" ]; then
     echo "❌ maxUnavailable ($MAX_UNAVAILABLE) >= replicas ($REPLICAS)"
     echo "   This can take down ALL pods simultaneously!"
@@ -22,8 +22,8 @@ if [ "$MAX_UNAVAILABLE" -ge "$REPLICAS" ]; then
 fi
 
 # Check all pods are ready
-READY=$(kubectl get deployment critical-api -n k8squest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-DESIRED=$(kubectl get deployment critical-api -n k8squest -o jsonpath='{.spec.replicas}' 2>/dev/null)
+READY=$(kubectl get deployment critical-api -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
+DESIRED=$(kubectl get deployment critical-api -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
 
 if [ "$READY" = "$DESIRED" ] && [ "$MAX_UNAVAILABLE" -lt "$REPLICAS" ]; then
     echo "✅ Rollout strategy is safe"

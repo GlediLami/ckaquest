@@ -7,100 +7,100 @@
 ### Deployment Operations
 ```bash
 # List deployments
-kubectl get deployments -n k8squest
+kubectl get deployments -n ckaquest
 
 # Detailed deployment info
-kubectl describe deployment <name> -n k8squest
+kubectl describe deployment <name> -n ckaquest
 
 # Check deployment rollout status
-kubectl rollout status deployment/<name> -n k8squest
+kubectl rollout status deployment/<name> -n ckaquest
 
 # View rollout history
-kubectl rollout history deployment/<name> -n k8squest
+kubectl rollout history deployment/<name> -n ckaquest
 
 # Rollback to previous version
-kubectl rollout undo deployment/<name> -n k8squest
+kubectl rollout undo deployment/<name> -n ckaquest
 
 # Rollback to specific revision
-kubectl rollout undo deployment/<name> --to-revision=2 -n k8squest
+kubectl rollout undo deployment/<name> --to-revision=2 -n ckaquest
 
 # Pause rollout (for canary/staged deployment)
-kubectl rollout pause deployment/<name> -n k8squest
+kubectl rollout pause deployment/<name> -n ckaquest
 
 # Resume rollout
-kubectl rollout resume deployment/<name> -n k8squest
+kubectl rollout resume deployment/<name> -n ckaquest
 
 # Restart deployment (rolling restart)
-kubectl rollout restart deployment/<name> -n k8squest
+kubectl rollout restart deployment/<name> -n ckaquest
 ```
 
 ### Scaling Operations
 ```bash
 # Scale deployment manually
-kubectl scale deployment <name> --replicas=5 -n k8squest
+kubectl scale deployment <name> --replicas=5 -n ckaquest
 
 # Check HorizontalPodAutoscaler
-kubectl get hpa -n k8squest
+kubectl get hpa -n ckaquest
 
 # Detailed HPA status
-kubectl describe hpa <name> -n k8squest
+kubectl describe hpa <name> -n ckaquest
 
 # Watch HPA in action
-kubectl get hpa -n k8squest -w
+kubectl get hpa -n ckaquest -w
 
 # Check metrics (requires metrics-server)
 kubectl top nodes
-kubectl top pods -n k8squest
+kubectl top pods -n ckaquest
 ```
 
 ### ReplicaSet Operations
 ```bash
 # List ReplicaSets (usually managed by Deployments)
-kubectl get replicasets -n k8squest
-kubectl get rs -n k8squest
+kubectl get replicasets -n ckaquest
+kubectl get rs -n ckaquest
 
 # Describe ReplicaSet
-kubectl describe rs <name> -n k8squest
+kubectl describe rs <name> -n ckaquest
 
 # See which ReplicaSet owns which pods
-kubectl get pods -n k8squest -o wide --show-labels
+kubectl get pods -n ckaquest -o wide --show-labels
 ```
 
 ### StatefulSet Operations
 ```bash
 # List StatefulSets
-kubectl get statefulsets -n k8squest
-kubectl get sts -n k8squest
+kubectl get statefulsets -n ckaquest
+kubectl get sts -n ckaquest
 
 # Describe StatefulSet
-kubectl describe sts <name> -n k8squest
+kubectl describe sts <name> -n ckaquest
 
 # Check PVCs for StatefulSet
-kubectl get pvc -n k8squest
+kubectl get pvc -n ckaquest
 ```
 
 ### PodDisruptionBudget
 ```bash
 # List PDBs
-kubectl get pdb -n k8squest
+kubectl get pdb -n ckaquest
 
 # Describe PDB (shows allowed disruptions)
-kubectl describe pdb <name> -n k8squest
+kubectl describe pdb <name> -n ckaquest
 ```
 
 ### Probes & Health Checks
 ```bash
 # Check pod readiness
-kubectl get pods -n k8squest -o wide
+kubectl get pods -n ckaquest -o wide
 
 # See why pod is not ready
-kubectl describe pod <name> -n k8squest | grep -A 10 Conditions
+kubectl describe pod <name> -n ckaquest | grep -A 10 Conditions
 
 # Check recent probe failures
-kubectl describe pod <name> -n k8squest | grep -i probe
+kubectl describe pod <name> -n ckaquest | grep -i probe
 
 # View events for probe failures
-kubectl get events -n k8squest | grep -i probe
+kubectl get events -n ckaquest | grep -i probe
 ```
 
 ---
@@ -111,8 +111,8 @@ kubectl get events -n k8squest | grep -i probe
 Deployment Issues?
     │
     ├─→ Pods not starting
-    │   ├─→ Check: kubectl get pods -n k8squest
-    │   ├─→ Check: kubectl describe deployment -n k8squest
+    │   ├─→ Check: kubectl get pods -n ckaquest
+    │   ├─→ Check: kubectl describe deployment -n ckaquest
     │   ├─→ Look for: ImagePullBackOff, CrashLoopBackOff
     │   └─→ Fix: Fix image, fix command, check probes
     │
@@ -123,14 +123,14 @@ Deployment Issues?
     │   └─→ Fix: Adjust strategy, check PDB, fix health checks
     │
     ├─→ Old pods still running
-    │   ├─→ Check: kubectl get rs -n k8squest
+    │   ├─→ Check: kubectl get rs -n ckaquest
     │   ├─→ Check: kubectl describe deployment (Selector)
     │   ├─→ Look for: Label selector mismatch, manual ReplicaSets
     │   └─→ Fix: Update labels, delete old ReplicaSets
     │
     ├─→ HPA not scaling
-    │   ├─→ Check: kubectl describe hpa -n k8squest
-    │   ├─→ Check: kubectl top pods -n k8squest
+    │   ├─→ Check: kubectl describe hpa -n ckaquest
+    │   ├─→ Check: kubectl top pods -n ckaquest
     │   ├─→ Look for: metrics-server missing, no resource requests
     │   └─→ Fix: Install metrics-server, add requests to pods
     │
@@ -141,7 +141,7 @@ Deployment Issues?
     │   └─→ Fix: Correct probe config, add initialDelaySeconds
     │
     └─→ Data loss in StatefulSet
-        ├─→ Check: kubectl get pvc -n k8squest
+        ├─→ Check: kubectl get pvc -n ckaquest
         ├─→ Check: StatefulSet vs Deployment usage
         ├─→ Look for: Deployment used instead of StatefulSet
         └─→ Fix: Convert to StatefulSet, use volumeClaimTemplates
@@ -162,13 +162,13 @@ Deployment Issues?
 **Quick Fix Template:**
 ```bash
 # See all revisions
-kubectl rollout history deployment/myapp -n k8squest
+kubectl rollout history deployment/myapp -n ckaquest
 
 # Check specific revision
-kubectl rollout history deployment/myapp --revision=3 -n k8squest
+kubectl rollout history deployment/myapp --revision=3 -n ckaquest
 
 # Rollback to known good revision
-kubectl rollout undo deployment/myapp --to-revision=2 -n k8squest
+kubectl rollout undo deployment/myapp --to-revision=2 -n ckaquest
 ```
 
 ### Pattern 2: Liveness Probe Killing Pods
@@ -193,7 +193,7 @@ livenessProbe:
 
 ### Pattern 3: Readiness Probe Missing
 **Symptoms:** Traffic sent to pods before ready, 5xx errors  
-**First Check:** `kubectl get pods -n k8squest` (READY column)  
+**First Check:** `kubectl get pods -n ckaquest` (READY column)  
 **Common Causes:**
 - No readiness probe configured
 - Probe always fails
@@ -269,7 +269,7 @@ strategy:
 
 ### Pattern 6: PodDisruptionBudget Blocking
 **Symptoms:** Can't drain node, evictions blocked  
-**First Check:** `kubectl describe pdb -n k8squest`  
+**First Check:** `kubectl describe pdb -n ckaquest`  
 **Common Causes:**
 - minAvailable too high for number of replicas
 - maxUnavailable too low (0)
@@ -322,7 +322,7 @@ spec:
 
 ### Pattern 8: Canary Imbalance
 **Symptoms:** Wrong traffic split between versions  
-**First Check:** `kubectl get pods -n k8squest --show-labels`  
+**First Check:** `kubectl get pods -n ckaquest --show-labels`  
 **Common Causes:**
 - Wrong replica counts
 - Labels not matching service selector
@@ -331,8 +331,8 @@ spec:
 **Quick Fix Template:**
 ```bash
 # 90% stable, 10% canary:
-kubectl scale deployment/stable --replicas=9 -n k8squest
-kubectl scale deployment/canary --replicas=1 -n k8squest
+kubectl scale deployment/stable --replicas=9 -n ckaquest
+kubectl scale deployment/canary --replicas=1 -n ckaquest
 
 # Both MUST have same service selector labels
 # Service distributes evenly across ALL matching pods
@@ -345,10 +345,10 @@ kubectl scale deployment/canary --replicas=1 -n k8squest
 ### Tip 1: Check Rollout Progress
 ```bash
 # Watch rollout in real-time
-kubectl rollout status deployment/myapp -n k8squest -w
+kubectl rollout status deployment/myapp -n ckaquest -w
 
 # See which ReplicaSets are active
-kubectl get rs -n k8squest -l app=myapp
+kubectl get rs -n ckaquest -l app=myapp
 
 # Old ReplicaSets have 0 pods
 ```
@@ -356,34 +356,34 @@ kubectl get rs -n k8squest -l app=myapp
 ### Tip 2: Debug Probe Failures
 ```bash
 # Test liveness/readiness endpoint manually
-kubectl exec -it <pod> -n k8squest -- wget -O- http://localhost:8080/healthz
+kubectl exec -it <pod> -n ckaquest -- wget -O- http://localhost:8080/healthz
 
 # Check probe configuration
-kubectl get pod <pod> -n k8squest -o yaml | grep -A 10 livenessProbe
+kubectl get pod <pod> -n ckaquest -o yaml | grep -A 10 livenessProbe
 ```
 
 ### Tip 3: Force Immediate Rollout
 ```bash
 # Change something to trigger rollout
-kubectl set image deployment/myapp app=myapp:v2 -n k8squest
+kubectl set image deployment/myapp app=myapp:v2 -n ckaquest
 
 # Or force restart
-kubectl rollout restart deployment/myapp -n k8squest
+kubectl rollout restart deployment/myapp -n ckaquest
 ```
 
 ### Tip 4: Check HPA Metrics
 ```bash
 # Current CPU/memory usage
-kubectl top pods -n k8squest
+kubectl top pods -n ckaquest
 
 # HPA decision-making info
-kubectl describe hpa -n k8squest | grep -A 5 Metrics
+kubectl describe hpa -n ckaquest | grep -A 5 Metrics
 ```
 
 ### Tip 5: Understand ReplicaSet Ownership
 ```bash
 # See which Deployment owns which ReplicaSet
-kubectl get rs -n k8squest -o wide
+kubectl get rs -n ckaquest -o wide
 
 # ReplicaSet name format: <deployment-name>-<template-hash>
 ```
@@ -461,7 +461,7 @@ By completing World 2, you should be able to:
 - [Configure Liveness/Readiness Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 - [HPA Walkthrough](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/)
 
-### K8sQuest Resources
+### CKAQuest Resources
 - World 1 Quick Reference (basic kubectl commands)
 - Use `guide` for deployment-specific walkthroughs
 - Read debriefs for production incident case studies
@@ -472,12 +472,12 @@ By completing World 2, you should be able to:
 
 When stuck on a level, try these in order:
 
-- [ ] `kubectl get deployments,rs,pods -n k8squest` - See the full picture
-- [ ] `kubectl describe deployment <name> -n k8squest` - Check strategy, events
-- [ ] `kubectl rollout status deployment/<name> -n k8squest` - Is it progressing?
-- [ ] `kubectl get events -n k8squest --sort-by='.lastTimestamp'` - Recent activity
-- [ ] `kubectl describe pod <pod> -n k8squest` - Check probe failures, resources
-- [ ] `kubectl logs <pod> -n k8squest` - Application errors?
+- [ ] `kubectl get deployments,rs,pods -n ckaquest` - See the full picture
+- [ ] `kubectl describe deployment <name> -n ckaquest` - Check strategy, events
+- [ ] `kubectl rollout status deployment/<name> -n ckaquest` - Is it progressing?
+- [ ] `kubectl get events -n ckaquest --sort-by='.lastTimestamp'` - Recent activity
+- [ ] `kubectl describe pod <pod> -n ckaquest` - Check probe failures, resources
+- [ ] `kubectl logs <pod> -n ckaquest` - Application errors?
 - [ ] Compare `broken.yaml` vs expected behavior - What's misconfigured?
 - [ ] Use `hints` in game - Progressive guidance
 - [ ] Use `guide` in game - Complete walkthrough if needed

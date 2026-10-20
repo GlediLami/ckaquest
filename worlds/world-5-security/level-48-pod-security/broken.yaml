@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: k8squest
+  name: ckaquest
   labels:
     pod-security.kubernetes.io/enforce: restricted  # Enforce restricted standard
     pod-security.kubernetes.io/audit: restricted
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: secure-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: app

@@ -12,7 +12,7 @@ Check These Areas:
 1. **Service Endpoints**
    Check what endpoints the service has:
    ```bash
-   kubectl get endpoints web-service -n k8squest
+   kubectl get endpoints web-service -n ckaquest
    ```
 
    Do you see pod IPs listed?
@@ -20,7 +20,7 @@ Check These Areas:
 2. **Pod Status**
    Check pod readiness:
    ```bash
-   kubectl get pods -n k8squest -l app=web
+   kubectl get pods -n ckaquest -l app=web
    ```
 
    Look at the READY column:
@@ -30,7 +30,7 @@ Check These Areas:
 3. **Pod Events**
    Check pod events:
    ```bash
-   kubectl describe pod web-app-1 -n k8squest
+   kubectl describe pod web-app-1 -n ckaquest
    ```
 
    Look for:

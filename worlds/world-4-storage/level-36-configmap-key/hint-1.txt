@@ -3,19 +3,19 @@
 Let's find the missing ConfigMap key:
 
 1️⃣ Check pod status:
-   kubectl get pod web-app -n k8squest
-   kubectl describe pod web-app -n k8squest
+   kubectl get pod web-app -n ckaquest
+   kubectl describe pod web-app -n ckaquest
    
    Look at Events - what error do you see?
 
 2️⃣ Check the ConfigMap:
-   kubectl get configmap app-config -n k8squest
-   kubectl describe configmap app-config -n k8squest
+   kubectl get configmap app-config -n ckaquest
+   kubectl describe configmap app-config -n ckaquest
    
    What keys exist in the ConfigMap?
 
 3️⃣ Check what the pod is trying to use:
-   kubectl get pod web-app -n k8squest -o yaml | grep -A 5 "configMapKeyRef"
+   kubectl get pod web-app -n ckaquest -o yaml | grep -A 5 "configMapKeyRef"
    
    What keys is the pod requesting?
 

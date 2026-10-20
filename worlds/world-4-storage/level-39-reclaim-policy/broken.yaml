@@ -17,7 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-claim
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   accessModes:
     - ReadWriteOnce
@@ -30,7 +30,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: data-writer
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: writer

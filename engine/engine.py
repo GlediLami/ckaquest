@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-K8sQuest - Interactive Kubernetes Learning Game
-🎮 Now with Retro Gaming UI! 🎮
+CKAQuest - CKA exam training game, based on K8sQuest.
+Every level breaks or asks for something on a real 3-node cluster.
 """
 
 import json
@@ -24,12 +24,9 @@ from rich.prompt import Confirm, Prompt
 from rich.table import Table
 from rich.text import Text
 
-# Platform-specific imports for pagination
-if os.name == 'nt':  # Windows
-    import msvcrt
-else:  # Unix/Linux/Mac
-    import tty
-    import termios
+import re
+import termios
+import tty
 
 # Import retro UI components
 try:
@@ -61,70 +58,84 @@ except ImportError:
         return Prompt.ask("Enter your name", default="K8s Explorer")
 
 
-# Import safety guards
-try:
-    from safety import print_safety_info, validate_kubectl_command
+# Isolation: the game only ever talks to its own cluster through its own kubeconfig.
+# It never reads or writes ~/.kube/config.
+CQ_ROOT = Path(__file__).resolve().parent.parent
+CQ_HOME = Path(os.environ.get("CQ_HOME", Path.home() / ".ckaquest"))
+CQ_WORK = Path(os.environ.get("CQ_WORK", Path.home() / "ckaquest-work"))
+CQ_CONTEXT = "kind-" + os.environ.get("CQ_CLUSTER", "ckaquest")
+DEFAULT_NAMESPACE = "ckaquest"
+os.environ["KUBECONFIG"] = os.environ.get(
+    "CKAQUEST_KUBECONFIG", str(CQ_HOME / "kubeconfig")
+)
+os.environ.setdefault("CQ_ROOT", str(CQ_ROOT))
+os.environ.setdefault("CQ_WORK", str(CQ_WORK))
 
-    SAFETY_ENABLED = os.environ.get("K8SQUEST_SAFETY", "on").lower() != "off"
-except ImportError:
-    SAFETY_ENABLED = False
-    print("⚠️  Warning: Safety guards module not found. Running without protection.")
+CKA_DOMAINS = {
+    "troubleshooting": "Troubleshooting (30%)",
+    "architecture": "Cluster Architecture, Installation & Configuration (25%)",
+    "networking": "Services & Networking (20%)",
+    "workloads": "Workloads & Scheduling (15%)",
+    "storage": "Storage (10%)",
+}
 
-# Web-mode / multi-user settings — injected by the engine pod at session creation.
-# When running locally these are unset and the game behaves exactly as before.
-K8SQUEST_NAMESPACE = os.environ.get("K8SQUEST_NAMESPACE", "k8squest")
-K8SQUEST_WEB = os.environ.get("K8SQUEST_WEB", "").lower() in ("1", "true")
-K8SQUEST_LEVEL = os.environ.get("K8SQUEST_LEVEL", "")
-K8S_CLUSTER_TYPE = os.environ.get("K8S_CLUSTER_TYPE", "kind")
 
-if not os.environ.get("KUBECONFIG"):
-    home = os.path.expanduser("~")
-    if K8S_CLUSTER_TYPE == "k3s":
-        k3s_config = os.path.join(home, ".kube", "k3s-config")
-        if os.path.exists(k3s_config):
-            os.environ["KUBECONFIG"] = k3s_config
+def natural_sort_key(path):
+    """Sort level-2 before level-10"""
+    return [int(p) if p.isdigit() else p.lower() for p in re.split(r"(\d+)", path.name)]
 
-def get_expected_context():
-    """Return the expected kubectl context name based on cluster type."""
-    if K8S_CLUSTER_TYPE == "k3s":
-        return "k3s-k8squest"
-    return "kind-k8squest"
+
+def discover_worlds():
+    """All world directories in order. New worlds show up without code changes."""
+    worlds_dir = CQ_ROOT / "worlds"
+    return [
+        d for d in sorted(worlds_dir.iterdir(), key=natural_sort_key)
+        if d.is_dir() and d.name.startswith("world-")
+    ]
+
+
+def discover_levels(world_path):
+    return [
+        d for d in sorted(world_path.iterdir(), key=natural_sort_key)
+        if d.is_dir() and (d / "mission.yaml").exists()
+    ]
+
+
+def level_namespace(mission):
+    return mission.get("namespace", DEFAULT_NAMESPACE)
+
+
+def script_env(mission=None):
+    """Environment for setup/validate/cleanup scripts"""
+    env = dict(os.environ)
+    env["NAMESPACE"] = level_namespace(mission or {})
+    env["PATH"] = f"{CQ_ROOT / 'bin' / 'shims'}:{CQ_ROOT / 'bin'}:{env.get('PATH', '')}"
+    return env
+
 
 console = Console()
 
 
 def wait_for_any_key():
-    """Block until the user presses any single key (including space bar).
-    Falls back to input() on platforms where raw-tty is unavailable."""
-    if os.name == 'nt':  # Windows
-        import msvcrt
-        while True:
-            ch = msvcrt.getwch()
-            # Skip null-prefix escape sequences (arrow/page keys)
-            if ch in ("\x00", "\xe0"):
-                msvcrt.getwch()
-                continue
-            return
-    else:  # Unix / macOS
-        import tty, termios, select
-        fd = sys.stdin.fileno()
+    """Block until the user presses any single key (including space bar)."""
+    fd = sys.stdin.fileno()
+    try:
+        old_settings = termios.tcgetattr(fd)
+    except termios.error:
+        input()  # fallback (e.g. piped stdin)
+        return
+    try:
+        tty.setraw(fd)
+        ch = sys.stdin.read(1)
+        # Consume the rest of an escape sequence so it doesn't pollute input
+        if ch == "\x1b" and select.select([sys.stdin], [], [], 0.05)[0]:
+            sys.stdin.read(2)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         try:
-            old_settings = termios.tcgetattr(fd)
-        except termios.error:
-            input()  # fallback (e.g. piped stdin)
-            return
-        try:
-            tty.setraw(fd)
-            ch = sys.stdin.read(1)
-            # Consume the rest of an escape sequence so it doesn't pollute input
-            if ch == "\x1b" and select.select([sys.stdin], [], [], 0.05)[0]:
-                sys.stdin.read(2)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-            try:
-                termios.tcflush(fd, termios.TCIFLUSH)
-            except Exception:
-                pass
+            termios.tcflush(fd, termios.TCIFLUSH)
+        except Exception:
+            pass
 
 
 class PaginatedDisplay:
@@ -149,18 +160,8 @@ class PaginatedDisplay:
         return max(8, default_height - 8)
 
     def _get_keypress(self):
-        """Read a single keypress (cross-platform) and return it"""
-        if os.name == 'nt':  # Windows
-            while True:
-                ch = msvcrt.getwch()
-                # Arrow/page keys emit a null prefix - skip them
-                if ch in ("\x00", "\xe0"):
-                    msvcrt.getwch()
-                    continue
-                if ch == "\r":
-                    return "\n"
-                return ch
-        else:  # Unix/Linux/Mac
+        """Read a single keypress and return it"""
+        if True:
             fd = sys.stdin.fileno()
             old_settings = termios.tcgetattr(fd)
             try:
@@ -312,9 +313,9 @@ class PaginatedDisplay:
         self.console.print()
 
 
-class K8sQuest:
+class CKAQuest:
     def __init__(self):
-        self.base_dir = Path(__file__).parent.parent
+        self.base_dir = CQ_ROOT
         self.progress_file = self.base_dir / "progress.json"
         self.progress = self.load_progress()
 
@@ -348,78 +349,42 @@ class K8sQuest:
 
         console.clear()
 
-        # Retro-style title
         title = """
-    ╦╔═╔═╗╔═╗╔═╗ ╦ ╦╔═╗╔═╗╔╦╗
-    ╠╩╗╠═╣╚═╗║═╬╗║ ║║╣ ╚═╗ ║
-    ╩ ╩╚═╝╚═╝╚═╝╚╚═╝╚═╝╚═╝ ╩
-        """
-
-        welcome_panel = Panel(
-            Text(title, style="bold cyan")
-            + Text("\n🎮 Kubernetes Adventure Game 🎮\n", style="bold yellow")
-            + Text("Contra-Style Learning | Arcade Action | Boss Battles", style="dim"),
-            title="[bold magenta]⚔️  K8SQUEST  ⚔️[/bold magenta]",
-            border_style="cyan",
-            box=box.HEAVY,
+   ██████╗██╗  ██╗ █████╗  ██████╗ ██╗   ██╗███████╗███████╗████████╗
+  ██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝
+  ██║     █████╔╝ ███████║██║   ██║██║   ██║█████╗  ███████╗   ██║
+  ██║     ██╔═██╗ ██╔══██║██║▄▄ ██║██║   ██║██╔══╝  ╚════██║   ██║
+  ╚██████╗██║  ██╗██║  ██║╚██████╔╝╚██████╔╝███████╗███████║   ██║
+   ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝
+"""
+        console.print(
+            Panel(
+                Text(title, style="bold cyan")
+                + Text("\nCKA exam training on a real 3-node cluster (Kubernetes v1.37)", style="bold yellow"),
+                title="[bold magenta]⚔️  CKAQUEST  ⚔️[/bold magenta]",
+                border_style="cyan",
+                box=box.HEAVY,
+            )
         )
-
-        console.print(welcome_panel)
         console.print()
 
-        # Player stats in retro gaming style
+        total = self.total_levels
+        done = len(self.progress["completed_levels"])
+        completion = (done / total) * 100 if total else 0
+        progress_bar = "█" * int(completion / 5) + "░" * (20 - int(completion / 5))
         stats = Table(show_header=False, box=box.HEAVY, border_style="yellow")
         stats.add_column("Stat", style="cyan bold")
         stats.add_column("Value", style="yellow bold")
         stats.add_row("🎮 PLAYER", self.progress["player_name"])
         stats.add_row("💎 TOTAL XP", str(self.progress["total_xp"]))
-        stats.add_row(
-            "⭐ LEVELS CLEARED", f"{len(self.progress['completed_levels'])}/50"
-        )
-
-        # Calculate completion percentage
-        completion = (len(self.progress["completed_levels"]) / 50) * 100
-        progress_bar = "█" * int(completion / 5) + "░" * (20 - int(completion / 5))
+        stats.add_row("⭐ LEVELS CLEARED", f"{done}/{total}")
         stats.add_row("📊 PROGRESS", f"[{progress_bar}] {completion:.0f}%")
-
-        # Show current level if resuming
         if self.progress.get("current_level"):
             stats.add_row("🎯 CURRENT MISSION", self.progress["current_level"])
-
-        # Add safety status with gaming flair
-        safety_status = "🛡️  ACTIVE" if SAFETY_ENABLED else "⚠️  DISABLED"
-        safety_color = "green" if SAFETY_ENABLED else "red"
-        stats.add_row("🛡️  SHIELDS", f"[{safety_color}]{safety_status}[/{safety_color}]")
-
+        stats.add_row("☸️  CLUSTER", f"{CQ_CONTEXT} (kubeconfig {os.environ['KUBECONFIG']})")
         console.print(
-            Panel(
-                stats,
-                title="[bold yellow]⚡ PLAYER STATUS ⚡[/bold yellow]",
-                border_style="yellow",
-                box=box.HEAVY,
-            )
+            Panel(stats, title="[bold yellow]⚡ PLAYER STATUS ⚡[/bold yellow]", border_style="yellow", box=box.HEAVY)
         )
-
-        # Show XP progress bar
-        if RETRO_UI_ENABLED:
-            console.print()
-            console.print(show_xp_bar(self.progress["total_xp"], 10200))
-
-        # Show safety reminder if enabled with gaming theme
-        if SAFETY_ENABLED:
-            console.print()
-            console.print(
-                Panel(
-                    "[green]🛡️  DEFENSE SYSTEMS ONLINE[/green]\n"
-                    "[dim]✓ Prevents cluster destruction\n"
-                    "✓ Namespace protection active\n"
-                    "✓ Safe mode engaged\n"
-                    "Type 'safety info' for shield details[/dim]",
-                    border_style="green",
-                    box=box.HEAVY,
-                    title="[bold green]🔰 SAFETY PROTOCOLS[/bold green]",
-                )
-            )
         console.print()
 
     def load_mission(self, level_path):
@@ -550,28 +515,12 @@ class K8sQuest:
 
     def get_completed_debriefs(self):
         """Return completed levels that have a debrief, in level order."""
-        worlds_dir = self.base_dir / "worlds"
         completed_levels = set(self.progress.get("completed_levels", []))
-
-        def natural_sort_key(path):
-            import re
-
-            return [
-                int(part) if part.isdigit() else part.lower()
-                for part in re.split(r"(\d+)", path.name)
-            ]
-
-        debriefs = []
-        for world_path in sorted(worlds_dir.iterdir(), key=natural_sort_key):
-            if not world_path.is_dir() or world_path.name.startswith("."):
-                continue
-            for level_path in sorted(world_path.iterdir(), key=natural_sort_key):
-                if (
-                    level_path.is_dir()
-                    and level_path.name in completed_levels
-                    and (level_path / "debrief.md").exists()
-                ):
-                    debriefs.append((level_path.name, level_path))
+        debriefs = [
+            (level.name, level)
+            for _, level in self.all_levels()
+            if level.name in completed_levels and (level / "debrief.md").exists()
+        ]
         return debriefs
 
     def review_completed_debriefs(self):
@@ -627,849 +576,487 @@ class K8sQuest:
         )
         console.print()
 
-    def show_hints(self, level_name, level_path=None):
-        """Show helpful hints based on the level - DEPRECATED, use show_progressive_hints"""
-        hints = {
-            "level-1-pods": [
-                "Use `kubectl get pod nginx-broken -n k8squest` to check status",
-                "Use `kubectl describe pod nginx-broken -n k8squest` to see events",
-                "Use `kubectl logs nginx-broken -n k8squest` to check logs",
-                "The pod has a bad command. Check what command is being run.",
-                "Remember: You can't edit a running pod - delete and recreate it!",
-            ],
-            "level-2-deployments": [
-                "Use `kubectl get deployment web -n k8squest` to check status",
-                "Use `kubectl describe deployment web -n k8squest` for details",
-                "Scale with `kubectl scale deployment web --replicas=N -n k8squest`",
-                "Or edit with `kubectl edit deployment web -n k8squest`",
-            ],
-        }
+    # ------------------------------------------------------------------
+    # Level content
+    # ------------------------------------------------------------------
 
-        level_hints = hints.get(level_name, ["Explore with kubectl commands!"])
-
-        hint_table = Table(
-            title="💡 Helpful Commands", box=box.ROUNDED, border_style="blue"
+    def show_task(self, mission):
+        """The exam-style task. This is what you would read in the real exam."""
+        task = mission.get("task")
+        if not task:
+            return
+        domain = CKA_DOMAINS.get(mission.get("domain", ""), "")
+        body = task.strip()
+        if mission.get("docs"):
+            body += "\n\n**Docs you may open in the exam:**\n" + "\n".join(
+                f"- {link}" for link in mission["docs"]
+            )
+        console.print(
+            Panel(
+                Markdown(body),
+                title=f"[bold magenta]📝 Exam task[/bold magenta]  [dim]{domain}[/dim]",
+                border_style="magenta",
+                box=box.HEAVY,
+            )
         )
-        hint_table.add_column("Hint", style="cyan")
-
-        for hint in level_hints:
-            hint_table.add_row(hint)
-
-        console.print(hint_table)
         console.print()
 
-        # Ask if they want to see the solution
-        if level_path:
-            if Confirm.ask(
-                "[yellow]📄 Would you like to see the solution.yaml file?[/yellow]",
-                default=False,
-            ):
-                console.print()
-                self.show_solution_file(level_path)
+    def show_solution_file(self, level_path):
+        """Display the reference solution (solution.yaml or solution.md)"""
+        for name in ("solution.md", "solution.yaml"):
+            solution_file = level_path / name
+            if solution_file.exists():
+                content = solution_file.read_text(encoding="utf-8", errors="replace")
+                body = Markdown(content) if name.endswith(".md") else f"[cyan]{content}[/cyan]"
                 console.print(
-                    "[dim]💡 Tip: You can use this as a reference to fix the issue[/dim]\n"
+                    Panel(
+                        body,
+                        title=f"[bold green]📄 {name}[/bold green]",
+                        border_style="green",
+                        box=box.ROUNDED,
+                    )
                 )
+                console.print()
+                return
+        console.print("[yellow]No solution file available for this level[/yellow]")
 
-    def get_resource_status(self, level_name):
-        """Get current status of Kubernetes resources in k8squest namespace"""
-        try:
-            # Get common resource types
-            resource_types = [
-                "pods",
-                "deployments",
-                "services",
-                "ingress",
-                "pvc",
-                "configmaps",
-            ]
-            status_parts = []
-
-            for resource_type in resource_types:
-                result = subprocess.run(
-                    ["kubectl", "get", resource_type, "-n", K8SQUEST_NAMESPACE, "--no-headers"],
-                    capture_output=True,
-                    text=True,
-                    timeout=3,
+    def show_guide(self, level_path):
+        """Step-by-step guide: guide.md, then SOLUTION.md, then all hints"""
+        for name in ("guide.md", "SOLUTION.md"):
+            guide = level_path / name
+            if guide.exists():
+                PaginatedDisplay(console).display_paginated(
+                    guide.read_text(encoding="utf-8", errors="replace"),
+                    title="📖 Guide",
+                    border_style="green",
                 )
+                return
+        self.show_progressive_hints(level_path, hint_level=3, show_all=True)
 
-                if result.returncode == 0 and result.stdout.strip():
-                    lines = result.stdout.strip().split("\n")
+    # ------------------------------------------------------------------
+    # Cluster interaction
+    # ------------------------------------------------------------------
 
-                    for line in lines[:2]:  # Show up to 2 of each type
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            name = parts[0]
-                            status = parts[1] if len(parts) > 1 else "?"
+    def get_resource_status(self, namespace):
+        """One-line summary of resources in the level namespace"""
+        result = subprocess.run(
+            ["kubectl", "get", "pods,deploy,svc,pvc", "-n", namespace,
+             "--no-headers", "--request-timeout=3s"],
+            capture_output=True, text=True, timeout=6,
+        )
+        if result.returncode != 0:
+            return "API not reachable" if "refused" in result.stderr else "Checking..."
+        lines = [line.split()[:3] for line in result.stdout.strip().splitlines() if line.strip()]
+        if not lines:
+            return f"No resources in namespace {namespace}"
+        return " | ".join(" ".join(parts[:2]) for parts in lines[:4])
 
-                            # Format based on resource type
-                            if resource_type == "pods":
-                                status_parts.append(f"Pod {name}: {status}")
-                            elif resource_type == "deployments":
-                                status_parts.append(f"Deploy {name}: {status}")
-                            elif resource_type == "services":
-                                svc_type = parts[1] if len(parts) > 1 else "?"
-                                status_parts.append(f"Svc {name}: {svc_type}")
-                            elif resource_type == "ingress":
-                                hosts = parts[2] if len(parts) > 2 else "?"
-                                status_parts.append(f"Ingress {name}: {hosts}")
-                            elif resource_type == "pvc":
-                                status_parts.append(f"PVC {name}: {status}")
-                            elif resource_type == "configmaps":
-                                status_parts.append(f"CM {name}")
-
-                    # Limit total status parts to avoid clutter
-                    if len(status_parts) >= 3:
-                        break
-
-            if status_parts:
-                return " | ".join(status_parts[:3])
-            else:
-                return "No resources found"
-
-        except subprocess.TimeoutExpired:
-            return "Timeout"
-        except Exception as e:
-            return f"Checking..."
-
-        return "Checking..."
-
-    def show_terminal_instructions(self, level_name):
-        """Show clear instructions about the kubectl terminal"""
-        if K8SQUEST_WEB:
-            # In web mode, the second terminal panel is already visible in the browser
-            instructions = Panel(
+    def show_terminal_instructions(self, mission):
+        namespace = level_namespace(mission)
+        console.print(
+            Panel(
                 Text.from_markup(
-                    "[bold cyan]🖥️  USE THE RIGHT TERMINAL PANEL[/bold cyan]\n\n"
-                    "[cyan]The shell panel on the right is your kubectl workspace:[/cyan]\n"
-                    f"1️⃣  Use kubectl commands targeting namespace [bold]{K8SQUEST_NAMESPACE}[/bold]\n"
-                    "2️⃣  Fix the broken resources\n"
-                    "3️⃣  Come back here and choose 'validate' or 'check'"
+                    "[bold yellow]📟 WORK IN A SECOND TERMINAL[/bold yellow]\n\n"
+                    f"  source {CQ_ROOT}/env.sh\n\n"
+                    "[cyan]That terminal now talks only to the CKAQuest cluster.[/cyan]\n"
+                    f"• Namespace for this level: [bold]{namespace}[/bold]\n"
+                    "• Nodes: [bold]ssh controlplane[/bold], [bold]ssh node01[/bold], [bold]ssh node02[/bold]\n"
+                    f"• Files you are asked to write go to [bold]{CQ_WORK}[/bold]\n"
+                    "• Come back here and choose [bold]validate[/bold] when done"
                 ),
-                title="[bold yellow]⚡ YOUR WORKSPACE[/bold yellow]",
-                border_style="yellow",
-                box=box.DOUBLE,
-            )
-        else:
-            instructions = Panel(
-                Text.from_markup(
-                    "[bold yellow]📟 OPEN A NEW TERMINAL WINDOW[/bold yellow]\n\n"
-                    "[cyan]While this game is running:[/cyan]\n"
-                    "1️⃣  Open a NEW terminal window/tab\n"
-                    "2️⃣  Use kubectl commands to fix the issue:\n"
-                    "    • [dim]kubectl edit, scale, patch, etc.[/dim]\n"
-                    "    • [dim]Or apply solution.yaml from level folder[/dim]\n"
-                    "3️⃣  Come back here and choose 'validate' or 'check'\n\n"
-                    "[dim]💡 Tip: Use Cmd+T (Mac) or Ctrl+Shift+T (Linux) to open a new tab[/dim]"
-                ),
-                title="[bold red]⚠️  IMPORTANT[/bold red]",
+                title="[bold red]⚠️  YOUR WORKSPACE[/bold red]",
                 border_style="red",
                 box=box.DOUBLE,
             )
-        console.print(instructions)
+        )
         console.print()
 
-    def monitor_status(self, level_name, duration=10):
+    def monitor_status(self, mission, duration=10):
         """Monitor resource status in real-time"""
-        console.print(
-            f"\n[yellow]👀 Monitoring status for {duration} seconds...[/yellow]\n"
-        )
-
+        namespace = level_namespace(mission)
+        console.print(f"\n[yellow]👀 Watching namespace {namespace} for {duration} seconds...[/yellow]\n")
         status_table = Table(box=box.SIMPLE, show_header=True, header_style="bold cyan")
         status_table.add_column("Time", style="dim")
         status_table.add_column("Status", style="yellow")
-
-        with Live(status_table, refresh_per_second=2, console=console) as live:
-            for i in range(duration):
-                status = self.get_resource_status(level_name)
+        with Live(status_table, refresh_per_second=2, console=console):
+            for _ in range(duration):
+                try:
+                    status = self.get_resource_status(namespace)
+                except subprocess.TimeoutExpired:
+                    status = "Timeout (is the API server down?)"
                 status_table.add_row(datetime.now().strftime("%H:%M:%S"), status)
                 time.sleep(1)
-
         console.print()
 
-    def show_step_by_step_guide(self, level_name):
-        """Show detailed step-by-step guide for beginners"""
-        guides = {
-            "level-1-pods": """
-# 🎓 Step-by-Step Guide: Fix the Crashing Pod
-
-## What's Wrong?
-The pod has a bad command `nginxzz` that doesn't exist.
-
-## How to Fix It:
-
-### Step 1: Check what's wrong
-```bash
-kubectl get pod nginx-broken -n k8squest
-kubectl describe pod nginx-broken -n k8squest
-```
-
-### Step 2: View the solution
-Look at the file: `worlds/world-1-basics/level-1-pods/solution.yaml`
-
-### Step 3: Delete the broken pod
-```bash
-kubectl delete pod nginx-broken -n k8squest
-```
-
-### Step 4: Apply the fix
-```bash
-kubectl apply -n k8squest -f worlds/world-1-basics/level-1-pods/solution.yaml
-```
-
-### Step 5: Verify it's working
-```bash
-kubectl get pod nginx-broken -n k8squest
-```
-Look for "Running" status!
-            """,
-            "level-2-deployments": """
-# 🎓 Step-by-Step Guide: Fix the Deployment
-
-## What's Wrong?
-The deployment has 0 replicas, so no pods are running.
-
-## How to Fix It:
-
-### Step 1: Check the deployment
-```bash
-kubectl get deployment web -n k8squest
-```
-
-### Step 2: Scale up the replicas
-```bash
-kubectl scale deployment web --replicas=2 -n k8squest
-```
-
-### Step 3: Verify it's working
-```bash
-kubectl get deployment web -n k8squest
-kubectl get pods -n k8squest
-```
-Look for "2/2" ready replicas!
-            """,
-        }
-
-        guide = guides.get(level_name, "No guide available for this level.")
-
-        console.print(
-            Panel(
-                Markdown(guide),
-                title="[bold green]📚 Beginner's Guide[/bold green]",
-                border_style="green",
-                box=box.ROUNDED,
-            )
-        )
-        console.print()
-
-    def deploy_mission(self, level_path, level_name):
-        """Deploy the broken Kubernetes resources"""
-        console.print("\n[yellow]🚀 Deploying mission environment...[/yellow]")
-
-        # Pre-flight connectivity check with timeout
+    def preflight(self):
+        """Make sure the CKAQuest cluster is reachable before touching anything"""
+        kubeconfig = Path(os.environ["KUBECONFIG"])
+        if not kubeconfig.exists():
+            console.print(f"[red]⚠️  No CKAQuest kubeconfig at {kubeconfig}.[/red]")
+            console.print("[yellow]Run ./install.sh (or bin/cq-cluster up) first.[/yellow]")
+            return False
+        ctx = subprocess.run(
+            ["kubectl", "config", "current-context"], capture_output=True, text=True
+        ).stdout.strip()
+        if ctx != CQ_CONTEXT:
+            subprocess.run(["kubectl", "config", "use-context", CQ_CONTEXT], capture_output=True)
         check = subprocess.run(
-            ["kubectl", "get", "nodes", "--request-timeout=5s"],
+            ["kubectl", "--context", CQ_CONTEXT, "get", "--raw=/readyz", "--request-timeout=5s"],
             capture_output=True, text=True,
         )
         if check.returncode != 0:
-            console.print(f"\n[red]⚠️  Cannot connect to cluster:[/red]")
+            console.print("\n[red]⚠️  Cannot reach the CKAQuest API server:[/red]")
             console.print(f"[dim red]{check.stderr.strip()}[/dim red]")
-            console.print(f"\n[yellow]💡 Make sure k3s is running, then in your other terminal run:[/yellow]")
-            console.print(f"[dim]    export KUBECONFIG=\"$HOME/.kube/k3s-config\"[/dim]")
-            console.print(f"[dim]    kubectl config use-context {get_expected_context()}[/dim]")
+            console.print("[yellow]If a previous level broke the control plane, fix it or run:[/yellow]")
+            console.print("[dim]    bin/cq-cluster rebuild[/dim]")
+            return False
+        return True
+
+    def run_level_script(self, level_path, name, mission, timeout=600):
+        script = level_path / name
+        if not script.exists():
+            return None
+        return subprocess.run(
+            ["bash", name],
+            cwd=str(level_path),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=script_env(mission),
+            timeout=timeout,
+        )
+
+    def cleanup_level(self, level_path, mission):
+        """Undo what a level changed outside its namespace (nodes, cluster-scoped objects)"""
+        if (level_path / "cleanup.sh").exists():
+            console.print("[dim]🧹 Restoring the cluster after this level...[/dim]")
+            result = self.run_level_script(level_path, "cleanup.sh", mission)
+            if result and result.returncode != 0:
+                console.print(f"[yellow]Cleanup reported a problem:[/yellow]\n[dim]{result.stdout}{result.stderr}[/dim]")
+        if self.progress.get("dirty_level") == str(level_path.relative_to(CQ_ROOT)):
+            self.progress["dirty_level"] = None
+            self.save_progress()
+
+    def cleanup_dirty_level(self):
+        """A previous session quit in the middle of a level: restore the cluster first"""
+        dirty = self.progress.get("dirty_level")
+        if not dirty:
+            return
+        level_path = CQ_ROOT / dirty
+        if level_path.exists():
+            self.cleanup_level(level_path, self.load_mission(level_path))
+        self.progress["dirty_level"] = None
+        self.save_progress()
+
+    def reset_namespace(self, namespace):
+        """Remove leftovers from earlier levels in a shared namespace"""
+        subprocess.run(
+            ["kubectl", "delete",
+             "all,cm,secret,pvc,netpol,ing,role,rolebinding,sa,quota,limits,hpa,pdb",
+             "--all", "-n", namespace, "--ignore-not-found", "--timeout=90s"],
+            capture_output=True, text=True,
+        )
+
+    def ensure_addons(self, mission):
+        for addon in mission.get("requires", []):
+            if addon in ("ingress", "gateway"):
+                console.print(f"[yellow]Installing add-on '{addon}' (first time only)...[/yellow]")
+                result = subprocess.run(
+                    [str(CQ_ROOT / "bin" / "cq-cluster"), "addon", addon],
+                    capture_output=True, text=True,
+                )
+                if result.returncode != 0:
+                    console.print(f"[red]Add-on install failed:[/red]\n[dim]{result.stdout}{result.stderr}[/dim]")
+                    return False
+        return True
+
+    def deploy_mission(self, level_path, mission):
+        """Prepare the level: clean up, then break things (or set up the task)"""
+        console.print("\n[yellow]🚀 Deploying mission environment...[/yellow]")
+        self.cleanup_dirty_level()
+        if not self.preflight():
+            return False
+        if not self.ensure_addons(mission):
             return False
 
+        namespace = level_namespace(mission)
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
             console=console,
         ) as progress:
-            task = progress.add_task("Setting up namespace...", total=3)
-
-            # Ensure namespace exists (idempotent, skip if already there)
-            result = subprocess.run(
-                ["kubectl", "apply", "-f", "-"],
-                input="apiVersion: v1\nkind: Namespace\nmetadata:\n  name: k8squest\n",
-                capture_output=True, text=True,
-            )
-            
-            # Check for namespace creation errors
-            if result.returncode != 0:
-                console.print(f"\n[red]⚠️  Failed to create namespace:[/red]")
-                console.print(f"[dim red]{result.stderr}[/dim red]")
-                console.print("[yellow]💡 Hint: Make sure your kubectl context is set correctly[/yellow]")
-                console.print(f"[dim]Run: kubectl config use-context {get_expected_context()}[/dim]")
-                return False
-
-            # Clean up resources from previous level (without deleting the namespace)
-            progress.update(task, description="Cleaning up previous level...")
+            task = progress.add_task("Cleaning up...", total=3)
+            # Clean state first, also for a level replayed after a quit
+            self.run_level_script(level_path, "cleanup.sh", mission)
             subprocess.run(
-                ["kubectl", "delete", "all", "--all", "-n", K8SQUEST_NAMESPACE, "--ignore-not-found"],
+                ["kubectl", "create", "namespace", namespace],
                 capture_output=True, text=True,
             )
-
-            progress.update(task, description="Deploying broken resources...")
+            if namespace == DEFAULT_NAMESPACE:
+                self.reset_namespace(namespace)
             progress.advance(task)
 
-            # Check if level has a setup script (for levels needing history like rollback)
-            setup_script = level_path / "setup.sh"
-            if setup_script.exists():
-                console.print("[yellow]Running level setup script...[/yellow]")
-                result = subprocess.run(
-                    ["bash", "setup.sh"],
-                    cwd=str(level_path),
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="replace",
-                )
-                if result.returncode != 0:
-                    console.print(f"[red]Setup failed:[/red]")
-                    console.print(f"[dim red]{result.stderr}[/dim red]")
-                    if result.stdout:
-                        console.print(f"[dim]{result.stdout}[/dim]")
-                    return False
+            progress.update(task, description="Deploying the scenario...")
+            self.progress["dirty_level"] = str(level_path.relative_to(CQ_ROOT))
+            self.save_progress()
+            if (level_path / "setup.sh").exists():
+                result = self.run_level_script(level_path, "setup.sh", mission)
             else:
-                # Apply broken config (without forcing namespace to respect YAML)
                 result = subprocess.run(
                     ["kubectl", "apply", "-f", str(level_path / "broken.yaml")],
-                    capture_output=True,
-                    text=True,
+                    capture_output=True, text=True, env=script_env(mission),
                 )
-                # Show errors if deployment fails
-                if result.returncode != 0:
-                    console.print(f"[red]Deployment failed:[/red]")
-                    console.print(f"[dim red]{result.stderr}[/dim red]")
-                    return False
-
+            if result.returncode != 0:
+                console.print("[red]Setup failed:[/red]")
+                console.print(f"[dim red]{result.stderr}[/dim red]")
+                if result.stdout:
+                    console.print(f"[dim]{result.stdout}[/dim]")
+                return False
             progress.update(task, description="✅ Environment ready!")
-            progress.advance(task)
+            progress.advance(task, 2)
 
-        console.print("\n")
+        console.print()
         console.print(
             Panel(
-                Text(
-                    "🔴 MISSION DEPLOYED WITH BUGS! 🔴",
-                    style="bold red",
-                    justify="center",
-                )
-                + Text(
-                    "\n\nSomething is broken in the Kubernetes cluster.", style="yellow"
-                )
-                + Text("\nYour mission: Find and fix the issue!", style="cyan"),
+                Text("🔴 MISSION DEPLOYED 🔴", style="bold red", justify="center")
+                + Text(f"\n\n{mission['description']}", style="yellow", justify="center"),
                 border_style="red",
                 box=box.DOUBLE,
             )
         )
         console.print()
-        return True  # Deployment successful
+        return True
 
-    def validate_mission(self, level_path, level_name):
+    def validate_mission(self, level_path, mission):
         """Run validation script and show results"""
         console.print("\n[yellow]🔍 Validating your solution...[/yellow]\n")
-
-        # Run validation script from the level directory with proper environment
-        # Use relative name (not absolute path) so Windows/Git Bash doesn't mangle it
-        result = subprocess.run(
-            ["bash", "validate.sh"],
-            cwd=str(level_path),  # CRITICAL: Run from level directory
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            env={**os.environ, "NAMESPACE": K8SQUEST_NAMESPACE}  # inject namespace for validate.sh
-        )
-
-        # Always show output for debugging
-        if result.stdout:
-            console.print(f"[dim]{result.stdout}[/dim]")
-        if result.stderr and result.returncode != 0:
-            console.print(f"[dim red]Error output: {result.stderr}[/dim red]")
-
-        if result.returncode == 0:
-            # Success!
-            console.print(
-                Panel(
-                    Text(
-                        "✅ MISSION COMPLETE! ✅", style="bold green", justify="center"
-                    )
-                    + Text(f"\n\n{result.stdout}", style="green"),
-                    border_style="green",
-                    box=box.DOUBLE,
-                )
-            )
-            return True
-        else:
-            # Failed
-            console.print(
-                Panel(
-                    Text(
-                        "❌ Not quite there yet...", style="bold red", justify="center"
-                    )
-                    + Text(f"\n\n{result.stdout}", style="red"),
-                    border_style="red",
-                    box=box.ROUNDED,
-                )
-            )
+        try:
+            result = self.run_level_script(level_path, "validate.sh", mission, timeout=300)
+        except subprocess.TimeoutExpired:
+            console.print("[red]Validation timed out (is the API server up?)[/red]")
             return False
+        output = result.stdout if result else "validate.sh missing"
+        if result and result.stderr and result.returncode != 0:
+            output += f"\n{result.stderr}"
+        ok = result is not None and result.returncode == 0
+        console.print(
+            Panel(
+                Text("✅ MISSION COMPLETE! ✅" if ok else "❌ Not quite there yet...",
+                     style="bold green" if ok else "bold red", justify="center")
+                + Text(f"\n\n{output}", style="green" if ok else "red"),
+                border_style="green" if ok else "red",
+                box=box.DOUBLE if ok else box.ROUNDED,
+            )
+        )
+        return ok
 
-    def play_level(self, level_path, level_name):
-        """Play a single level with retro gaming UI"""
+    # ------------------------------------------------------------------
+    # Game loop
+    # ------------------------------------------------------------------
+
+    def play_level(self, level_path):
+        """Play a single level. Returns False when the player wants to stop."""
+        level_name = level_path.name
         mission = self.load_mission(level_path)
 
-        # Show retro level start screen
         if RETRO_UI_ENABLED:
-            level_num = int(level_name.split("-")[1]) if "level-" in level_name else 0
+            match = re.search(r"level-(\d+)", level_name)
             show_level_start(
-                level_num,
+                int(match.group(1)) if match else 0,
                 mission["name"],
                 mission["xp"],
                 mission.get("difficulty", "beginner"),
             )
-            if K8SQUEST_WEB:
-                try:
-                    input()
-                except EOFError:
-                    return False
-            else:
-                wait_for_any_key()  # Wait for player to press any key (incl. space bar)
+            wait_for_any_key()
 
-        # Show mission briefing with metadata
         console.clear()
-
-        # Display retro-style header
         if RETRO_UI_ENABLED:
-            console.print(
-                show_retro_header(
-                    mission["name"], mission["xp"], self.progress["total_xp"]
-                )
-            )
+            console.print(show_retro_header(mission["name"], mission["xp"], self.progress["total_xp"]))
             console.print()
 
-        # Display difficulty and time estimate with gaming flair
-        difficulty_colors = {
-            "beginner": "green",
-            "intermediate": "yellow",
-            "advanced": "red",
-            "expert": "magenta",
-        }
-        diff_color = difficulty_colors.get(
-            mission.get("difficulty", "beginner"), "cyan"
-        )
-
-        difficulty_icons = {
-            "beginner": "⚡",
-            "intermediate": "⚡⚡",
-            "advanced": "⚡⚡⚡",
-            "expert": "💀",
-        }
-        diff_icon = difficulty_icons.get(mission.get("difficulty", "beginner"), "⚡")
-
-        metadata = f"[{diff_color}]{diff_icon}[/{diff_color}] {mission.get('difficulty', 'Unknown').upper()}"
+        difficulty_colors = {"beginner": "green", "intermediate": "yellow", "advanced": "red", "expert": "magenta"}
+        difficulty_icons = {"beginner": "⚡", "intermediate": "⚡⚡", "advanced": "⚡⚡⚡", "expert": "💀"}
+        difficulty = mission.get("difficulty", "beginner")
+        diff_color = difficulty_colors.get(difficulty, "cyan")
+        metadata = f"[{diff_color}]{difficulty_icons.get(difficulty, '⚡')}[/{diff_color}] {difficulty.upper()}"
         metadata += f"  |  ⏱️  ~{mission.get('expected_time', '?')}"
+        if mission.get("domain") in CKA_DOMAINS:
+            metadata += f"  |  📚 {CKA_DOMAINS[mission['domain']]}"
         if "concepts" in mission:
-            metadata += f"  |  🎯 {', '.join(mission['concepts'])}"
-
+            metadata += f"\n🎯 {', '.join(mission['concepts'])}"
         console.print(Panel(metadata, border_style=diff_color, box=box.HEAVY))
         console.print()
 
         self.show_mission_briefing(mission, level_name)
 
-        # In web mode the backend already deployed the namespace + broken resources
-        if not K8SQUEST_WEB:
-            deployment_success = self.deploy_mission(level_path, level_name)
-            if not deployment_success:
-                console.print("\n[red]⚠️  Mission deployment failed![/red]")
-                console.print("[yellow]This usually means:[/yellow]")
-                console.print(f"  1. kubectl context is not set to '{get_expected_context()}'")
-                console.print(f"  2. {K8S_CLUSTER_TYPE.capitalize()} cluster is not running")
-                console.print("  3. Docker is not running")
-                console.print()
-                if Confirm.ask("Would you like to skip this level?", default=False):
-                    return True
-                else:
-                    return False
+        if not self.deploy_mission(level_path, mission):
+            console.print("\n[red]⚠️  Mission deployment failed![/red]")
+            if Confirm.ask("Skip this level?", default=False):
+                return True
+            return False
 
-        # Show terminal instructions prominently
-        self.show_terminal_instructions(level_name)
+        self.show_task(mission)
+        self.show_terminal_instructions(mission)
 
-        # Start with hint level 0 (no hints shown yet)
         current_hint_level = 0
-
-        # Interactive loop with retro UI
         attempts = 0
+        actions = ["check", "task", "hints", "guide", "solution", "validate", "reset", "skip", "quit"]
         while True:
             console.print()
-
-            # Show retro command menu
             if RETRO_UI_ENABLED:
                 console.print(show_command_menu())
-            else:
-                console.print("=" * 60)
-                console.print("[bold cyan]🎮 What would you like to do?[/bold cyan]")
-                console.print("=" * 60)
-                console.print(
-                    "  [cyan]check[/cyan]     - 👁️  Monitor the resource status"
-                )
-                console.print("  [cyan]guide[/cyan]     - 📖 Step-by-step instructions")
-                console.print("  [cyan]hints[/cyan]     - 💡 Helpful kubectl commands")
-                console.print(
-                    "  [cyan]solution[/cyan]  - 📄 View the solution.yaml file"
-                )
-                console.print("  [cyan]validate[/cyan]  - ✅ Test if you've fixed it")
-                console.print("  [cyan]skip[/cyan]      - ⏭️  Skip this level")
-                console.print("  [cyan]quit[/cyan]      - 🚪 Exit the game")
-                console.print("=" * 60)
-
             console.print()
-
             try:
-                action = Prompt.ask(
-                    "⚔️  Choose your action",
-                    choices=[
-                        "check",
-                        "guide",
-                        "hints",
-                        "solution",
-                        "validate",
-                        "skip",
-                        "quit",
-                    ],
-                    default="check",
-                )
+                action = Prompt.ask("⚔️  Choose your action", choices=actions, default="validate")
             except EOFError:
-                console.print("\n[yellow]Session disconnected.[/yellow]")
                 return False
 
             if action == "check":
-                # Real-time status monitoring
-                self.monitor_status(level_name, duration=10)
+                self.monitor_status(mission, duration=10)
 
-            elif action == "guide":
-                if RETRO_UI_ENABLED:
-                    show_power_up_notification("guide")
-                self.show_step_by_step_guide(level_name)
+            elif action == "task":
+                self.show_mission_briefing(mission, level_name)
+                self.show_task(mission)
 
             elif action == "hints":
-                # Unlock next hint level
                 current_hint_level += 1
                 if RETRO_UI_ENABLED:
                     show_power_up_notification("hint")
                 console.print()
-                # Show only the newly unlocked hint (not all previous hints)
-                self.show_progressive_hints(
-                    level_path, current_hint_level, show_all=False
-                )
+                self.show_progressive_hints(level_path, current_hint_level, show_all=False)
+
+            elif action == "guide":
+                if RETRO_UI_ENABLED:
+                    show_power_up_notification("guide")
+                self.show_guide(level_path)
 
             elif action == "solution":
-                console.print("\n[yellow]📄 Showing solution file...[/yellow]\n")
                 if RETRO_UI_ENABLED:
                     show_power_up_notification("solution")
                 self.show_solution_file(level_path)
-                console.print(
-                    "[dim]💡 Use this as reference to fix the broken configuration[/dim]\n"
-                )
+
+            elif action == "reset":
+                if Confirm.ask("Restore and re-deploy this level from scratch?", default=False):
+                    self.cleanup_level(level_path, mission)
+                    if not self.deploy_mission(level_path, mission):
+                        return False
+                    self.show_task(mission)
 
             elif action == "validate":
                 attempts += 1
                 console.print(f"\n[dim]⚔️  ATTEMPT #{attempts}[/dim]")
-
-                if self.validate_mission(level_path, level_name):
-                    # Victory with retro UI!
-                    if RETRO_UI_ENABLED:
-                        xp_earned = mission["xp"]
+                if self.validate_mission(level_path, mission):
+                    xp_earned = mission["xp"]
+                    first_clear = level_name not in self.progress["completed_levels"]
+                    if first_clear:
                         self.progress["total_xp"] += xp_earned
-                        show_victory(xp_earned, self.progress["total_xp"])
-                    else:
-                        # Standard success animation
-                        console.print("\n")
-                        for i in range(3):
-                            console.print("⭐ " * 20)
-                            time.sleep(0.2)
-
-                        # Award XP
-                        xp_earned = mission["xp"]
-                        self.progress["total_xp"] += xp_earned
-
-                    if level_name not in self.progress["completed_levels"]:
                         self.progress["completed_levels"].append(level_name)
                     self.save_progress()
-
-                    if not RETRO_UI_ENABLED:
-                        console.print(
-                            f"\n[bold yellow]🌟 +{xp_earned} XP! Total: {self.progress['total_xp']} XP[/bold yellow]"
-                        )
+                    if RETRO_UI_ENABLED:
+                        show_victory(xp_earned if first_clear else 0, self.progress["total_xp"])
+                    else:
+                        console.print(f"\n[bold yellow]🌟 +{xp_earned if first_clear else 0} XP! Total: {self.progress['total_xp']} XP[/bold yellow]")
                     console.print(f"[dim]⚡ Cleared in {attempts} attempt(s)[/dim]\n")
 
-                    # Check for milestones
                     if RETRO_UI_ENABLED:
                         completed_count = len(self.progress["completed_levels"])
-                        if completed_count == 10:
-                            celebrate_milestone("world_complete")
-                        elif completed_count == 25:
-                            celebrate_milestone("halfway")
-                        elif completed_count == 49:
-                            celebrate_milestone("final_boss")
-                        elif completed_count == 50:
+                        if completed_count == self.total_levels:
                             show_game_complete()
+                        elif completed_count == self.total_levels // 2:
+                            celebrate_milestone("halfway")
 
-                    # Show debrief - THE LEARNING MOMENT!
                     self.show_debrief(level_path)
-                    
-                    # Pause before asking about next challenge
+                    self.cleanup_level(level_path, mission)
                     console.print("\n[dim]Press Enter to continue...[/dim]")
                     input()
+                    return Confirm.ask("Ready for the next challenge?", default=True)
 
-                    if Confirm.ask("Ready for the next challenge?", default=True):
-                        return True
-                    else:
-                        return False
-                else:
-                    # Unlock next hint on failure
-                    current_hint_level = min(current_hint_level + 1, 3)
-                    encouragement = [
-                        "Don't give up! You're learning! 💪",
-                        "Every mistake teaches you something! 🧠",
-                        "Try the 'guide' option for step-by-step help! 📚",
-                        "Use 'check' to see real-time status! 👀",
-                    ]
-                    console.print(
-                        f"\n[yellow]{encouragement[attempts % len(encouragement)]}[/yellow]\n"
-                    )
-
-                    if not Confirm.ask("Try again?", default=True):
-                        return False
+                current_hint_level = min(current_hint_level + 1, 3)
+                console.print("\n[yellow]Read the failed checks above, then fix and validate again.[/yellow]\n")
 
             elif action == "skip":
-                if Confirm.ask(
-                    "Skip this level? (No XP will be awarded)", default=False
-                ):
+                if Confirm.ask("Skip this level? (No XP will be awarded)", default=False):
+                    self.cleanup_level(level_path, mission)
                     return True
 
             elif action == "quit":
                 console.print(
-                    "\n[yellow]👋 Thanks for playing K8sQuest! Progress saved.[/yellow]\n"
+                    "\n[yellow]👋 Progress saved. The level stays deployed. "
+                    "It is cleaned up when you start the next one.[/yellow]\n"
                 )
                 sys.exit(0)
 
-    def play_specific_level_by_name(self, level_name: str):
-        """Web mode: jump directly to a level by its directory name (e.g. 'level-1-pods')."""
-        import re
-        base_dir = Path(__file__).parent.parent / "worlds"
-        matches = list(base_dir.rglob(level_name))
-        if not matches:
-            console.print(f"[red]Level '{level_name}' not found.[/red]")
-            sys.exit(1)
-        level_path = matches[0]
-        self.play_level(level_path, level_name)
+    def all_levels(self):
+        return [(world, level) for world in discover_worlds() for level in discover_levels(world)]
+
+    @property
+    def total_levels(self):
+        return len(self.all_levels())
+
+    def play_from(self, start_level=None):
+        """Play levels in order, starting at start_level (a level dir name) or the beginning"""
+        levels = self.all_levels()
+        start = 0
+        if start_level:
+            for i, (_, level) in enumerate(levels):
+                if level.name == start_level:
+                    start = i + 1 if start_level in self.progress["completed_levels"] else i
+                    break
+        for world, level in levels[start:]:
+            self.progress["current_level"] = level.name
+            self.progress["current_world"] = world.name
+            self.save_progress()
+            if not self.play_level(level):
+                return
 
     def play_specific_level(self):
-        """Allow user to select and play a specific level"""
-        import re
-
-        # Get all worlds and their levels
-        worlds = {}
-        all_worlds = [
-            "world-1-basics",
-            "world-2-deployments",
-            "world-3-networking",
-            "world-4-storage",
-            "world-5-security",
-        ]
-
-        def natural_sort_key(path):
-            """Extract numbers from path for natural sorting"""
-            parts = re.split(r"(\d+)", path.name)
-            return [int(part) if part.isdigit() else part for part in parts]
-
-        # Collect all levels from all worlds
-        for world_name in all_worlds:
-            world_path = self.base_dir / "worlds" / world_name
-            if world_path.exists():
-                levels = sorted(
-                    [d for d in world_path.iterdir() if d.is_dir()],
-                    key=natural_sort_key,
-                )
-                worlds[world_name] = levels
-
-        # Display all levels organized by world
+        """Pick a level from the full list"""
         console.clear()
-        console.print(
-            Panel("[bold cyan]Select a Level to Play[/bold cyan]", border_style="cyan")
-        )
-        console.print()
+        console.print(Panel("[bold cyan]Select a Level to Play[/bold cyan]", border_style="cyan"))
+        choices = []
+        current_world = None
+        for world, level in self.all_levels():
+            if world != current_world:
+                current_world = world
+                title = world.name.replace("world-", "World ").replace("-", " ").title()
+                console.print(f"\n[bold yellow]{title}[/bold yellow]")
+            mission = self.load_mission(level)
+            status = "✅" if level.name in self.progress["completed_levels"] else "⭕"
+            domain = mission.get("domain", "")
+            choices.append((world, level))
+            console.print(f"  [{len(choices):2d}] {status} {mission.get('name', level.name)} [dim]{domain}[/dim]", markup=True)
 
-        level_choices = []
-        display_list = []
-
-        for world_name in all_worlds:
-            if world_name not in worlds:
-                continue
-
-            world_display = (
-                world_name.replace("world-", "World ").replace("-", " ").title()
-            )
-            console.print(f"\n[bold yellow]{world_display}[/bold yellow]")
-
-            for level_path in worlds[world_name]:
-                level_name = level_path.name
-                # Check if completed
-                status = (
-                    "✅" if level_name in self.progress["completed_levels"] else "⭕"
-                )
-
-                # Load mission to get the name
-                mission_file = level_path / "mission.yaml"
-                if mission_file.exists():
-                    with open(mission_file, "r", encoding='utf-8', errors='replace') as f:
-                        mission = yaml.safe_load(f)
-                        display_name = mission.get("name", level_name)
-                else:
-                    display_name = level_name
-
-                level_num = len(level_choices) + 1
-                level_choices.append((level_name, world_name, level_path))
-                display_list.append(f"  [{level_num:2d}] {status} {display_name}")
-                console.print(display_list[-1])
-
-        console.print("\n[dim]Enter level number or 'q' to quit[/dim]\n")
-
-        # Get user selection
+        console.print("\n[dim]Enter level number or 'q' to go back[/dim]\n")
         choice = Prompt.ask("Choose a level", default="q")
-
         if choice.lower() == "q":
-            console.print("\n[yellow]Returning to menu...[/yellow]\n")
             return
-
-        try:
-            level_index = int(choice) - 1
-            if 0 <= level_index < len(level_choices):
-                level_name, world_name, level_path = level_choices[level_index]
-
-                # Update progress to this level
-                self.progress["current_level"] = level_name
-                self.progress["current_world"] = world_name
-                self.save_progress()
-
-                # Play the level
-                self.play_level(level_path, level_name)
-
-                # After playing, ask what to do next
-                console.print("\n[cyan]What would you like to do?[/cyan]")
-                console.print("  [1] Play another level", markup=False)
-                console.print("  [2] Continue from here", markup=False)
-                console.print("  [q] Quit", markup=False)
-                console.print()
-
-                next_choice = Prompt.ask(
-                    "Your choice", choices=["1", "2", "q"], default="q"
-                )
-
-                if next_choice == "1":
-                    self.play_specific_level()  # Recursive call to play another
-                elif next_choice == "2":
-                    # Continue from this world
-                    all_worlds_list = [
-                        "world-1-basics",
-                        "world-2-deployments",
-                        "world-3-networking",
-                        "world-4-storage",
-                        "world-5-security",
-                    ]
-                    start_world_index = all_worlds_list.index(world_name)
-                    for world in all_worlds_list[start_world_index:]:
-                        if not self.play_world(world):
-                            break
-            else:
-                console.print("[red]Invalid level number[/red]")
-                time.sleep(1)
-                self.play_specific_level()
-        except ValueError:
-            console.print("[red]Please enter a valid number[/red]")
+        if not choice.isdigit() or not 1 <= int(choice) <= len(choices):
+            console.print("[red]Invalid level number[/red]")
             time.sleep(1)
+            return self.play_specific_level()
+
+        world, level = choices[int(choice) - 1]
+        self.progress["current_level"] = level.name
+        self.progress["current_world"] = world.name
+        self.save_progress()
+        if not self.play_level(level):
+            return
+        console.print("\n[cyan]What next?[/cyan]")
+        console.print("  [1] Pick another level", markup=False)
+        console.print("  [2] Continue in order from here", markup=False)
+        console.print("  [q] Quit", markup=False)
+        next_choice = Prompt.ask("Your choice", choices=["1", "2", "q"], default="q")
+        if next_choice == "1":
             self.play_specific_level()
-
-    def play_world(self, world_name):
-        """Play all levels in a world"""
-        world_path = self.base_dir / "worlds" / world_name
-
-        if not world_path.exists():
-            console.print(f"[red]Error: World '{world_name}' not found[/red]")
-            return False
-
-        # Get all level directories with natural sorting (level-1, level-2, ..., level-10)
-        import re
-
-        def natural_sort_key(path):
-            """Extract numbers from path for natural sorting"""
-            parts = re.split(r"(\d+)", path.name)
-            return [int(part) if part.isdigit() else part for part in parts]
-
-        levels = sorted(
-            [d for d in world_path.iterdir() if d.is_dir()], key=natural_sort_key
-        )
-
-        # Find where to resume from
-        start_index = 0
-        if self.progress.get("current_level"):
-            # Try to find the current level in the list
-            for i, level_path in enumerate(levels):
-                if level_path.name == self.progress["current_level"]:
-                    # If the level is already completed, start from the next one
-                    if (
-                        self.progress["current_level"]
-                        in self.progress["completed_levels"]
-                    ):
-                        start_index = i + 1
-                    else:
-                        start_index = i
-                    break
-
-        # Play levels starting from resume point
-        for level_path in levels[start_index:]:
-            level_name = level_path.name
-
-            # Save current level before playing
-            self.progress["current_level"] = level_name
-            self.progress["current_world"] = world_name
-            self.save_progress()
-
-            if not self.play_level(level_path, level_name):
-                return False  # Player quit or stopped
-
-        # World complete!
-        console.clear()
-        console.print(
-            Panel(
-                Text("🎉 WORLD COMPLETE! 🎉", style="bold green", justify="center")
-                + Text(
-                    f"\n\nTotal XP: {self.progress['total_xp']}",
-                    style="yellow",
-                    justify="center",
-                ),
-                border_style="green",
-                box=box.DOUBLE,
-            )
-        )
-        time.sleep(2)
-
-        return True  # World completed successfully
+        elif next_choice == "2":
+            self.play_from(level.name)
 
 
 def main():
-    game = K8sQuest()
+    game = CKAQuest()
 
-    # Web mode: bypass all menus and jump straight to the requested level.
-    # K8SQUEST_LEVEL is set by the backend when creating the engine pod.
-    if K8SQUEST_WEB:
-        if K8SQUEST_LEVEL:
-            game.play_specific_level_by_name(K8SQUEST_LEVEL)
-        else:
-            console.print("[red]K8SQUEST_WEB is set but K8SQUEST_LEVEL is missing.[/red]")
-            sys.exit(1)
-        return
-
-    # First time setup - get player name
     if game.progress["player_name"] == "Padawan":
         console.print()
         game.progress["player_name"] = get_player_name(console)
@@ -1479,93 +1066,37 @@ def main():
 
     game.show_welcome()
 
-    # All 5 worlds in order
-    all_worlds = [
-        "world-1-basics",
-        "world-2-deployments",
-        "world-3-networking",
-        "world-4-storage",
-        "world-5-security",
-    ]
-
-    # Check if there's progress to resume
-    has_progress = len(game.progress["completed_levels"]) > 0 or game.progress.get(
-        "current_level"
-    )
-
-    if has_progress:
-        current_level = game.progress.get("current_level", "None")
-        current_world = game.progress.get("current_world", "world-1-basics")
-        completed_count = len(game.progress["completed_levels"])
-
-        console.print(
-            Panel(
-                f"[yellow]📍 Resume Point Detected[/yellow]\n\n"
-                f"Current Level: [cyan]{current_level}[/cyan]\n"
-                f"Completed: [green]{completed_count}[/green] levels\n"
-                f"Total XP: [yellow]{game.progress['total_xp']}[/yellow]",
-                title="[bold]Continue Your Journey[/bold]",
-                border_style="yellow",
-            )
-        )
-        console.print()
-
-        # Offer three options
+    while True:
+        has_progress = bool(game.progress["completed_levels"]) or game.progress.get("current_level")
         console.print("[cyan]Choose an option:[/cyan]")
-        console.print("  [1] Continue from where you left off", markup=False)
+        if has_progress:
+            console.print("  [1] Continue where you left off", markup=False)
+        else:
+            console.print("  [1] Start from level 1", markup=False)
         console.print("  [2] Play a specific level", markup=False)
-        console.print("  [3] Start from the beginning", markup=False)
-        if game.get_completed_debriefs():
-            console.print("  [4] Review completed mission debriefs", markup=False)
-        console.print("  [q] Quit", markup=False)
-        console.print()
-
+        console.print("  [3] Start over (reset progress)", markup=False)
         menu_choices = ["1", "2", "3"]
         if game.get_completed_debriefs():
+            console.print("  [4] Review completed mission debriefs", markup=False)
             menu_choices.append("4")
-        menu_choices.append("q")
-        choice = Prompt.ask("Your choice", choices=menu_choices, default="1")
+        console.print("  [q] Quit", markup=False)
+        console.print()
+        choice = Prompt.ask("Your choice", choices=menu_choices + ["q"], default="1")
 
         if choice == "1":
-            # Find which world to start from
-            start_world_index = 0
-            for i, world in enumerate(all_worlds):
-                if world == current_world:
-                    start_world_index = i
-                    break
-
-            # Play from current world through to the end
-            for world in all_worlds[start_world_index:]:
-                if not game.play_world(world):
-                    break  # Player quit
-
+            game.play_from(game.progress.get("current_level"))
         elif choice == "2":
-            # Play specific level
             game.play_specific_level()
-
         elif choice == "3":
-            game.progress["current_level"] = None
-            game.progress["completed_levels"] = []
-            game.progress["total_xp"] = 0
-            game.save_progress()
-
-            # Play all worlds from the beginning
-            for world in all_worlds:
-                if not game.play_world(world):
-                    break  # Player quit
+            if Confirm.ask("Really reset all progress?", default=False):
+                game.progress.update(current_level=None, completed_levels=[], total_xp=0)
+                game.save_progress()
+                game.play_from(None)
         elif choice == "4":
             game.review_completed_debriefs()
-            main()
-        else:
-            console.print(f"\n[yellow]See you later, {game.progress['player_name']}![/yellow]\n")
-    else:
-        if Confirm.ask("Ready to start your training?", default=True):
-            # Play all worlds from the beginning
-            for world in all_worlds:
-                if not game.play_world(world):
-                    break  # Player quit
-        else:
-            console.print(f"\n[yellow]See you later, {game.progress['player_name']}![/yellow]\n")
+            continue
+        console.print(f"\n[yellow]See you later, {game.progress['player_name']}![/yellow]\n")
+        return
 
 
 if __name__ == "__main__":

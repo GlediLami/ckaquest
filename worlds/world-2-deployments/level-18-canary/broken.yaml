@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-stable
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 5  # PROBLEM! Should be 9 for 90% traffic
   selector:
@@ -27,7 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-canary
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 5  # PROBLEM! Should be 1 for 10% traffic
   selector:
@@ -52,7 +52,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-service
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   selector:
     app: myapp  # Matches BOTH stable and canary

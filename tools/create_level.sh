@@ -1,5 +1,5 @@
 #!/bin/bash
-# K8sQuest - Quick Level Creation Script
+# CKAQuest - Quick Level Creation Script
 # Usage: ./create_level.sh <world-number> <level-number> <level-name> <short-description>
 
 set -e
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: example-pod
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: app
@@ -63,7 +63,7 @@ cat > "$LEVEL_DIR/validate.sh" <<'EOF'
 #!/bin/bash
 
 # TODO: Add validation logic
-POD_STATUS=$(kubectl get pod example-pod -n k8squest -o jsonpath='{.status.phase}' 2>/dev/null)
+POD_STATUS=$(kubectl get pod example-pod -n ckaquest -o jsonpath='{.status.phase}' 2>/dev/null)
 
 if [ "$POD_STATUS" = "Running" ]; then
     echo "✅ Validation passed"
@@ -81,14 +81,14 @@ cat > "$LEVEL_DIR/hint-1.txt" <<EOF
 🔍 Observation Hint:
 
 TODO: Add observation hint
-Run: kubectl get pods -n k8squest
+Run: kubectl get pods -n ckaquest
 EOF
 
 cat > "$LEVEL_DIR/hint-2.txt" <<EOF
 🧭 Direction Hint:
 
 TODO: Add direction hint
-Check: kubectl describe pod <name> -n k8squest
+Check: kubectl describe pod <name> -n ckaquest
 EOF
 
 cat > "$LEVEL_DIR/hint-3.txt" <<EOF
@@ -125,7 +125,7 @@ TODO: Teach the concept properly
 
 \`\`\`bash
 # TODO: Add relevant commands
-kubectl get pods -n k8squest
+kubectl get pods -n ckaquest
 \`\`\`
 
 ## What's Next

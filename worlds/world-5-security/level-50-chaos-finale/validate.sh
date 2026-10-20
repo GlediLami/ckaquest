@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 DEPLOYMENT="chaos-app"
 
 echo "🔥 CHAOS FINALE VALIDATION 🔥"

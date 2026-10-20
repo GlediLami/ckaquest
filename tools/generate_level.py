@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-K8sQuest Level Generator
+CKAQuest Level Generator
 Creates a complete level structure from a template
 """
 
@@ -93,6 +93,6 @@ exit 0
     return level_dir
 
 if __name__ == "__main__":
-    print("K8sQuest Level Generator")
+    print("CKAQuest Level Generator")
     print("This tool helps create level structures quickly")
     print("Edit this script to add level configurations")

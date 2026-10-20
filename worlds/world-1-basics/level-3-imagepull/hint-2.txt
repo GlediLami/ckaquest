@@ -4,4 +4,4 @@ The error shows "ImagePullBackOff" or "ErrImagePull". This means Kubernetes can'
 
 Check the image name and tag in the pod specification. Does that image tag actually exist in Docker Hub?
 
-Try: `kubectl get pod web-app -n k8squest -o yaml | grep image:`
+Try: `kubectl get pod web-app -n ckaquest -o yaml | grep image:`

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 POD_NAME="secure-app"
 
 echo "🔍 VALIDATION STAGE 1: Checking namespace security labels..."

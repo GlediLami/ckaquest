@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 PV_NAME="important-data"
 PVC_NAME="data-claim"
 POD_NAME="data-writer"

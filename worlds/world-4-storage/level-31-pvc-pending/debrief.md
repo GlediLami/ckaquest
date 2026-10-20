@@ -59,7 +59,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/k8squest-data
+    path: /tmp/ckaquest-data
 ```
 
 **How binding works now:**

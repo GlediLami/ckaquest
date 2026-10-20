@@ -3,8 +3,8 @@
 Fix the client pod to use correct service name:
 
 ```bash
-kubectl delete pod app-client -n k8squest
-kubectl apply -f solution.yaml -n k8squest
+kubectl delete pod app-client -n ckaquest
+kubectl apply -f solution.yaml -n ckaquest
 ```
 
 Or edit broken.yaml and change:
@@ -23,5 +23,5 @@ args:
 
 Then recreate the pod. Check logs to verify connection success:
 ```bash
-kubectl logs app-client -n k8squest
+kubectl logs app-client -n ckaquest
 ```

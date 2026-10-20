@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Player name generator for K8sQuest
+Player name generator for CKAQuest
 Generates cool DevOps/SRE themed usernames
 """
 

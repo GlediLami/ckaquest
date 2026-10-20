@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Exam-style "ssh node01" for CKAQuest. Only active inside a shell that sourced env.sh.
+# Known node names go into the kind node container. Everything else goes to the real ssh.
+source "$(dirname "$0")/../../lib/common.sh"
+
+target="${1:-}"
+target="${target#*@}"   # allow root@node01
+if container="$(cq_node_container "$target" 2>/dev/null)"; then
+  shift
+  if [ $# -gt 0 ]; then
+    exec docker exec -i "$container" bash -c "$*"
+  fi
+  exec docker exec -it -e PS1="root@${target}:\w# " -w /root "$container" bash
+fi
+
+# Fall through to the real ssh binary, skipping this shim.
+self_dir="$(cd "$(dirname "$0")" && pwd)"
+PATH="$(printf '%s' "$PATH" | tr ':' '\n' | grep -vx "$self_dir" | paste -sd: -)"
+exec ssh "$@"

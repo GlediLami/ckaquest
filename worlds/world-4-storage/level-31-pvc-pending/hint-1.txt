@@ -3,12 +3,12 @@
 Let's investigate why the PVC is stuck in Pending:
 
 1️⃣ Check the PVC status:
-   kubectl get pvc -n k8squest
+   kubectl get pvc -n ckaquest
    
    Notice the STATUS column - what does it show?
 
 2️⃣ Get more details about the PVC:
-   kubectl describe pvc app-storage-claim -n k8squest
+   kubectl describe pvc app-storage-claim -n ckaquest
    
    Look for:
    • Status: Pending
@@ -21,12 +21,12 @@ Let's investigate why the PVC is stuck in Pending:
    Do you see a PV that could satisfy the PVC?
 
 4️⃣ Check the pod status:
-   kubectl get pod database-pod -n k8squest
+   kubectl get pod database-pod -n ckaquest
    
    What state is it in? Can you see why?
 
 5️⃣ Describe the pod to see events:
-   kubectl describe pod database-pod -n k8squest
+   kubectl describe pod database-pod -n ckaquest
    
    Look for messages about volume mounting issues
 

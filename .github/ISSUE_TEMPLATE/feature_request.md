@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement for K8sQuest
+about: Suggest a new feature or enhancement for CKAQuest
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

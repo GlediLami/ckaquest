@@ -16,13 +16,13 @@ Here's the exact fix you need:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: k8squest
+  name: ckaquest
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: web-cluster
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   clusterIP: None  # ✅ KEY CHANGE: Makes service headless
   selector:
@@ -35,7 +35,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: web
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   serviceName: web-cluster  # Must match headless service name
   replicas: 3
@@ -57,13 +57,13 @@ spec:
 🚀 How to Apply:
 
 1️⃣ Delete the existing service:
-   kubectl delete service web-cluster -n k8squest
+   kubectl delete service web-cluster -n ckaquest
 
 2️⃣ Apply the fixed configuration:
    kubectl apply -f solution.yaml
 
 3️⃣ Verify the service is headless:
-   kubectl get service web-cluster -n k8squest
+   kubectl get service web-cluster -n ckaquest
    
    Output should show:
    NAME          TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
@@ -72,7 +72,7 @@ spec:
    Notice: CLUSTER-IP is "None" (headless!)
 
 4️⃣ Wait for StatefulSet pods:
-   kubectl get pods -n k8squest -l app=web-cluster -w
+   kubectl get pods -n ckaquest -l app=web-cluster -w
    
    Pods will come up in order:
    • web-0 (first)
@@ -81,12 +81,12 @@ spec:
 
 5️⃣ Test per-pod DNS resolution:
    # Start a debug pod
-   kubectl run -it --rm debug --image=busybox:1.28 -n k8squest -- sh
+   kubectl run -it --rm debug --image=busybox:1.28 -n ckaquest -- sh
    
    # Inside the debug pod, test DNS:
-   nslookup web-0.web-cluster.k8squest.svc.cluster.local
-   nslookup web-1.web-cluster.k8squest.svc.cluster.local
-   nslookup web-2.web-cluster.k8squest.svc.cluster.local
+   nslookup web-0.web-cluster.ckaquest.svc.cluster.local
+   nslookup web-1.web-cluster.ckaquest.svc.cluster.local
+   nslookup web-2.web-cluster.ckaquest.svc.cluster.local
    
    Each should resolve to the specific pod's IP!
 
@@ -94,7 +94,7 @@ spec:
 
 BEFORE (Regular ClusterIP Service):
 ┌──────────────────────────────────────────────────────┐
-│  DNS Query: web-cluster.k8squest.svc.cluster.local  │
+│  DNS Query: web-cluster.ckaquest.svc.cluster.local  │
 │      ↓                                               │
 │  Returns: 10.96.100.50 (virtual ClusterIP)          │
 │      ↓                                               │
@@ -112,22 +112,22 @@ BEFORE (Regular ClusterIP Service):
 
 AFTER (Headless Service):
 ┌──────────────────────────────────────────────────────┐
-│  DNS Query: web-0.web-cluster.k8squest.svc...       │
+│  DNS Query: web-0.web-cluster.ckaquest.svc...       │
 │      ↓                                               │
 │  Returns: 10.244.1.5 (web-0 pod IP directly)        │
 │                                                      │
-│  DNS Query: web-1.web-cluster.k8squest.svc...       │
+│  DNS Query: web-1.web-cluster.ckaquest.svc...       │
 │      ↓                                               │
 │  Returns: 10.244.1.6 (web-1 pod IP directly)        │
 │                                                      │
-│  DNS Query: web-2.web-cluster.k8squest.svc...       │
+│  DNS Query: web-2.web-cluster.ckaquest.svc...       │
 │      ↓                                               │
 │  Returns: 10.244.1.7 (web-2 pod IP directly)        │
 │                                                      │
 │ ✅ Each pod reachable by stable DNS name!            │
 │                                                      │
 │ Also works:                                          │
-│  DNS Query: web-cluster.k8squest.svc...             │
+│  DNS Query: web-cluster.ckaquest.svc...             │
 │      ↓                                               │
 │  Returns: [10.244.1.5, 10.244.1.6, 10.244.1.7]      │
 │  (All pod IPs, no load balancing)                   │
@@ -138,9 +138,9 @@ AFTER (Headless Service):
 Format: <pod-name>.<service-name>.<namespace>.svc.cluster.local
 
 Examples:
-• web-0.web-cluster.k8squest.svc.cluster.local → web-0 pod
-• web-1.web-cluster.k8squest.svc.cluster.local → web-1 pod
-• web-2.web-cluster.k8squest.svc.cluster.local → web-2 pod
+• web-0.web-cluster.ckaquest.svc.cluster.local → web-0 pod
+• web-1.web-cluster.ckaquest.svc.cluster.local → web-1 pod
+• web-2.web-cluster.ckaquest.svc.cluster.local → web-2 pod
 
 Short forms also work (within same namespace):
 • web-0.web-cluster → web-0 pod
@@ -310,15 +310,15 @@ spec:
 ✅ Apply this solution and your StatefulSet will have stable network identities!
 
 After applying, verify with:
-   kubectl get service web-cluster -n k8squest
+   kubectl get service web-cluster -n ckaquest
    # Should show: CLUSTER-IP = None
    
-   kubectl get pods -n k8squest -l app=web-cluster
+   kubectl get pods -n ckaquest -l app=web-cluster
    # Should show: web-0, web-1, web-2
    
    # Test DNS from a debug pod:
-   kubectl run -it --rm debug --image=busybox:1.28 -n k8squest -- \
-     nslookup web-0.web-cluster.k8squest.svc.cluster.local
+   kubectl run -it --rm debug --image=busybox:1.28 -n ckaquest -- \
+     nslookup web-0.web-cluster.ckaquest.svc.cluster.local
 
 The key change is just one line: clusterIP: None
 This makes all the difference for StatefulSets!

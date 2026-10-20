@@ -159,7 +159,7 @@ All levels include:
 
 ## Integration with Game Engine
 
-Levels are fully compatible with the K8sQuest engine:
+Levels are fully compatible with the CKAQuest engine:
 - ✅ Progressive hint system (3 tiers)
 - ✅ XP tracking (200-250 XP per level)
 - ✅ Difficulty ratings (beginner → advanced)

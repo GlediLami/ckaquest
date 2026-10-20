@@ -3,28 +3,28 @@
 Let's investigate the RBAC permission issue:
 
 1️⃣ Check pod status and logs:
-   kubectl get pod pod-lister -n k8squest
-   kubectl logs pod-lister -n k8squest
+   kubectl get pod pod-lister -n ckaquest
+   kubectl logs pod-lister -n ckaquest
    
    What error do you see? "Forbidden"?
 
 2️⃣ Check ServiceAccount:
-   kubectl get serviceaccount pod-reader -n k8squest
+   kubectl get serviceaccount pod-reader -n ckaquest
    
    ServiceAccount exists, but does it have permissions?
 
 3️⃣ Check for Role:
-   kubectl get role -n k8squest
+   kubectl get role -n ckaquest
    
    Is there a Role defined?
 
 4️⃣ Check for RoleBinding:
-   kubectl get rolebinding -n k8squest
+   kubectl get rolebinding -n ckaquest
    
    Is there a RoleBinding connecting ServiceAccount to Role?
 
 5️⃣ Test permissions directly:
-   kubectl auth can-i list pods --as=system:serviceaccount:k8squest:pod-reader -n k8squest
+   kubectl auth can-i list pods --as=system:serviceaccount:ckaquest:pod-reader -n ckaquest
    
    Does it say "no"?
 

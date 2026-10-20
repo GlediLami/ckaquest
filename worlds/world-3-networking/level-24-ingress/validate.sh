@@ -5,7 +5,7 @@
 
 set -e
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 INGRESS_NAME="web-ingress"
 SERVICE_NAME="web-service"
 

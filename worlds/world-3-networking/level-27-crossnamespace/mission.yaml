@@ -6,7 +6,7 @@ xp: 250
 difficulty: intermediate
 
 description: |
-  A frontend application in the 'k8squest' namespace needs to call an API in the 
+  A frontend application in the 'ckaquest' namespace needs to call an API in the 
   'backend-ns' namespace, but it can't connect. The issue is using a short service 
   name instead of the fully-qualified domain name (FQDN). You need to fix the DNS 
   name to enable cross-namespace communication.

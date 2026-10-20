@@ -9,7 +9,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-data
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   accessModes:
     - ReadWriteOnce
@@ -35,14 +35,14 @@ kubectl delete -f broken.yaml
 kubectl apply -f solution.yaml
 
 # Write data
-kubectl exec data-app -n k8squest -- sh -c 'echo "persistent data" > /data/test.txt'
+kubectl exec data-app -n ckaquest -- sh -c 'echo "persistent data" > /data/test.txt'
 
 # Restart pod
-kubectl delete pod data-app -n k8squest
+kubectl delete pod data-app -n ckaquest
 kubectl apply -f solution.yaml
 
 # Check data still exists!
-kubectl exec data-app -n k8squest -- cat /data/test.txt
+kubectl exec data-app -n ckaquest -- cat /data/test.txt
 # Should show "persistent data" - survived the restart!
 ```
 

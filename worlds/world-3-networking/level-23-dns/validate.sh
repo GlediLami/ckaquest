@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if client pod can resolve service DNS
-LOGS=$(kubectl logs app-client -n k8squest --tail=10 2>/dev/null)
+LOGS=$(kubectl logs app-client -n ckaquest --tail=10 2>/dev/null)
 
 # Check for pg_isready success message with correct service name
 if echo "$LOGS" | grep -qE "(database-service|database):5432 - accepting connections"; then

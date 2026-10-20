@@ -2,8 +2,8 @@
 
 Steps to fix:
 1. Delete from default namespace: `kubectl delete -f broken.yaml`
-2. Edit broken.yaml and change ALL `namespace: default` to `namespace: k8squest`
+2. Edit broken.yaml and change ALL `namespace: default` to `namespace: ckaquest`
 3. Apply to correct namespace: `kubectl apply -f broken.yaml`
-4. Verify: `kubectl get all -n k8squest`
+4. Verify: `kubectl get all -n ckaquest`
 
-All resources should now be in the k8squest namespace!
+All resources should now be in the ckaquest namespace!

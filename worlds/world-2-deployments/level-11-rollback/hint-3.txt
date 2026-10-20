@@ -2,7 +2,7 @@
 
 Rollback the deployment to the previous working version:
 
-`kubectl rollout undo deployment/web-app -n k8squest`
+`kubectl rollout undo deployment/web-app -n ckaquest`
 
 This will:
 1. Revert to the previous ReplicaSet
@@ -10,7 +10,7 @@ This will:
 3. Scale up the working pods
 
 Then verify:
-`kubectl get deployment web-app -n k8squest`
-`kubectl get pods -n k8squest`
+`kubectl get deployment web-app -n ckaquest`
+`kubectl get pods -n ckaquest`
 
 All 3 pods should be Running!

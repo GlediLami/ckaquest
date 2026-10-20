@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 POD_NAME="resource-hungry-app"
 QUOTA_NAME="compute-quota"
 

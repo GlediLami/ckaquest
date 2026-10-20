@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: k8squest
+  name: ckaquest
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -16,14 +16,14 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: standard
   hostPath:
-    path: /tmp/k8squest-config
+    path: /tmp/ckaquest-config
     type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: config-pvc
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   accessModes:
     - ReadWriteOnce
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: app

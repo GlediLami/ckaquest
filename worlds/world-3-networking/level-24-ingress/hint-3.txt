@@ -41,7 +41,7 @@ Step-by-Step:
 
 3. **Verify the change:**
    ```bash
-   kubectl describe ingress web-ingress -n k8squest
+   kubectl describe ingress web-ingress -n ckaquest
    ```
 
    You should see:

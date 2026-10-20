@@ -1,7 +1,7 @@
 🧭 Direction Hint:
 
-The resources are in the "default" namespace, but they should be in the "k8squest" namespace for this quest!
+The resources are in the "default" namespace, but they should be in the "ckaquest" namespace for this quest!
 
 Look at broken.yaml - the metadata sections specify `namespace: default`.
 
-You need to change this to `namespace: k8squest`.
+You need to change this to `namespace: ckaquest`.

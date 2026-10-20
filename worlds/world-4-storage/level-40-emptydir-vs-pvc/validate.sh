@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 POD_NAME="data-app"
 PVC_NAME="app-data"
 

@@ -18,7 +18,7 @@
 Fixes #(issue number)
 
 ## 📍 Affected Levels/Areas
-<!-- Which parts of K8sQuest does this affect? -->
+<!-- Which parts of CKAQuest does this affect? -->
 - [ ] World 1 - Basics
 - [ ] World 2 - Deployments
 - [ ] World 3 - Networking
@@ -65,7 +65,7 @@ Fixes #(issue number)
 ### Reviewer Checklist
 <!-- For maintainers -->
 - [ ] Code quality is acceptable
-- [ ] Changes align with K8sQuest's learning objectives
+- [ ] Changes align with CKAQuest's learning objectives
 - [ ] No security concerns
 - [ ] Documentation is adequate
 - [ ] Tested locally and works as described

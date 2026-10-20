@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 DEPLOYMENT="web-servers"
 PVC_NAME="shared-pvc"
 PV_NAME="shared-storage"

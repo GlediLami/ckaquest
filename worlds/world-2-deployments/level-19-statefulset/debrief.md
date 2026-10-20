@@ -101,9 +101,9 @@ StatefulSet:    myapp-0             (stable ordinal)
 
 ```
 DNS for StatefulSet pods:
-- database-0.database-service.k8squest.svc.cluster.local
-- database-1.database-service.k8squest.svc.cluster.local
-- database-2.database-service.k8squest.svc.cluster.local
+- database-0.database-service.ckaquest.svc.cluster.local
+- database-1.database-service.ckaquest.svc.cluster.local
+- database-2.database-service.ckaquest.svc.cluster.local
 
 Even if pod is deleted and recreated, DNS name stays the same!
 ```

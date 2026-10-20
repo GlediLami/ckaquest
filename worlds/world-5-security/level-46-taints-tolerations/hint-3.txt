@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: regular-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: app
@@ -38,7 +38,7 @@ kubectl taint nodes kind-control-plane dedicated=gpu:NoSchedule --overwrite
 kubectl apply -f solution.yaml
 
 # Verify
-kubectl get pod regular-app -n k8squest
+kubectl get pod regular-app -n ckaquest
 # Should be Running
 
 # Run validation

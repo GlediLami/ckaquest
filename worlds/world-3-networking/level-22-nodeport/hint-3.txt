@@ -3,13 +3,13 @@
 Edit the service to add explicit NodePort:
 
 ```bash
-kubectl edit svc web-nodeport -n k8squest
+kubectl edit svc web-nodeport -n ckaquest
 ```
 
 Or delete and reapply:
 ```bash
-kubectl delete svc web-nodeport -n k8squest
-kubectl apply -f solution.yaml -n k8squest
+kubectl delete svc web-nodeport -n ckaquest
+kubectl apply -f solution.yaml -n ckaquest
 ```
 
 Add this to the ports section:

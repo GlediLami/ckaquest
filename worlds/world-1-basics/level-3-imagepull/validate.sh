@@ -2,8 +2,8 @@
 
 echo "🔍 Checking pod status..."
 
-POD_STATUS=$(kubectl get pod web-app -n k8squest -o jsonpath='{.status.phase}' 2>/dev/null)
-READY=$(kubectl get pod web-app -n k8squest -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null)
+POD_STATUS=$(kubectl get pod web-app -n ckaquest -o jsonpath='{.status.phase}' 2>/dev/null)
+READY=$(kubectl get pod web-app -n ckaquest -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null)
 
 echo "   Phase: $POD_STATUS"
 echo "   Ready: $READY"
@@ -13,6 +13,6 @@ if [[ "$POD_STATUS" == "Running" ]] && [[ "$READY" == "true" ]]; then
     exit 0
 else
     echo "❌ Pod is not running properly"
-    echo "💡 Hint: Check 'kubectl describe pod web-app -n k8squest' for ImagePullBackOff errors"
+    echo "💡 Hint: Check 'kubectl describe pod web-app -n ckaquest' for ImagePullBackOff errors"
     exit 1
 fi

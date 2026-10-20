@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if NodePort is explicitly set
-NODEPORT=$(kubectl get svc web-nodeport -n k8squest -o jsonpath='{.spec.ports[0].nodePort}' 2>/dev/null)
+NODEPORT=$(kubectl get svc web-nodeport -n ckaquest -o jsonpath='{.spec.ports[0].nodePort}' 2>/dev/null)
 
 if [[ -z "$NODEPORT" ]]; then
   echo "❌ Service not found"

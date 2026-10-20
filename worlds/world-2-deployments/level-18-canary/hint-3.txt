@@ -4,18 +4,18 @@ Fix the replica counts to achieve 90/10 split.
 
 Steps:
 1. Scale stable to 9 replicas:
-   `kubectl scale deployment app-stable --replicas=9 -n k8squest`
+   `kubectl scale deployment app-stable --replicas=9 -n ckaquest`
 
 2. Scale canary to 1 replica:
-   `kubectl scale deployment app-canary --replicas=1 -n k8squest`
+   `kubectl scale deployment app-canary --replicas=1 -n ckaquest`
 
 3. Wait for pods to be ready:
-   `kubectl get deployments -n k8squest -w`
+   `kubectl get deployments -n ckaquest -w`
 
 4. Verify the split:
    ```bash
-   STABLE=$(kubectl get deployment app-stable -n k8squest -o jsonpath='{.status.readyReplicas}')
-   CANARY=$(kubectl get deployment app-canary -n k8squest -o jsonpath='{.status.readyReplicas}')
+   STABLE=$(kubectl get deployment app-stable -n ckaquest -o jsonpath='{.status.readyReplicas}')
+   CANARY=$(kubectl get deployment app-canary -n ckaquest -o jsonpath='{.status.readyReplicas}')
    echo "Stable: $STABLE, Canary: $CANARY"
    echo "Canary percentage: $((CANARY * 100 / (STABLE + CANARY)))%"
    ```

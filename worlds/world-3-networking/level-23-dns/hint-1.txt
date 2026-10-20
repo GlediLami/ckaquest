@@ -1,9 +1,9 @@
 🔍 Observation Hint:
 
-Check the client pod logs: `kubectl logs app-client -n k8squest`
+Check the client pod logs: `kubectl logs app-client -n ckaquest`
 
 You'll see "Connection failed" repeating. The pod is trying to connect to hostname "database".
 
-But what's the actual SERVICE name? `kubectl get svc -n k8squest`
+But what's the actual SERVICE name? `kubectl get svc -n ckaquest`
 
 The service is named "database-service", not "database"!

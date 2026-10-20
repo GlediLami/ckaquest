@@ -5,7 +5,7 @@ Start by examining what's happening with the pod:
 ## Step 1: Check Pod Status
 
 ```bash
-kubectl get pod web-app -n k8squest
+kubectl get pod web-app -n ckaquest
 ```
 
 Look for the status. You might see:
@@ -16,7 +16,7 @@ Look for the status. You might see:
 ## Step 2: Examine Pod Events
 
 ```bash
-kubectl describe pod web-app -n k8squest
+kubectl describe pod web-app -n ckaquest
 ```
 
 Look at the **Events** section at the bottom. You should see an error like:
@@ -29,7 +29,7 @@ This tells you the issue: **runAsNonRoot is enabled but no user ID specified!**
 ## Step 3: Check Current SecurityContext
 
 ```bash
-kubectl get pod web-app -n k8squest -o yaml | grep -A 10 securityContext
+kubectl get pod web-app -n ckaquest -o yaml | grep -A 10 securityContext
 ```
 
 You'll see:
@@ -68,10 +68,10 @@ The SecurityContext needs:
 After fixing:
 ```bash
 # Check if pod is running
-kubectl get pod web-app -n k8squest
+kubectl get pod web-app -n ckaquest
 
 # Verify what user container is running as
-kubectl exec web-app -n k8squest -- id
+kubectl exec web-app -n ckaquest -- id
 
 # Should show: uid=1000 (not uid=0/root)
 ```

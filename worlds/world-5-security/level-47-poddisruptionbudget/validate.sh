@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 DEPLOYMENT="web-app"
 PDB_NAME="web-pdb"
 

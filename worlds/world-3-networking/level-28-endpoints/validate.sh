@@ -5,7 +5,7 @@
 
 set -e
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 SERVICE_NAME="web-service"
 
 echo "🔍 Level 28: Service Endpoints Not Updating - Validation"

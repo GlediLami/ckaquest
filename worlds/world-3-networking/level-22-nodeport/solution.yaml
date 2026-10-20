@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
   labels:
     app: web
 spec:
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-nodeport
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   type: NodePort
   selector:

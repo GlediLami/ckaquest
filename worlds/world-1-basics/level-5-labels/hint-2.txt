@@ -3,9 +3,9 @@
 The service finds pods using **label selectors**. The service's selector must match the pod's labels.
 
 Check the service selector:
-`kubectl get service backend-service -n k8squest -o yaml | grep -A 3 selector:`
+`kubectl get service backend-service -n ckaquest -o yaml | grep -A 3 selector:`
 
 Check the pod labels:
-`kubectl get pod backend-app -n k8squest --show-labels`
+`kubectl get pod backend-app -n ckaquest --show-labels`
 
 Do the labels match? Find the mismatch!

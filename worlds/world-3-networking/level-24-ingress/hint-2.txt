@@ -72,7 +72,7 @@ Edit broken.yaml and change the path from "/api" to "/", then reapply:
 ```bash
 # After editing
 kubectl apply -f broken.yaml
-kubectl get ingress web-ingress -n k8squest
+kubectl get ingress web-ingress -n ckaquest
 ```
 
 ---

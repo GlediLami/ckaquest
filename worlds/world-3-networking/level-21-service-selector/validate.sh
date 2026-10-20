@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if service has endpoints
-ENDPOINTS=$(kubectl get endpoints backend-service -n k8squest -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null)
+ENDPOINTS=$(kubectl get endpoints backend-service -n ckaquest -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null)
 
 if [[ -z "$ENDPOINTS" ]]; then
   echo "❌ Service has no endpoints. Check the selector!"
@@ -9,7 +9,7 @@ if [[ -z "$ENDPOINTS" ]]; then
 fi
 
 # Test connectivity from test-client pod
-RESPONSE=$(kubectl exec test-client -n k8squest -- curl -s -o /dev/null -w "%{http_code}" http://backend-service 2>/dev/null)
+RESPONSE=$(kubectl exec test-client -n ckaquest -- curl -s -o /dev/null -w "%{http_code}" http://backend-service 2>/dev/null)
 
 if [[ "$RESPONSE" == "200" ]]; then
   echo "✅ Level complete! Service is routing traffic correctly"

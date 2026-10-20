@@ -7,60 +7,60 @@
 ### Investigation & Debugging
 ```bash
 # Check pod status
-kubectl get pods -n k8squest
+kubectl get pods -n ckaquest
 
 # Detailed pod information
-kubectl describe pod <pod-name> -n k8squest
+kubectl describe pod <pod-name> -n ckaquest
 
 # View container logs
-kubectl logs <pod-name> -n k8squest
+kubectl logs <pod-name> -n ckaquest
 
 # View logs for specific container in multi-container pod
-kubectl logs <pod-name> -c <container-name> -n k8squest
+kubectl logs <pod-name> -c <container-name> -n ckaquest
 
 # Stream logs in real-time
-kubectl logs -f <pod-name> -n k8squest
+kubectl logs -f <pod-name> -n ckaquest
 
 # Get previous container logs (after crash)
-kubectl logs <pod-name> --previous -n k8squest
+kubectl logs <pod-name> --previous -n ckaquest
 
 # Check events (critical for debugging!)
-kubectl get events -n k8squest --sort-by='.lastTimestamp'
+kubectl get events -n ckaquest --sort-by='.lastTimestamp'
 
 # Interactive shell into running container
-kubectl exec -it <pod-name> -n k8squest -- /bin/sh
+kubectl exec -it <pod-name> -n ckaquest -- /bin/sh
 ```
 
 ### Resource Management
 ```bash
 # List all resources in namespace
-kubectl get all -n k8squest
+kubectl get all -n ckaquest
 
 # Delete and recreate pod
-kubectl delete pod <pod-name> -n k8squest
-kubectl apply -f <file.yaml> -n k8squest
+kubectl delete pod <pod-name> -n ckaquest
+kubectl apply -f <file.yaml> -n ckaquest
 
 # Force delete stuck pod
-kubectl delete pod <pod-name> -n k8squest --grace-period=0 --force
+kubectl delete pod <pod-name> -n ckaquest --grace-period=0 --force
 
 # Check resource quotas
-kubectl get resourcequota -n k8squest
-kubectl describe resourcequota -n k8squest
+kubectl get resourcequota -n ckaquest
+kubectl describe resourcequota -n ckaquest
 ```
 
 ### YAML Editing
 ```bash
 # Apply changes from file
-kubectl apply -f broken.yaml -n k8squest
+kubectl apply -f broken.yaml -n ckaquest
 
 # Edit live resource (dangerous!)
-kubectl edit pod <pod-name> -n k8squest
+kubectl edit pod <pod-name> -n ckaquest
 
 # View current YAML
-kubectl get pod <pod-name> -n k8squest -o yaml
+kubectl get pod <pod-name> -n ckaquest -o yaml
 
 # Dry-run to test changes
-kubectl apply -f solution.yaml -n k8squest --dry-run=client
+kubectl apply -f solution.yaml -n ckaquest --dry-run=client
 ```
 
 ---
@@ -158,8 +158,8 @@ resources:
 **Symptoms:** Service has no endpoints, pods not selected  
 **First Check:** 
 ```bash
-kubectl get pods --show-labels -n k8squest
-kubectl describe svc <service> -n k8squest
+kubectl get pods --show-labels -n ckaquest
+kubectl describe svc <service> -n ckaquest
 ```
 
 **Common Causes:**
@@ -192,21 +192,21 @@ metadata:
 ### Tip 1: Events Are Your Friend
 **Always check events when stuck:**
 ```bash
-kubectl get events -n k8squest --sort-by='.lastTimestamp' | tail -20
+kubectl get events -n ckaquest --sort-by='.lastTimestamp' | tail -20
 ```
 Events show you what Kubernetes tried to do and why it failed.
 
 ### Tip 2: Previous Logs After Crash
 **Container crashed? Get the logs from before it died:**
 ```bash
-kubectl logs <pod> --previous -n k8squest
+kubectl logs <pod> --previous -n ckaquest
 ```
 Without `--previous`, you only see logs from current (crashed) container.
 
 ### Tip 3: Describe Everything
 **`kubectl describe` is more detailed than `kubectl get`:**
 ```bash
-kubectl describe pod <pod> -n k8squest
+kubectl describe pod <pod> -n ckaquest
 # Shows: Events, status, conditions, volumes, QoS, more
 ```
 
@@ -222,7 +222,7 @@ kubectl get ns    # namespaces
 ### Tip 5: Watch Mode
 **See changes in real-time:**
 ```bash
-kubectl get pods -n k8squest -w
+kubectl get pods -n ckaquest -w
 # Press Ctrl+C to stop watching
 ```
 
@@ -282,7 +282,7 @@ By completing World 1, you should be able to:
 - [Debug Pods](https://kubernetes.io/docs/tasks/debug/debug-application/)
 - [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 
-### K8sQuest Resources
+### CKAQuest Resources
 - Use `guide` command in game for step-by-step walkthroughs
 - Use `hints` command for progressive hints (3 levels)
 - Read `debrief.md` after completing each level for deep learning
@@ -293,11 +293,11 @@ By completing World 1, you should be able to:
 
 When stuck on a level, try these in order:
 
-- [ ] `kubectl get pods -n k8squest` - What's the status?
-- [ ] `kubectl describe pod <pod> -n k8squest` - Check Events section
-- [ ] `kubectl logs <pod> -n k8squest` - Any application errors?
-- [ ] `kubectl logs <pod> --previous -n k8squest` - If crashed, check previous logs
-- [ ] `kubectl get events -n k8squest --sort-by='.lastTimestamp'` - Recent events
+- [ ] `kubectl get pods -n ckaquest` - What's the status?
+- [ ] `kubectl describe pod <pod> -n ckaquest` - Check Events section
+- [ ] `kubectl logs <pod> -n ckaquest` - Any application errors?
+- [ ] `kubectl logs <pod> --previous -n ckaquest` - If crashed, check previous logs
+- [ ] `kubectl get events -n ckaquest --sort-by='.lastTimestamp'` - Recent events
 - [ ] Compare `broken.yaml` with expected behavior - What's different?
 - [ ] Use `hints` in game - Get nudge in right direction
 - [ ] Use `guide` in game - Step-by-step solution if really stuck

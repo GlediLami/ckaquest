@@ -1,4 +1,4 @@
-# K8sQuest 🕹️⚙️
+# CKAQuest 🕹️⚙️
 
 [![Platform Support](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)]()
 [![Shell](https://img.shields.io/badge/shell-bash-green)]()
@@ -6,7 +6,7 @@
 
 Learn Kubernetes by fixing it.
 
-K8sQuest is a **local, game-based Kubernetes training platform** with an interactive GUI-like terminal interface. Each mission breaks something in Kubernetes. Your job is to fix it.
+CKAQuest is a **local, game-based Kubernetes training platform** with an interactive GUI-like terminal interface. Each mission breaks something in Kubernetes. Your job is to fix it.
 
 **50 progressive challenges across 5 worlds** - from beginner to advanced.
 
@@ -26,10 +26,10 @@ No cloud. No AWS. No costs.
 
 ## 🛡️ Safety First
 
-K8sQuest includes **comprehensive safety guards** (enabled by default):
+CKAQuest includes **comprehensive safety guards** (enabled by default):
 - ✅ Prevents deletion of critical namespaces (kube-system, default, etc.)
 - ✅ Blocks destructive cluster-wide operations
-- ✅ Limits operations to `k8squest` namespace via RBAC
+- ✅ Limits operations to `ckaquest` namespace via RBAC
 - ✅ Confirms risky operations before execution
 - ✅ Safe for beginners - hard to break things!
 
@@ -45,7 +45,7 @@ K8sQuest includes **comprehensive safety guards** (enabled by default):
 
 ## Platform Support
 
-K8sQuest works on **Linux, macOS, and Windows**!
+CKAQuest works on **Linux, macOS, and Windows**!
 
 - ✅ **Linux** - Native bash support
 - ✅ **macOS** - Native bash support  
@@ -62,13 +62,13 @@ Quick setup - just run:
 
 ### Windows Installation
 
-K8sQuest supports Windows! Follow these steps:
+CKAQuest supports Windows! Follow these steps:
 
 #### Prerequisites
 
 1. **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
    - Install and enable WSL2 backend (recommended)
-   - **Start Docker Desktop** before running K8sQuest
+   - **Start Docker Desktop** before running CKAQuest
 
 2. **Git for Windows** - [Download](https://git-scm.com/download/win)
    - ✅ Includes Git Bash (required!)
@@ -119,8 +119,8 @@ K8sQuest supports Windows! Follow these steps:
 ```bash
 # 1. Open Git Bash (not PowerShell/CMD!)
 # 2. Clone the repository
-git clone https://github.com/Manoj-engineer/k8squest.git
-cd k8squest
+git clone https://github.com/Manoj-engineer/ckaquest.git
+cd ckaquest
 
 # 3. Run installation
 ./install.sh
@@ -132,7 +132,7 @@ cd k8squest
 #### Windows Troubleshooting
 
 **Issue:** `TypeError: 'type' object is not subscriptable` when running `./play.sh`
-- **Cause:** Python 3.8 or older is being used. K8sQuest requires **Python 3.9+**
+- **Cause:** Python 3.8 or older is being used. CKAQuest requires **Python 3.9+**
 - **Solution (macOS):**
   ```bash
   brew install python@3.11
@@ -167,7 +167,7 @@ For the best experience on Windows, use Windows Subsystem for Linux:
 # In PowerShell (as Administrator)
 wsl --install -d Ubuntu
 
-# Then restart your computer and use Ubuntu terminal for K8sQuest
+# Then restart your computer and use Ubuntu terminal for CKAQuest
 ```
 
 This provides a native Linux environment and the smoothest experience.
@@ -297,7 +297,7 @@ If you prefer the old-school bash script:
 
 ## ⭐ Support the Project
 
-If K8sQuest helped you learn Kubernetes, please consider:
+If CKAQuest helped you learn Kubernetes, please consider:
 
 - **⭐ Star this repo** - Help others discover this free resource!
 - **🐦 Share** - Tell your teammates and friends about it

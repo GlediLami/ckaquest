@@ -22,15 +22,15 @@ but base64 encoding provides NO security!
 
 ```bash
 # Get the "encoded" username
-kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}'
+kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.username}'
 # Output: YWRtaW4=
 
 # Decode it instantly (no key needed!)
-kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}' | base64 -d
+kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.username}' | base64 -d
 # Output: admin
 
 # Same with password
-kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.password}' | base64 -d
+kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.password}' | base64 -d
 # Output: secretpass123
 ```
 

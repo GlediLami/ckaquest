@@ -31,3 +31,6 @@ Thumbs.db
 # Kubernetes
 kubeconfig
 *.kubeconfig
+
+# CKAQuest local tools and work files
+.tools/

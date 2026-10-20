@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: slow-startup-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   replicas: 3
   selector:
@@ -33,7 +33,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: slow-app-service
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   selector:
     app: slow-app

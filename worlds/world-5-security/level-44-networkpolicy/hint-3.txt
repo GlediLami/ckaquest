@@ -11,7 +11,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-database-ingress
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   podSelector:
     matchLabels:
@@ -42,7 +42,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-backend-egress
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   podSelector:
     matchLabels:
@@ -77,13 +77,13 @@ spec:
 
 Without DNS egress rule:
 ```bash
-kubectl exec backend -n k8squest -- nslookup database
+kubectl exec backend -n ckaquest -- nslookup database
 # Timeout! Can't resolve hostname
 ```
 
 With DNS egress rule:
 ```bash
-kubectl exec backend -n k8squest -- nslookup database
+kubectl exec backend -n ckaquest -- nslookup database
 # Success! Returns IP address
 ```
 
@@ -91,7 +91,7 @@ kubectl exec backend -n k8squest -- nslookup database
 
 ```bash
 # Remove the deny-all policy
-kubectl delete networkpolicy deny-all -n k8squest
+kubectl delete networkpolicy deny-all -n ckaquest
 
 # Apply the new policies
 kubectl apply -f solution.yaml
@@ -100,7 +100,7 @@ kubectl apply -f solution.yaml
 sleep 5
 
 # Test connectivity
-kubectl logs backend -n k8squest
+kubectl logs backend -n ckaquest
 
 # Should see successful connections now!
 ```
@@ -109,16 +109,16 @@ kubectl logs backend -n k8squest
 
 ```bash
 # Check policies are created
-kubectl get networkpolicy -n k8squest
+kubectl get networkpolicy -n ckaquest
 
 # Describe database policy
-kubectl describe networkpolicy allow-database-ingress -n k8squest
+kubectl describe networkpolicy allow-database-ingress -n ckaquest
 
 # Describe backend policy
-kubectl describe networkpolicy allow-backend-egress -n k8squest
+kubectl describe networkpolicy allow-backend-egress -n ckaquest
 
 # Test from backend to database
-kubectl exec backend -n k8squest -- nc -vz database 5432
+kubectl exec backend -n ckaquest -- nc -vz database 5432
 # Should output: database (10.x.x.x:5432) open
 ```
 

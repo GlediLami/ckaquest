@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: db-credentials
-  namespace: k8squest
+  namespace: ckaquest
 type: Opaque
 data:
   username: YWRtaW4=  # ✅ base64 encoded "admin"
@@ -13,7 +13,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-client
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: client

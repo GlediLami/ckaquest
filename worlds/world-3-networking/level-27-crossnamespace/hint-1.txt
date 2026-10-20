@@ -12,7 +12,7 @@ Check These Areas:
 1. **Frontend Pod Logs**
    Check what error the frontend is seeing:
    ```bash
-   kubectl logs frontend-app -n k8squest
+   kubectl logs frontend-app -n ckaquest
    ```
 
    Look for:
@@ -39,12 +39,12 @@ Check These Areas:
 3. **Service Names**
    What service name is the frontend trying to access?
    ```bash
-   kubectl get pod frontend-app -n k8squest -o yaml | grep command -A5
+   kubectl get pod frontend-app -n ckaquest -o yaml | grep command -A5
    ```
 
-   Does that service exist in the k8squest namespace?
+   Does that service exist in the ckaquest namespace?
    ```bash
-   kubectl get service api-service -n k8squest
+   kubectl get service api-service -n ckaquest
    ```
 
    What about in other namespaces?

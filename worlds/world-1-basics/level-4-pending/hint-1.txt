@@ -1,7 +1,7 @@
 🔍 Observation Hint:
 
-Check the pod status: `kubectl get pod hungry-app -n k8squest`
+Check the pod status: `kubectl get pod hungry-app -n ckaquest`
 
-You'll see it's stuck in "Pending" state. Run `kubectl describe pod hungry-app -n k8squest` and look at the Events section.
+You'll see it's stuck in "Pending" state. Run `kubectl describe pod hungry-app -n ckaquest` and look at the Events section.
 
 What message do you see about scheduling?

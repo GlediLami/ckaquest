@@ -5,22 +5,22 @@
 Let's investigate why this is a security issue:
 
 1️⃣ Check pod status:
-   kubectl get pod database-client -n k8squest
+   kubectl get pod database-client -n ckaquest
    
    The pod should be Running (the Secret is valid!)
 
 2️⃣ Check the Secret:
-   kubectl get secret db-credentials -n k8squest -o yaml
+   kubectl get secret db-credentials -n ckaquest -o yaml
    
    Look at the "data" section - values appear encoded with base64
 
 3️⃣ Decode the username:
-   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}' | base64 -d
+   kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.username}' | base64 -d
    
    Output: admin
 
 4️⃣ Decode the password:
-   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.password}' | base64 -d
+   kubectl get secret db-credentials -n ckaquest -o jsonpath='{.data.password}' | base64 -d
    
    Output: secretpass123
 

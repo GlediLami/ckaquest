@@ -1,11 +1,11 @@
-# 🗺️ K8sQuest Learning Path
+# 🗺️ CKAQuest Learning Path
 
 > **Your journey from Kubernetes beginner to production-ready engineer**
 
 ## 📊 Complete Skill Tree
 
 ```
-K8sQuest Learning Path
+CKAQuest Learning Path
 │
 ├─ WORLD 1: Core Kubernetes Basics ⭐
 │  │  Difficulty: Beginner | Time: 3-5 hours | XP: 1,450
@@ -295,7 +295,7 @@ Level 1 (CrashLoopBackOff)
 ## 🎯 Certification Alignment
 
 ### CKAD (Certified Kubernetes Application Developer)
-**K8sQuest Coverage:**
+**CKAQuest Coverage:**
 - ✅ Core Concepts (World 1)
 - ✅ Multi-Container Pods (Level 7-9)
 - ✅ Pod Design (World 2)
@@ -305,7 +305,7 @@ Level 1 (CrashLoopBackOff)
 **Recommendation:** Complete Worlds 1-4 for full CKAD readiness
 
 ### CKA (Certified Kubernetes Administrator)
-**K8sQuest Coverage:**
+**CKAQuest Coverage:**
 - ✅ Workloads & Scheduling (Worlds 1-2)
 - ⏳ Services & Networking (World 3)
 - ⏳ Storage (World 4)
@@ -362,7 +362,7 @@ After completing a world, explain the concepts to a colleague. Teaching solidifi
 
 ## 📚 Additional Resources
 
-### Before Starting K8sQuest
+### Before Starting CKAQuest
 - [Kubernetes Basics Tutorial](https://kubernetes.io/docs/tutorials/kubernetes-basics/)
 - [What is a Pod?](https://kubernetes.io/docs/concepts/workloads/pods/)
 
@@ -378,6 +378,6 @@ After completing a world, explain the concepts to a colleague. Teaching solidifi
 
 ---
 
-**Remember:** K8sQuest is designed for learning by fixing. Every broken resource is an opportunity to understand Kubernetes more deeply!
+**Remember:** CKAQuest is designed for learning by fixing. Every broken resource is an opportunity to understand Kubernetes more deeply!
 
 🎮 **Happy Learning!** 🎮

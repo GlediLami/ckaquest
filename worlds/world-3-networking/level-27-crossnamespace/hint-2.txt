@@ -10,7 +10,7 @@ fails.
 Current Situation:
 ------------------
 
-**Frontend Pod (in k8squest namespace):**
+**Frontend Pod (in ckaquest namespace):**
 ```yaml
 command: 
   - 'sh'
@@ -34,7 +34,7 @@ What's Happening:
    When you use a short name like "api-service", Kubernetes DNS tries:
    
    ```
-   1. api-service.k8squest.svc.cluster.local      ❌ Not found (wrong namespace)
+   1. api-service.ckaquest.svc.cluster.local      ❌ Not found (wrong namespace)
    2. api-service.svc.cluster.local               ❌ Not found (ambiguous)
    3. api-service.cluster.local                   ❌ Not found
    4. api-service                                 ❌ Not found
@@ -45,7 +45,7 @@ What's Happening:
 2. **Why Short Names Don't Work:**
    - Short names are namespace-scoped
    - Kubernetes DNS only searches the CURRENT namespace
-   - Frontend is in k8squest → looks for api-service in k8squest
+   - Frontend is in ckaquest → looks for api-service in ckaquest
    - api-service is actually in backend-ns → not found!
 
 The Fix:
@@ -72,10 +72,10 @@ Kubernetes DNS Format:
 **Examples:**
 
 ```yaml
-# Same namespace (k8squest → k8squest)
+# Same namespace (ckaquest → ckaquest)
 http://my-service                           ✅ Works
 
-# Cross-namespace (k8squest → backend-ns)
+# Cross-namespace (ckaquest → backend-ns)
 http://api-service                          ❌ Doesn't work
 http://api-service.backend-ns               ✅ Works (short FQDN)
 http://api-service.backend-ns.svc           ✅ Works
@@ -102,9 +102,9 @@ command: ['sh', '-c', 'wget -q -O- http://api-service.backend-ns.svc.cluster.loc
 
 Then apply:
 ```bash
-kubectl delete pod frontend-app -n k8squest
+kubectl delete pod frontend-app -n ckaquest
 kubectl apply -f broken.yaml
-kubectl logs frontend-app -n k8squest -f
+kubectl logs frontend-app -n ckaquest -f
 ```
 
 You should see "API Response from backend-ns" instead of DNS errors!
@@ -116,10 +116,10 @@ You can test DNS resolution manually:
 
 ```bash
 # Test short name (will fail)
-kubectl exec frontend-app -n k8squest -- nslookup api-service
+kubectl exec frontend-app -n ckaquest -- nslookup api-service
 
 # Test FQDN (will succeed)
-kubectl exec frontend-app -n k8squest -- nslookup api-service.backend-ns.svc.cluster.local
+kubectl exec frontend-app -n ckaquest -- nslookup api-service.backend-ns.svc.cluster.local
 ```
 
 The FQDN should return the service IP.

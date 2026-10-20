@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 STATEFULSET="postgres-cluster"
 
 echo "🔍 Stage 1: Checking if StatefulSet exists..."

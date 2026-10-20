@@ -5,7 +5,7 @@
 
 set -e
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 FRONTEND_POD="frontend"
 BACKEND_POD="backend"
 NETWORK_POLICY="backend-network-policy"

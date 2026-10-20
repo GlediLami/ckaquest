@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: data-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: app

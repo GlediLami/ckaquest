@@ -3,12 +3,12 @@
 Let's investigate why the service isn't accessible:
 
 1️⃣ Check the service status:
-   kubectl get service web-service -n k8squest
+   kubectl get service web-service -n ckaquest
    
    Notice the EXTERNAL-IP column - what do you see?
 
 2️⃣ Look for more details:
-   kubectl describe service web-service -n k8squest
+   kubectl describe service web-service -n ckaquest
    
    Pay attention to:
    • Type: LoadBalancer
@@ -16,7 +16,7 @@ Let's investigate why the service isn't accessible:
    • What does "pending" mean?
 
 3️⃣ Check the service type:
-   kubectl get service web-service -n k8squest -o yaml | grep type:
+   kubectl get service web-service -n ckaquest -o yaml | grep type:
    
    What type of service is this?
 

@@ -1,10 +1,10 @@
-# Contributing to K8sQuest
+# Contributing to CKAQuest
 
 ## 🎯 Mission: Create Consistent, High-Quality Challenges
 
-Welcome, contributor! This guide will help you create new K8sQuest challenges that are maintainable, consistent, and provide actual learning value.
+Welcome, contributor! This guide will help you create new CKAQuest challenges that are maintainable, consistent, and provide actual learning value.
 
-**K8sQuest is now COMPLETE with all 50 levels across 5 worlds!** However, we welcome:
+**CKAQuest is now COMPLETE with all 50 levels across 5 worlds!** However, we welcome:
 - Bug fixes and improvements to existing levels
 - New bonus levels or alternative challenges
 - Translations and localization
@@ -72,7 +72,7 @@ The intentionally broken Kubernetes resources that students must fix.
 - Must be valid YAML syntax
 - Must deploy without syntax errors (broken behavior ≠ malformed YAML)
 - Should demonstrate ONE specific misconfiguration
-- Must use namespace `k8squest` for all namespaced resources
+- Must use namespace `ckaquest` for all namespaced resources
 - Include comments explaining what's wrong (for educational value)
 - Use realistic resource names and configurations
 
@@ -82,7 +82,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   containers:
   - name: web
@@ -108,7 +108,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: k8squest
+  namespace: ckaquest
 spec:
   securityContext:
     runAsNonRoot: true  # ✅ Require non-root user
@@ -132,7 +132,7 @@ Bash script that returns 0 (success) or 1 (failure). Must be executable.
 ```bash
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 POD_NAME="web-app"
 
 echo "🔍 Validating SecurityContext configuration..."
@@ -165,7 +165,7 @@ exit 0
 ```bash
 #!/bin/bash
 
-NAMESPACE="k8squest"
+NAMESPACE="ckaquest"
 ERRORS=0
 
 echo "🔍 MULTI-STAGE VALIDATION"
@@ -273,10 +273,10 @@ Progressive hints that unlock gradually. Each should build on the previous.
 The pod is failing to start. Let's investigate:
 
 1. Check pod status:
-   kubectl get pod web-app -n k8squest
+   kubectl get pod web-app -n ckaquest
    
 2. Look for events:
-   kubectl describe pod web-app -n k8squest
+   kubectl describe pod web-app -n ckaquest
    
 3. Check for security-related errors in events
 
@@ -337,7 +337,7 @@ Apply these in both pod-level and container-level securityContext!
 - Never commit real credentials
 
 ❌ **Don't break multiple namespaces**
-- All resources in `k8squest` namespace only
+- All resources in `ckaquest` namespace only
 - Don't affect system namespaces
 
 ❌ **Don't make it a guessing game**
@@ -382,7 +382,7 @@ Before submitting a new level, verify:
 - [ ] Applied solution.yaml - verifies it works
 - [ ] Ran validate.sh with both states
 - [ ] Checked for helpful error messages
-- [ ] Verified namespace isolation (k8squest only)
+- [ ] Verified namespace isolation (ckaquest only)
 
 ### Best Practices
 - [ ] Single, clear learning objective
@@ -397,11 +397,11 @@ Before submitting a new level, verify:
 ### Step 1: Setup Fresh Environment
 ```bash
 # Make sure you have a clean cluster
-kind delete cluster --name k8squest
-kind create cluster --name k8squest
+kind delete cluster --name ckaquest
+kind create cluster --name ckaquest
 
-# Create k8squest namespace
-kubectl create namespace k8squest
+# Create ckaquest namespace
+kubectl create namespace ckaquest
 ```
 
 ### Step 2: Test Broken State
@@ -535,4 +535,4 @@ New levels should fit logically into existing worlds or propose a new themed wor
 - Open an issue for discussion
 - Join community discussions
 
-**Thank you for contributing to K8sQuest!** 🚀
+**Thank you for contributing to CKAQuest!** 🚀

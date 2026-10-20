@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if deployment has readiness probe configured
-HAS_READINESS=$(kubectl get deployment slow-startup-app -n k8squest -o jsonpath='{.spec.template.spec.containers[0].readinessProbe}' 2>/dev/null)
+HAS_READINESS=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.spec.template.spec.containers[0].readinessProbe}' 2>/dev/null)
 
 if [ -z "$HAS_READINESS" ]; then
     echo "❌ Deployment does not have a readiness probe configured"
@@ -9,8 +9,8 @@ if [ -z "$HAS_READINESS" ]; then
 fi
 
 # Check if all pods are ready
-DESIRED=$(kubectl get deployment slow-startup-app -n k8squest -o jsonpath='{.spec.replicas}' 2>/dev/null)
-READY=$(kubectl get deployment slow-startup-app -n k8squest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
+DESIRED=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.spec.replicas}' 2>/dev/null)
+READY=$(kubectl get deployment slow-startup-app -n ckaquest -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
 
 if [ "$READY" = "$DESIRED" ]; then
     echo "✅ All $READY/$DESIRED pods are ready"
