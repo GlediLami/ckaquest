@@ -1,0 +1,1 @@
+kubectl get pods -n kube-system. One control plane pod is not healthy. Describe it and read its logs.

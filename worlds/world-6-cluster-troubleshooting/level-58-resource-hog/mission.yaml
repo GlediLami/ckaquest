@@ -1,0 +1,24 @@
+name: "Who Is Eating the CPU?"
+description: "One pod burns CPU on a shared cluster"
+objective: "Find the CPU hog with kubectl top and shrink its CPU limit without a restart"
+xp: 250
+difficulty: intermediate
+expected_time: 10m
+domain: troubleshooting
+namespace: top-lab
+exam: true
+concepts:
+  - kubectl top
+  - metrics-server
+  - in-place pod resize
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **top-lab** runs several pods. One of them uses far more CPU than the others.
+
+  1. Write the **name** of the pod with the highest CPU usage in **top-lab** to `~/ckaquest-work/58/cpu-hog.txt` (only the name, one line).
+  2. Write the name of the **node** with the highest CPU usage in the cluster to `~/ckaquest-work/58/busy-node.txt`.
+  3. Reduce the CPU **limit** of that pod to `100m` **in place**. The pod must not be recreated and its restart count must stay 0.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_top/
+  - https://kubernetes.io/docs/tasks/configure-pod-container/resize-container-resources/

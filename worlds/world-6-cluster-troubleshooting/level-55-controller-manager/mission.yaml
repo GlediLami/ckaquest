@@ -1,0 +1,22 @@
+name: "Scale Does Nothing"
+description: "A new deployment never creates pods"
+objective: "Repair the controller manager so deployment api runs 3 pods"
+xp: 300
+difficulty: advanced
+expected_time: 12m
+domain: troubleshooting
+namespace: cm-lab
+exam: true
+concepts:
+  - kube-controller-manager
+  - ReplicaSet controller
+  - static pods
+task: |
+  Context: `kind-ckaquest`
+
+  The deployment **api** in namespace **cm-lab** wants 3 replicas. It shows `0/3` and no ReplicaSet was ever created. Scaling it does not help.
+
+  Repair the cluster so that **api** runs 3 ready pods.
+docs:
+  - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/
+  - https://kubernetes.io/docs/tasks/debug/debug-cluster/

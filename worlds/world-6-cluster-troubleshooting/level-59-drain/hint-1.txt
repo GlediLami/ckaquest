@@ -1,0 +1,1 @@
+Try kubectl drain ckaquest-worker2 --ignore-daemonsets and read every error. There are two different blockers.

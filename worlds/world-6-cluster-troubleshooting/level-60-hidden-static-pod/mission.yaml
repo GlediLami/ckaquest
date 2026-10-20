@@ -1,0 +1,21 @@
+name: "The Pod That Will Not Die"
+description: "A pod keeps coming back no matter how often you delete it"
+objective: "Remove the pod for good"
+xp: 250
+difficulty: intermediate
+expected_time: 10m
+domain: troubleshooting
+namespace: ckaquest
+exam: true
+concepts:
+  - static pods
+  - mirror pods
+  - kubelet staticPodPath
+task: |
+  Context: `kind-ckaquest`
+
+  In namespace **default** a pod whose name starts with **crypto-miner** comes back every time it is deleted.
+
+  Remove it permanently. Do not stop or reconfigure the kubelet. node01 must stay Ready.
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/

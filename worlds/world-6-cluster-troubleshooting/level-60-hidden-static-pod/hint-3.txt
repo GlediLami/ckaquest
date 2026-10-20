@@ -1,0 +1,1 @@
+Delete the YAML file from that folder. The kubelet stops the pod and the mirror pod disappears after a few seconds.

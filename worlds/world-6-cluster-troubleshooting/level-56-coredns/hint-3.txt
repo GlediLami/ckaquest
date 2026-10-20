@@ -1,0 +1,1 @@
+Fix the zone name in the Corefile with kubectl -n kube-system edit cm coredns. CoreDNS reloads the config by itself (reload plugin), or run kubectl -n kube-system rollout restart deploy coredns.

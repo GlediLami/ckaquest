@@ -1,0 +1,1 @@
+etcd listens for clients on 2379 (2380 is peer traffic). Compare --etcd-servers in /etc/kubernetes/manifests/kube-apiserver.yaml with --listen-client-urls in etcd.yaml.

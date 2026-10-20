@@ -1,0 +1,1 @@
+The DNS pods are Running, so look at their configuration. kubectl -n kube-system get cm coredns -o yaml. Read the kubernetes plugin line slowly.

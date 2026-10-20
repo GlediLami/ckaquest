@@ -1,0 +1,25 @@
+name: "The API Server Is Gone"
+description: "kubectl answers with connection refused"
+objective: "Bring the kube-apiserver back"
+xp: 350
+difficulty: advanced
+expected_time: 15m
+domain: troubleshooting
+namespace: ckaquest
+exam: true
+concepts:
+  - kube-apiserver
+  - crictl
+  - /var/log/pods
+  - etcd connection
+task: |
+  Context: `kind-ckaquest`
+
+  After a change on the control plane, `kubectl` fails with **connection refused** (or times out).
+
+  Find the problem on node `controlplane` and fix it. `kubectl get nodes` must work again and all control plane pods must be Running.
+
+  You cannot use kubectl to debug this one.
+docs:
+  - https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/
+  - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/

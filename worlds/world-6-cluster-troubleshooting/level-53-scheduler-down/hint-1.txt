@@ -1,0 +1,1 @@
+kubectl describe pod on a Pending pod. If there are no scheduling events at all (not even "FailedScheduling"), no scheduler looked at it.

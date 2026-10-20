@@ -1,0 +1,1 @@
+systemctl enable --now kubelet starts it and also enables it for the next boot. Starting it alone is only half the points.

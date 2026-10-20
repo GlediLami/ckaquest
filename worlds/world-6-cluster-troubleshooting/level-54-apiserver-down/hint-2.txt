@@ -1,0 +1,1 @@
+Read the last logs of the exited container: crictl logs <container-id>. Or look in /var/log/pods/kube-system_kube-apiserver-*/kube-apiserver/. What does it fail to connect to?

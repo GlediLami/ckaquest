@@ -1,0 +1,1 @@
+Test from inside: kubectl run t --rm -it --image=busybox:1.28 --restart=Never -- nslookup web.dns-lab.svc.cluster.local. Then look at the DNS pods in kube-system.

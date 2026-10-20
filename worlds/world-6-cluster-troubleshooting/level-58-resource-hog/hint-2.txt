@@ -1,0 +1,1 @@
+Most resource fields of a running pod are immutable with a normal edit or apply. Since Kubernetes 1.35 you can resize CPU and memory through the resize subresource.

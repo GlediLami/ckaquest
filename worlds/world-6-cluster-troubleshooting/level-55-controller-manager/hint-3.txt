@@ -1,0 +1,1 @@
+ssh controlplane and ls /etc/kubernetes/*.conf. Fix the --kubeconfig flag in /etc/kubernetes/manifests/kube-controller-manager.yaml. Some exam versions also break the volume mount path, so check both.

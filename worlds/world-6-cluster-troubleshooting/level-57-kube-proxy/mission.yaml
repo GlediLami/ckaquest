@@ -1,0 +1,22 @@
+name: "Services Stopped Routing"
+description: "New Services do not answer on their ClusterIP"
+objective: "Repair kube-proxy on all nodes"
+xp: 300
+difficulty: advanced
+expected_time: 12m
+domain: troubleshooting
+namespace: proxy-lab
+exam: true
+concepts:
+  - kube-proxy
+  - DaemonSet
+  - iptables
+task: |
+  Context: `kind-ckaquest`
+
+  In namespace **proxy-lab** the Service **echo** has healthy endpoints, but connections to its ClusterIP time out or are refused.
+
+  Find the cluster component that is broken and repair it on all nodes. Requests to `http://echo.proxy-lab` from a pod must succeed.
+docs:
+  - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/
+  - https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/

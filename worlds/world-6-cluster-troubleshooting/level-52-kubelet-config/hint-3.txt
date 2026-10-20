@@ -1,0 +1,1 @@
+The kubelet config file is /var/lib/kubelet/config.yaml (see --config in the systemd drop-in). Compare the CA path with the files in /etc/kubernetes/pki/. Fix it and run systemctl restart kubelet.

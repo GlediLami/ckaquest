@@ -1,0 +1,1 @@
+kubectl top pod -n top-lab --sort-by=cpu and kubectl top node --sort-by=cpu. metrics-server must be running (kubectl -n kube-system get deploy metrics-server).

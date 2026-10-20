@@ -1,0 +1,1 @@
+"cannot delete Pods that declare no controller" needs --force. "Cannot evict pod as it would violate the pod disruption budget" means the PDB allows 0 disruptions. Check kubectl get pdb -n maint.

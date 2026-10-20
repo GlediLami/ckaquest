@@ -1,0 +1,1 @@
+Set the PDB to minAvailable: 1 (kubectl edit pdb web-pdb -n maint), then drain with --ignore-daemonsets --force. The drain cordons the node for you. Do not uncordon.

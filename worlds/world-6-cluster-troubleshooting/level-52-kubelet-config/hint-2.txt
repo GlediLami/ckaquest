@@ -1,0 +1,1 @@
+Read why it dies: journalctl -u kubelet --no-pager | tail -30. Look for a file path in the error.

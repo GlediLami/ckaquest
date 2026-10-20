@@ -1,0 +1,1 @@
+Static pods come from files the kubelet reads on the node. Do not assume the folder is /etc/kubernetes/manifests. Ask the kubelet: ssh node01, then grep staticPodPath /var/lib/kubelet/config.yaml.

@@ -1,0 +1,1 @@
+kubectl -n kube-system get pods, then kubectl -n kube-system logs kube-controller-manager-ckaquest-control-plane. Which file can it not find?

@@ -1,0 +1,22 @@
+name: "Nothing Gets Scheduled"
+description: "New pods stay Pending on a cluster with free capacity"
+objective: "Repair the scheduler so deployment web runs 2 pods"
+xp: 250
+difficulty: intermediate
+expected_time: 10m
+domain: troubleshooting
+namespace: sched-lab
+exam: true
+concepts:
+  - kube-scheduler
+  - static pods
+  - /etc/kubernetes/manifests
+task: |
+  Context: `kind-ckaquest`
+
+  The deployment **web** in namespace **sched-lab** has 2 replicas, but its pods stay **Pending**. The nodes have plenty of free capacity.
+
+  Find the broken cluster component and repair it. Both replicas of **web** must be Running.
+docs:
+  - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
+  - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/

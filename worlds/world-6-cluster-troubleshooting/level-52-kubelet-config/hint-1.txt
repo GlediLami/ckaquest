@@ -1,0 +1,1 @@
+ssh node02 and check systemctl status kubelet. "activating (auto-restart)" means it starts and dies again and again.

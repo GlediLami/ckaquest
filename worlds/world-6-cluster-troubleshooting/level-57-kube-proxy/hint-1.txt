@@ -1,0 +1,1 @@
+Endpoints exist, so the selector is fine. Which component turns a ClusterIP into pod IPs on every node? Check its pods in kube-system.

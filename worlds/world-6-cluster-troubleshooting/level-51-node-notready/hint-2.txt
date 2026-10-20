@@ -1,0 +1,1 @@
+The kubelet is a systemd service on the node, not a pod. ssh node01, then systemctl status kubelet.

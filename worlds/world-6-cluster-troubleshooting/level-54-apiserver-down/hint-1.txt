@@ -1,0 +1,1 @@
+ssh controlplane, then crictl ps -a | grep apiserver. Is it running, exited, or missing?

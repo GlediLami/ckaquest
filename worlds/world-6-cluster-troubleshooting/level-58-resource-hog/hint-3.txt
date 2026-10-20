@@ -1,0 +1,1 @@
+kubectl patch pod report-generator -n top-lab --subresource resize -p '{"spec":{"containers":[{"name":"worker","resources":{"limits":{"cpu":"100m"}}}]}}'. kubectl edit pod <name> --subresource resize also works.

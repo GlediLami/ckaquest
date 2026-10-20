@@ -1,0 +1,1 @@
+Start with the node itself: kubectl describe node ckaquest-worker. Look at Conditions and the message "Kubelet stopped posting node status".

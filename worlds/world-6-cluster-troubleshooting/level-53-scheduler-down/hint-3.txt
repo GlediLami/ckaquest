@@ -1,0 +1,1 @@
+Control plane pods are static pods. Their YAML lives on the control plane node in /etc/kubernetes/manifests/. ssh controlplane and fix the command in kube-scheduler.yaml. The kubelet picks up the change by itself.

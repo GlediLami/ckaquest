@@ -1,0 +1,1 @@
+kubectl -n kube-system edit ds kube-proxy and set --config=/var/lib/kube-proxy/config.conf (the ConfigMap key is config.conf, mounted at /var/lib/kube-proxy).

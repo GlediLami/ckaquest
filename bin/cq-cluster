@@ -64,6 +64,18 @@ addon_gateway() {
     --set nginx.service.type=NodePort --wait --timeout 5m >/dev/null
 }
 
+bootstrap_nodes() {
+  local cluster="$1" node role
+  log "node tools (vim, completion, etcdctl) on $cluster nodes"
+  for node in $("$CQ_KIND" get nodes --name "$cluster"); do
+    role=worker
+    [[ "$node" == *control-plane ]] && role=controlplane
+    docker cp "$CQ_ROOT/cluster/node-bootstrap.sh" "$node:/root/.cq-node-bootstrap.sh" >/dev/null
+    docker exec "$node" bash /root/.cq-node-bootstrap.sh "$role" &
+  done
+  wait
+}
+
 cmd_up() {
   check_prereqs
   mkdir -p "$CQ_HOME" "$CQ_WORK"
@@ -79,6 +91,7 @@ cmd_up() {
   kubectl config use-context "$CQ_CONTEXT" >/dev/null
   install_metrics_server
   install_crds
+  bootstrap_nodes "$CQ_CLUSTER"
   cq_ensure_namespace ckaquest
   kubectl config set-context --current --namespace=default >/dev/null
   log "ready. In your kubectl terminal run:  source $CQ_ROOT/env.sh"
@@ -131,6 +144,7 @@ EOF
   else
     "$CQ_KIND" create cluster --name "$CQ_LAB_CLUSTER" --config "$cfg" --kubeconfig "$KUBECONFIG" --wait 180s
   fi
+  bootstrap_nodes "$CQ_LAB_CLUSTER"
   # kind switches the current context to the new cluster. Switch back.
   kubectl config use-context "$CQ_CONTEXT" >/dev/null
 }

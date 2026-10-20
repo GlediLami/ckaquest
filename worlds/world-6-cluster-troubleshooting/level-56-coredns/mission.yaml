@@ -1,0 +1,24 @@
+name: "Names Do Not Resolve"
+description: "Pods can reach IPs but not Service names"
+objective: "Repair cluster DNS"
+xp: 250
+difficulty: intermediate
+expected_time: 12m
+domain: troubleshooting
+namespace: dns-lab
+exam: true
+concepts:
+  - CoreDNS
+  - Corefile
+  - nslookup
+task: |
+  Context: `kind-ckaquest`
+
+  In namespace **dns-lab** there is a deployment **web** with a Service **web**.
+
+  Pods can reach the Service by its ClusterIP, but `nslookup web.dns-lab.svc.cluster.local` fails from every pod in the cluster.
+
+  Repair cluster DNS. Do not change the cluster domain `cluster.local`.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+  - https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/

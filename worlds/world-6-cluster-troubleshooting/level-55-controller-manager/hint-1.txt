@@ -1,0 +1,1 @@
+A Deployment does not create pods itself. The deployment controller creates a ReplicaSet, the ReplicaSet controller creates pods. Which component runs those controllers?

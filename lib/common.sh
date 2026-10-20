@@ -86,3 +86,19 @@ cq_node_restore() {
   local node="$1" file="$2"
   cq_node_sh "$node" "[ -f /root/.cq-backup/$(basename "$file") ] && cp -a /root/.cq-backup/$(basename "$file") '$file' && rm -f /root/.cq-backup/$(basename "$file") || true"
 }
+
+# Wait for the API server to answer (after a control plane change). Default 180s.
+cq_wait_api() { cq_wait "${1:-180}" cq_api_up; }
+
+# Patch a static pod manifest on the control plane with sed, keeping a backup.
+# cq_break_manifest kube-scheduler 's/foo/bar/'
+cq_break_manifest() {
+  local component="$1" expr="$2"
+  local file="/etc/kubernetes/manifests/${component}.yaml"
+  cq_node_backup controlplane "$file"
+  cq_node_sh controlplane "sed -i '$expr' '$file'"
+}
+
+cq_restore_manifest() {
+  cq_node_restore controlplane "/etc/kubernetes/manifests/${1}.yaml"
+}

@@ -1,0 +1,22 @@
+name: "Kubelet Will Not Start"
+description: "node02 is NotReady and its kubelet keeps crashing"
+objective: "Repair the kubelet configuration on node02"
+xp: 250
+difficulty: advanced
+expected_time: 12m
+domain: troubleshooting
+namespace: ckaquest
+exam: true
+concepts:
+  - kubelet config
+  - journalctl
+  - /var/lib/kubelet/config.yaml
+task: |
+  Context: `kind-ckaquest`
+
+  The node **ckaquest-worker2** (ssh name: `node02`) is **NotReady**. Its kubelet is enabled but fails right after start.
+
+  Find the broken setting and fix it. Do not reinstall anything. The node must be **Ready**.
+docs:
+  - https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/
+  - https://kubernetes.io/docs/tasks/debug/debug-cluster/

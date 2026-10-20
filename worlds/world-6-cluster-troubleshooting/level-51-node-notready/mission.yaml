@@ -1,0 +1,22 @@
+name: "Node NotReady"
+description: "Worker node01 went NotReady and new pods avoid it"
+objective: "node01 is Ready again and stays Ready after a reboot"
+xp: 200
+difficulty: intermediate
+expected_time: 8m
+domain: troubleshooting
+namespace: ckaquest
+exam: true
+concepts:
+  - kubelet
+  - systemctl
+  - node conditions
+task: |
+  Context: `kind-ckaquest`
+
+  The node **ckaquest-worker** (ssh name: `node01`) has status **NotReady**.
+
+  Find the cause and fix it. The node must be **Ready**, and the fix must survive a reboot of the node.
+docs:
+  - https://kubernetes.io/docs/tasks/debug/debug-cluster/
+  - https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/

@@ -1,0 +1,25 @@
+name: "Maintenance Window"
+description: "node02 needs a kernel update, but the drain gets stuck"
+objective: "Drain node02 without taking the app down"
+xp: 300
+difficulty: intermediate
+expected_time: 12m
+domain: troubleshooting
+namespace: maint
+exam: true
+concepts:
+  - kubectl drain
+  - PodDisruptionBudget
+  - cordon
+task: |
+  Context: `kind-ckaquest`
+
+  Node **ckaquest-worker2** (`node02`) needs maintenance.
+
+  - Drain it. All pods of namespace **maint** must leave the node, except DaemonSet pods.
+  - The pod **debug-shell** (no controller) may be deleted.
+  - The deployment **web** must keep at least **1** ready replica at all times, and end with **2** ready replicas. You may change the PodDisruptionBudget, but it must still protect at least 1 pod.
+  - The node must stay **cordoned** at the end. Do not uncordon it.
+docs:
+  - https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+  - https://kubernetes.io/docs/tasks/run-application/configure-pdb/
