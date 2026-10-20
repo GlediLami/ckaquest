@@ -152,7 +152,7 @@ def random_set(levels):
 def load_set(name, levels):
     if name == "random":
         return random_set(levels)
-    path = SETS / f"{name}.yaml"
+    path = Path(name) if name.endswith(".yaml") else SETS / f"{name}.yaml"
     if not path.exists():
         raise SystemExit(f"no exam set '{name}'. Try: exam.sh list")
     with open(path) as f:
@@ -194,6 +194,9 @@ def cmd_start(name):
 
     console.print(Panel(f"[bold]Setting up {len(numbers)} tasks[/bold]. This takes a few minutes. The timer starts after setup.",
                         border_style="cyan"))
+    for addon in sorted({a for m in missions.values() for a in m.get("requires", [])}):
+        console.print(f"  [dim]add-on {addon}[/dim]")
+        subprocess.run([str(CQ_ROOT / "bin" / "cq-cluster"), "addon", addon], capture_output=True)
     order = sorted(range(len(numbers)), key=lambda i: numbers[i] in DISRUPTIVE)
     for i in order:
         n = numbers[i]

@@ -9,19 +9,20 @@ Two ways to use CKAQuest:
 
 Status: on 2026-10-20 work stopped after World 6 was written. This file is the plan for everything after that.
 
-## 1. Where we are
+## 1. Where we are (2026-10-21)
 
 | Part | State |
 |---|---|
-| Repo `~/projects/ckaquest`, Apache-2.0, base imported from K8sQuest | Done, 2 commits, local only |
-| Own kind cluster `ckaquest`, 3 nodes, v1.37.0, own kubeconfig `~/.ckaquest/kubeconfig` | Done. Other clusters and `~/.kube/config` stay untouched. |
-| `env.sh` exam shell: `k`, `$do`, `$now`, completion, `ssh node01` | Done |
-| Node tools: vim, completion, kubectl, etcdctl/etcdutl 3.7.0 | Done, not committed |
-| Engine: auto worlds, task panel, domain, docs links, setup/cleanup, reset | Done |
-| `lib/validate.sh` partial scoring, `tests/run-levels.sh` harness | Done |
-| Base 50 levels on the new cluster | Harness run in progress (see section 9) |
-| World 6 Cluster Troubleshooting, levels 51 to 60 | Written, not tested, not committed |
-| Worlds 7 to 10, exam simulator, offline mode | Not started |
+| Own kind cluster `ckaquest` (3 nodes, v1.37.0), own kubeconfig, exam shell `env.sh` | Done |
+| Worlds 1 to 5 (base 50): exam tasks, domains, course sections, docs, strict validators, Exam angle debriefs, own namespace per level | Done, 50 of 50 pass |
+| World 6 cluster troubleshooting (51 to 60) | Done, 10 of 10 pass |
+| World 7 admin and security (61 to 70) | Done, 10 of 10 pass |
+| Worlds 8, 9, 10, 12 (71 to 96, 103 to 110) | Done, 34 of 34 pass |
+| World 11 lifecycle (97 to 102), bare nodes and lab cluster | Written, test in progress |
+| Exam simulator `exam.sh`, sets A to F, random sets, history | Written. A full mock run end to end is still to do. |
+| Offline pack `bin/cq-offline`, offline proof `tests/offline-check.sh` | Written. `prepare` and the proof run are still to do. |
+| Game mechanics: par time, stars, hint cost, streak, domain mastery, readiness, play by course section | Done |
+| Local Helm chart repo `bin/cq-helm-repo`, Helm config kept in `~/.ckaquest/helm` | Done |
 
 ## 2. Sources
 
@@ -51,13 +52,13 @@ Rule: **we write everything ourselves.** Outside sources give topics and ideas o
 | World | Theme | Levels | State |
 |---|---|---|---|
 | 1 to 5 | K8sQuest base: pods, deployments, networking, storage, security | 50 | Exists. Gets the upgrades in 3.3. |
-| 6 | Cluster troubleshooting: kubelet, static pods, API server, controller manager, CoreDNS, kube-proxy, top, drain, mirror pods | 51 to 60 | Written |
-| 7 | Cluster admin and security: CSR user, ClusterRole, SA 403, cert renew, etcd backup, etcd restore, kubeconfig repair, static pod create, admission plugin | 61 to 70 | Designed |
-| 8 | Networking 2025: Gateway + HTTPRoute, HTTPS listener, 80/20 split, Ingress with class, NetworkPolicy across namespaces, CoreDNS custom config | 71 to 78 | Designed |
-| 9 | Packaging and extensions: Helm install/upgrade/rollback/find release, Kustomize overlay and patches, CRD + CR, operator RBAC | 79 to 86 | Designed |
-| 10 | Workloads, autoscaling, storage: native sidecar, 3-container pod, HPA with behavior, VPA, DaemonSet on all nodes, CronJob, ConfigMap/Secret, StorageClass default, PriorityClass | 87 to 96 | Designed |
-| 11 | Lifecycle on the lab cluster: node prep (sysctl, modules), kubeadm init and join, CNI install (Calico, custom CIDR), kubeadm upgrade control plane, upgrade worker, HA concepts | 97 to 102 | Needs a feasibility test (section 8) |
-| 12 | Speed drills: JSONPath, custom-columns, imperative commands, `$do` YAML, against a clock | 103 to 110 | Own drills |
+| 6 | Cluster troubleshooting: kubelet, static pods, API server, controller manager, CoreDNS, kube-proxy, top, drain, mirror pods | 51 to 60 | Done, tested |
+| 7 | Cluster admin and security: CSR user, ClusterRole, SA 403, cert renew, etcd backup, etcd restore, kubeconfig repair, static pod create, admission plugin | 61 to 70 | Done, tested |
+| 8 | Networking 2025: Gateway + HTTPRoute, HTTPS listener, 80/20 split, Ingress with class, NetworkPolicy across namespaces, CoreDNS custom config | 71 to 78 | Done, tested |
+| 9 | Packaging and extensions: Helm install/upgrade/rollback/find release, Kustomize overlay and patches, CRD + CR, operator RBAC | 79 to 86 | Done, tested |
+| 10 | Workloads, autoscaling, storage: native sidecar, 3-container pod, HPA with behavior, VPA, DaemonSet on all nodes, CronJob, ConfigMap/Secret, StorageClass default, PriorityClass | 87 to 96 | Done, tested |
+| 11 | Lifecycle on the lab cluster: node prep (sysctl, modules), kubeadm init and join, CNI install (Calico, custom CIDR), kubeadm upgrade control plane, upgrade worker, HA concepts | 97 to 102 | Written (spikes passed, section 12) |
+| 12 | Speed drills: JSONPath, custom-columns, imperative commands, `$do` YAML, against a clock | 103 to 110 | Done, tested |
 
 About 110 levels in total. Every curriculum bullet gets at least 2 levels.
 
@@ -191,16 +192,16 @@ Ways to make it fit, in this order:
 
 Each phase ends with the harness green for everything in it and a commit.
 
-| # | Phase | Done when |
-|---|---|---|
-| 1 | Done (2026-10-20): base 50 and World 6 tested, 12, 14, 37, 45 to 50 fixed | Harness shows 60 of 60 OK |
-| 2 | Done (2026-10-21), see section 12. Feasibility spikes: kubeadm upgrade inside kind, kubeadm init/join on bare kind node images, Calico in kind, offline image loading, offline docs build | One short report: what works, what gets dropped |
-| 3 | Base 50 upgrade (section 3.3) | Every level has task, domain, docs, course section, strict validator |
-| 4 | Worlds 7 to 10 | Harness green |
-| 5 | Exam simulator engine plus 2 mock sets | You can do a full mock end to end |
-| 6 | Offline pack and offline proof | A full mock runs with the network cut |
-| 7 | World 11 (lab cluster), World 12 drills, 4 more mock sets, random sets | 6 mocks plus random |
-| 8 | Polish: game mechanics (par time, mastery, readiness), security and code review pass | Review findings fixed |
+| # | Phase | Done when | State |
+|---|---|---|---|
+| 1 | Test and fix base 50 and World 6 | Harness shows 60 of 60 OK | Done 2026-10-20 |
+| 2 | Feasibility spikes (section 12) | Short report | Done 2026-10-21 |
+| 3 | Base 50 upgrade (section 3.3) | Task, domain, docs, course section, strict validator | Done 2026-10-21 |
+| 4 | Worlds 7 to 10 | Harness green | Done 2026-10-21 |
+| 5 | Exam simulator plus mock sets | Full mock end to end | Written, end-to-end run open |
+| 6 | Offline pack and proof | A full mock runs with the network cut | Written, proof run open |
+| 7 | World 11, World 12, 6 mocks plus random | 6 mocks plus random | World 12 done, World 11 in test, 6 sets written |
+| 8 | Polish: game mechanics, safety review | Review findings fixed | Mechanics done, namespace guard added |
 
 Suggested order of your own study: play worlds 1 to 5 now (they work). Phases 1 to 4 run in parallel with your course sections 1 to 10. Exam mocks are ready before you reach the course mock exams.
 

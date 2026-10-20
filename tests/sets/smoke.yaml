@@ -1,0 +1,9 @@
+name: smoke
+description: Small set for tests/exam-smoke.sh
+minutes: 120
+tasks:
+- level: 23
+- level: 41
+- level: 65
+- level: 71
+- level: 92
