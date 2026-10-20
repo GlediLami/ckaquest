@@ -15,14 +15,9 @@ spec:
     spec:
       containers:
       - name: backend
-        image: k8s.gcr.io/hpa-example
+        image: nginx:1.27-alpine
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: 200m
-          limits:
-            cpu: 500m
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -43,4 +38,3 @@ spec:
       target:
         type: Utilization
         averageUtilization: 50
-# This will fail because metrics-server is not installed!

@@ -1,33 +1,10 @@
-#!/bin/bash
-
-# Check if HPA can get metrics
-HPA_STATUS=$(kubectl get hpa web-backend-hpa -n ckaquest -o jsonpath='{.status.conditions[?(@.type=="ScalingActive")].status}' 2>/dev/null)
-
-if [ "$HPA_STATUS" = "True" ]; then
-    echo "✅ HPA is able to scale (metrics available)"
-    
-    # Verify metrics-server is running
-    METRICS_SERVER=$(kubectl get deployment metrics-server -n kube-system -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    if [ "$METRICS_SERVER" -ge 1 ]; then
-        echo "✅ metrics-server is running"
-    fi
-    
-    # Verify we can get pod metrics
-    if kubectl top pods -n ckaquest &>/dev/null; then
-        echo "✅ Pod metrics are available (kubectl top works)"
-    fi
-    
-    exit 0
-else
-    echo "❌ HPA cannot scale"
-    echo "   ScalingActive status: $HPA_STATUS"
-    
-    # Check if metrics-server exists
-    if ! kubectl get deployment metrics-server -n kube-system &>/dev/null; then
-        echo "   ⚠️  metrics-server is not installed!"
-        echo "   Install it with: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-        echo "   (For kind/local clusters, you may need to add --kubelet-insecure-tls flag)"
-    fi
-    
-    exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+hpa_active() { [ "$(jp ckaquest hpa/web-backend-hpa '{.status.conditions[?(@.type=="ScalingActive")].status}')" = True ]; }
+hpa_has_metric() { [ -n "$(jp ckaquest hpa/web-backend-hpa '{.status.currentMetrics[0].resource.current.averageUtilization}')" ]; }
+check "HPA still targets 50% CPU, 1 to 5 replicas" out_eq "50 1 5" kubectl get hpa web-backend-hpa -n ckaquest -o jsonpath='{.spec.metrics[0].resource.target.averageUtilization} {.spec.minReplicas} {.spec.maxReplicas}'
+check 2 "web-backend container has a CPU request" field_ne ckaquest deploy/web-backend '{.spec.template.spec.containers[0].resources.requests.cpu}' ""
+check "web-backend is ready" deploy_ready ckaquest web-backend
+check 2 "HPA condition ScalingActive is True" hpa_active
+check "HPA shows a current CPU value (no <unknown>)" hpa_has_metric
+finish

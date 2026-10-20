@@ -1,20 +1,19 @@
-#!/bin/bash
-
-# Check if pods are running and NOT constantly restarting
-RESTART_COUNT=$(kubectl get pods -n ckaquest -l app=api -o jsonpath='{.items[*].status.containerStatuses[*].restartCount}' 2>/dev/null | awk '{for(i=1;i<=NF;i++) sum+=$i} END {print sum}')
-RUNNING_PODS=$(kubectl get pods -n ckaquest -l app=api -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}' 2>/dev/null | wc -w | tr -d ' ')
-
-# Give a grace period - if restarts are low (< 3 total) and pods are running, consider it fixed
-if [ "$RUNNING_PODS" -eq 2 ] && [ "$RESTART_COUNT" -lt 3 ]; then
-    echo "✅ Pods are running stably with $RUNNING_PODS/2 ready"
-    echo "   Total restart count: $RESTART_COUNT (healthy)"
-    exit 0
-else
-    echo "❌ Pods are not healthy"
-    echo "   Running pods: $RUNNING_PODS/2"
-    echo "   Total restarts: $RESTART_COUNT"
-    if [ "$RESTART_COUNT" -ge 3 ]; then
-        echo "   ⚠️  Too many restarts - liveness probe likely failing!"
-    fi
-    exit 1
-fi
+#!/usr/bin/env bash
+source "$CQ_ROOT/lib/validate.sh"
+probe_path() { jp ckaquest deploy/api-server '{.spec.template.spec.containers[0].livenessProbe.httpGet.path}'; }
+probe_serves() {
+  local pod path
+  pod="$(kubectl get pods -n ckaquest -l app=api --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)"
+  path="$(probe_path)"
+  [ -n "$pod" ] && [ -n "$path" ] && kubectl exec -n ckaquest "$pod" -- wget -q -O /dev/null "http://localhost:80$path" >/dev/null 2>&1
+}
+no_restarts() {
+  local r
+  r="$(kubectl get pods -n ckaquest -l app=api -o jsonpath='{.items[*].status.containerStatuses[*].restartCount}' 2>/dev/null)"
+  [ -n "$r" ] && ! tr ' ' '\n' <<<"$r" | grep -qv '^0$'
+}
+check "api-server still has a liveness probe" field_ne ckaquest deploy/api-server '{.spec.template.spec.containers[0].livenessProbe.httpGet.port}' ""
+check 2 "the probe path returns 200 from nginx" probe_serves
+check "api-server has 2/2 ready replicas" deploy_ready ckaquest api-server 2
+check "current pods have not restarted" no_restarts
+finish

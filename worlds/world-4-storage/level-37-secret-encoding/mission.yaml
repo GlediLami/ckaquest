@@ -1,27 +1,24 @@
-level: 37
-title: "Secret Encoding vs Encryption"
-objective: "Understand why base64 encoding is NOT security"
 name: "Secret Encoding vs Encryption"
-world: "Storage & Stateful Apps"
-difficulty: "intermediate"
+description: "database-client crashes with 'Invalid username format'"
+objective: "Fix the Secret so the client gets the right credentials"
 xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: storage
+namespace: ckaquest
+exam: true
 concepts:
   - secrets
-  - base64-encoding
-  - encryption-at-rest
-  - secret-management
-  - security
-description: |
-  The database credentials are stored in a Kubernetes Secret using base64 encoding.
-  But here's the critical lesson: base64 is NOT encryption - it's just encoding!
-  Anyone with kubectl access can decode these "secrets" instantly.
-  
-  This level demonstrates why proper secret management requires more than just
-  Kubernetes Secrets. You need encryption-at-rest, RBAC, and ideally external
-  secret managers like Vault or Sealed Secrets.
-  
-learning_objectives:
-  - Understand the difference between encoding and encryption
-  - Learn why base64 provides zero security
-  - Discover how easily Secrets can be decoded
-  - Explore proper secret management strategies
+  - base64 encoding
+  - environment variables from secrets
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **database-client** in namespace **ckaquest** reads its credentials from Secret **db-credentials**.
+  The pod keeps crashing with `Invalid username format`.
+
+  The real credentials are username `admin` and password `secretpass123`.
+  Fix the Secret and make sure database-client is running and logs `Connected successfully`.
+docs:
+  - https://kubernetes.io/docs/concepts/configuration/secret/
+  - https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/

@@ -1,13 +1,26 @@
 name: "HPA Can't Scale"
-description: "HorizontalPodAutoscaler fails to scale pods due to missing metrics"
-objective: "Install metrics-server so HPA can read CPU/memory metrics and scale"
+description: "The HPA for web-backend shows <unknown> CPU and never scales"
+objective: "Make the HPA read CPU usage for web-backend"
 xp: 250
-difficulty: intermediate  
-expected_time: 18m
+difficulty: intermediate
+expected_time: 10m
+domain: workloads
+namespace: ckaquest
+exam: true
 concepts:
   - HorizontalPodAutoscaler
-  - metrics-server
-  - CPU metrics
-  - autoscaling
-  - kubectl top
   - resource requests
+  - metrics-server
+  - kubectl top
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **web-backend** in namespace **ckaquest** has an HPA called **web-backend-hpa**.
+  It should keep average CPU at 50%, with 1 to 5 replicas.
+  The TARGETS column shows `<unknown>/50%` and the HPA never scales.
+
+  metrics-server is installed and works.
+  Fix it so the HPA reads a real CPU value. Do not change the HPA target or replica range.
+docs:
+  - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

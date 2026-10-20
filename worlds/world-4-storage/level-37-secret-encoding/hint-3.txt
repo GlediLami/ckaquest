@@ -1,44 +1,6 @@
-✅ HINT 3: Complete Solution
+The username was base64-encoded twice. Let kubectl do the encoding:
+  k create secret generic db-credentials -n ckaquest \
+    --from-literal=username=admin --from-literal=password=secretpass123 \
+    $do | k apply -f -
 
-Fix: Base64 encode the Secret data values
-
-📝 In Secret:
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-credentials
-  namespace: ckaquest
-type: Opaque
-data:
-  username: YWRtaW4=  # ✅ base64 of "admin"
-  password: c2VjcmV0cGFzczEyMw==  # ✅ base64 of "secretpass123"
-```
-
-🔧 How to encode:
-```bash
-echo -n "admin" | base64
-# YWRtaW4=
-
-echo -n "secretpass123" | base64
-# c2VjcmV0cGFzczEyMw==
-```
-
-🚀 Apply:
-```bash
-kubectl delete -f broken.yaml
-kubectl apply -f solution.yaml
-kubectl logs database-client -n ckaquest
-# Should show "Connected successfully!"
-```
-
-💡 Alternative: Use stringData for automatic encoding:
-```yaml
-apiVersion: v1
-kind: Secret
-stringData:  # No manual encoding needed!
-  username: admin
-  password: secretpass123
-```
-
-Remember: Secret "data" requires base64, "stringData" accepts plain text!
+Env vars are read when the container starts. Recreate the pod so it picks up the new value fast.

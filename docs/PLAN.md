@@ -69,7 +69,7 @@ About 110 levels in total. Every curriculum bullet gets at least 2 levels.
 
 ### 3.3 Upgrades for the base 50
 
-1. Fix level 12 (the broken state already passes) and level 14 (no automatic fix).
+1. Done: levels 12, 14 and 37 fixed (2026-10-20).
 2. Add `domain`, `task`, `docs`, `course_section` to every `mission.yaml`.
 3. Rewrite the loose validators with `lib/validate.sh`. Level 1 example: it passes if the command line is just deleted.
 4. Add an "Exam angle" section to each debrief: the fastest imperative command and the doc page.
@@ -193,7 +193,7 @@ Each phase ends with the harness green for everything in it and a commit.
 
 | # | Phase | Done when |
 |---|---|---|
-| 1 | Finish testing: base 50 report, fix 12 and 14, test World 6 | Harness shows 60 of 60 OK |
+| 1 | Done (2026-10-20): base 50 and World 6 tested, 12, 14, 37, 45 to 50 fixed | Harness shows 60 of 60 OK |
 | 2 | Feasibility spikes: kubeadm upgrade inside kind, kubeadm init/join on bare kind node images, Calico in kind, offline image loading, offline docs build | One short report: what works, what gets dropped |
 | 3 | Base 50 upgrade (section 3.3) | Every level has task, domain, docs, course section, strict validator |
 | 4 | Worlds 7 to 10 | Harness green |

@@ -6,10 +6,8 @@ metadata:
   namespace: ckaquest
 type: Opaque
 data:
-  # ⚠️ These look encoded, but base64 is NOT encryption!
-  # Anyone with kubectl access can decode these instantly
-  username: YWRtaW4=  # base64 encoded "admin"
-  password: c2VjcmV0cGFzczEyMw==  # base64 encoded "secretpass123"
+  username: WVdSdGFXND0=
+  password: c2VjcmV0cGFzczEyMw==
 ---
 apiVersion: v1
 kind: Pod

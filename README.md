@@ -12,7 +12,7 @@ Work in progress.
 
 | Part | State |
 |---|---|
-| Worlds 1 to 5: pods, deployments, networking, storage, security (50 levels) | Playable. 44 tested clean. Levels 12, 14, 37, 45 to 50 are being fixed. |
+| Worlds 1 to 5: pods, deployments, networking, storage, security (50 levels) | Playable, all 50 tested |
 | World 6: cluster troubleshooting (levels 51 to 60) | Playable, all 10 tested |
 | Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, lifecycle, drills | Planned |
 | Exam simulator | Planned |
