@@ -37,3 +37,8 @@ domain: networking
 course_section: 7
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/network-policies/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **frontend** in namespace **ckaquest** cannot reach Service **backend-service** on port 8080. NetworkPolicy **backend-network-policy** protects the backend.
+  Change the policy so frontend can reach the backend. Other pods must stay blocked.

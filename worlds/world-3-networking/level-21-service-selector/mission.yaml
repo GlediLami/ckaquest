@@ -14,3 +14,8 @@ domain: networking
 course_section: 2
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/service/
+task: |
+  Context: `kind-ckaquest`
+
+  Service **backend-service** in namespace **ckaquest** gets no traffic to pod **backend-pod**. Pod **test-client** cannot reach it.
+  Fix the Service so it routes to backend-pod. Do not change the pod.

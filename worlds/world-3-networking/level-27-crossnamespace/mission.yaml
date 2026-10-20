@@ -37,3 +37,8 @@ domain: networking
 course_section: 9
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **frontend-app** in namespace **ckaquest** must call Service **api-service** in namespace **backend-ns**. Its requests fail.
+  Fix the frontend so it reaches api-service. Do not move the Service.

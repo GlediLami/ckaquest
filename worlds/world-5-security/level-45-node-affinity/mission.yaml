@@ -30,3 +30,8 @@ domain: workloads
 course_section: 3
 docs:
   - https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **gpu-workload** in namespace **ckaquest** must run only on nodes labelled `accelerator=gpu`.
+  Add a required node affinity for that label. The pod must be Running on such a node.

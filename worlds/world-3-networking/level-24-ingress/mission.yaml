@@ -14,3 +14,8 @@ domain: networking
 course_section: 9
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/ingress/
+task: |
+  Context: `kind-ckaquest`
+
+  Ingress **web-ingress** in namespace **ckaquest** should send all requests for host `myapp.local` to Service **web-service** on port 80. Requests to `/` return 404.
+  Fix the Ingress.

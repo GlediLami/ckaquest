@@ -24,3 +24,8 @@ domain: storage
 course_section: 8
 docs:
   - https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **data-app** in namespace **ckaquest** stores data in an `emptyDir`. The data is lost every time the pod is recreated.
+  Create PVC **app-data** (1Gi, ReadWriteOnce) and change the pod to use it in place of the emptyDir.

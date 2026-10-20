@@ -37,3 +37,8 @@ domain: networking
 course_section: 2
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+task: |
+  Context: `kind-ckaquest`
+
+  Service **web-service** in namespace **ckaquest** is of type LoadBalancer and stays `<pending>`. This cluster has no load balancer.
+  Change it to a NodePort Service on node port **30080**, so pod **web-app** is reachable from outside.

@@ -23,3 +23,8 @@ domain: workloads
 course_section: 5
 docs:
   - https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **web-app** in namespace **ckaquest** does not start. It reads its settings from ConfigMap **app-config**.
+  Find which key is missing and add it with value `postgres.ckaquest.svc.cluster.local`. The pod must be Running.

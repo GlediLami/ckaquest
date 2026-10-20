@@ -38,3 +38,8 @@ domain: networking
 course_section: 2
 docs:
   - https://kubernetes.io/docs/reference/networking/virtual-ips/#session-affinity
+task: |
+  Context: `kind-ckaquest`
+
+  Service **session-service** in namespace **ckaquest** balances across 3 pods. Users lose their session when a request lands on a different pod.
+  Configure the Service so requests from the same client IP always go to the same pod.

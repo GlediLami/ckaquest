@@ -37,3 +37,8 @@ domain: storage
 course_section: 8
 docs:
   - https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **database-pod** in namespace **ckaquest** stays Pending because PVC **app-storage-claim** never binds. PV **app-storage** exists.
+  Find why the claim and the volume do not match and fix it, so the PVC is Bound and the pod Running.

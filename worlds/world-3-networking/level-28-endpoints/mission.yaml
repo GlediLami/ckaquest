@@ -38,3 +38,8 @@ domain: troubleshooting
 course_section: 14
 docs:
   - https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/
+task: |
+  Context: `kind-ckaquest`
+
+  Service **web-service** in namespace **ckaquest** sends traffic to pods **web-app-1** and **web-app-2** even while they cannot serve it.
+  Add a readiness probe to both pods: HTTP GET on `/`, port 8080. Both pods must become Ready.

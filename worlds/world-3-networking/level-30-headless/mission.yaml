@@ -37,3 +37,8 @@ domain: networking
 course_section: 9
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+task: |
+  Context: `kind-ckaquest`
+
+  StatefulSet **web** in namespace **ckaquest** needs a stable DNS name per pod, like `web-0.web-cluster`. Service **web-cluster** does not give that.
+  Make web-cluster a headless Service. Keep its name, selector and port.

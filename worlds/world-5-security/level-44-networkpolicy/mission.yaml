@@ -31,3 +31,8 @@ domain: networking
 course_section: 7
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/network-policies/
+task: |
+  Context: `kind-ckaquest`
+
+  NetworkPolicy **deny-all** in namespace **ckaquest** blocks pod **backend** from the database.
+  Allow ingress to the **database** pods on TCP 5432 from the backend pods only. All other ingress to the database must stay blocked.

@@ -30,3 +30,8 @@ domain: workloads
 course_section: 3
 docs:
   - https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **critical-api** in namespace **ckaquest** must win against dev workloads when the cluster is full.
+  Create PriorityClass **high-priority** (value 1000) and PriorityClass **low-priority** (value 100). Run critical-api with high-priority and **dev-workload-1** with low-priority.

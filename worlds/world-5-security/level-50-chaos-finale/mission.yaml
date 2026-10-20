@@ -44,3 +44,9 @@ docs:
   - https://kubernetes.io/docs/reference/access-authn-authz/rbac/
   - https://kubernetes.io/docs/concepts/policy/resource-quotas/
   - https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **ckaquest** has many failures at the same time: the app does not start, cannot be reached and cannot be maintained.
+  Inspect Deployment **chaos-app** and everything around it: ResourceQuota **chaos-quota**, ServiceAccount **app-sa** and its RBAC, NetworkPolicies, PDB **chaos-pdb**, securityContext and PriorityClass **production-priority**.
+  Fix every problem until all replicas of chaos-app are ready. Run `validate` often. It tells you how many checks pass.

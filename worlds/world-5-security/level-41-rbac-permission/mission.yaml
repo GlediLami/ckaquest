@@ -25,3 +25,8 @@ domain: architecture
 course_section: 7
 docs:
   - https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **pod-lister** in namespace **ckaquest** runs as ServiceAccount **pod-reader** and gets `Forbidden` when it lists pods.
+  Create Role **pod-reader-role** that allows get, list and watch on pods, and bind it to the ServiceAccount. Grant nothing more.

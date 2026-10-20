@@ -31,3 +31,8 @@ domain: workloads
 course_section: 3
 docs:
   - https://kubernetes.io/docs/concepts/policy/resource-quotas/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **resource-hungry-app** in namespace **ckaquest** is rejected by ResourceQuota **compute-quota**.
+  Read the quota and create the pod with requests and limits that fit inside it. Do not change the quota.

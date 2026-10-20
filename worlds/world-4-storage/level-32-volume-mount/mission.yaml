@@ -36,3 +36,8 @@ domain: storage
 course_section: 8
 docs:
   - https://kubernetes.io/docs/concepts/storage/volumes/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **web-app** in namespace **ckaquest** expects its config file at `/app/config/app.conf`. The file comes from PVC **config-pvc**, but the app cannot find it.
+  Fix the pod so the volume is mounted where the app looks.

@@ -24,3 +24,8 @@ domain: storage
 course_section: 8
 docs:
   - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming
+task: |
+  Context: `kind-ckaquest`
+
+  PV **important-data** holds data that must survive even if PVC **data-claim** in namespace **ckaquest** is deleted.
+  Change the PV so its data is kept when the claim is released. Pod **data-writer** must keep running.

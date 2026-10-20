@@ -30,3 +30,8 @@ domain: workloads
 course_section: 3
 docs:
   - https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+task: |
+  Context: `kind-ckaquest`
+
+  Both worker nodes carry the taint `dedicated=gpu:NoSchedule`. Pod **regular-app** in namespace **ckaquest** stays Pending.
+  Add a toleration so the pod can run on a worker. Do not remove the taints.

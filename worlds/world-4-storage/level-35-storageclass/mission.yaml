@@ -23,3 +23,8 @@ domain: storage
 course_section: 8
 docs:
   - https://kubernetes.io/docs/concepts/storage/storage-classes/
+task: |
+  Context: `kind-ckaquest`
+
+  PVC **app-storage** in namespace **ckaquest** stays Pending, so pod **data-processor** cannot start.
+  Check which StorageClasses exist in the cluster. Fix the claim so it is provisioned and the pod runs.

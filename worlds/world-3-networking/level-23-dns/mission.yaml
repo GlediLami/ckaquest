@@ -14,3 +14,8 @@ domain: networking
 course_section: 9
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **app-client** in namespace **ckaquest** cannot connect to the database. The database runs in pod **database** behind Service **database-service** on port 5432.
+  Find out which name the client uses and fix it so the client reaches the database through the Service.
