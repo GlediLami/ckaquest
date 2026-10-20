@@ -329,3 +329,16 @@ When a service isn't routing traffic:
 **Remember:** Services are just selectors. Endpoints are the truth. Always check endpoints when debugging connectivity!
 
 🎉 **Congratulations on mastering service selectors!**
+
+## Exam angle
+
+Check endpoints before anything else:
+
+```bash
+k get ep backend-service
+k describe svc backend-service | grep Selector
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/
+
+Your notes: Labels and Selectors, Service Networking

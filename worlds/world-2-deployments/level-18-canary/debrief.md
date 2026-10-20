@@ -515,3 +515,16 @@ You've learned how to configure canary deployments with proper traffic splits fo
 Next level: StatefulSet vs Deployment! You'll learn why using Deployments for stateful applications can cause data loss.
 
 **Key takeaway**: Canary deployments must have correct replica ratios to limit user exposure. Always validate your traffic split before deploying!
+
+## Exam angle
+
+Traffic split by pod count is plain scaling:
+
+```bash
+k scale deploy app-stable --replicas=9
+k scale deploy app-canary --replicas=1
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/management/#canary-deployments
+
+Your notes: Workloads

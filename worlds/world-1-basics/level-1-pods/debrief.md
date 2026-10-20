@@ -143,3 +143,16 @@ You now understand:
 ---
 
 💡 **Pro tip:** In production, you'd almost never use standalone pods. Deployments handle restarts, rollbacks, and scaling. But understanding pods is essential because Deployments create pods under the hood.
+
+## Exam angle
+
+Pods are mostly immutable. Export, fix, replace in one go:
+
+```bash
+k get pod nginx-broken -o yaml > p.yaml   # edit
+k replace --force -f p.yaml
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/
+
+Your notes: Application Failure, Commands and Arguments

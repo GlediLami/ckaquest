@@ -183,3 +183,17 @@ Next level: You'll learn about ReplicaSets and how Deployments use them under th
 spec:
   revisionHistoryLimit: 10  # Keep last 10 ReplicaSets
 ```
+
+## Exam angle
+
+Know the rollout commands by heart:
+
+```bash
+k rollout history deploy web-app
+k rollout undo deploy web-app [--to-revision=N]
+k rollout status deploy web-app
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment
+
+Your notes: Workloads, Cluster Upgrade

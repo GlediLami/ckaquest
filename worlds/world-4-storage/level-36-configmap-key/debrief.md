@@ -142,3 +142,16 @@ env:
 ---
 
 **Well done!** You understand ConfigMap key management! 🎉
+
+## Exam angle
+
+Add a key without an editor:
+
+```bash
+k patch cm app-config -p '{"data":{"database_host":"..."}}'
+k describe pod web-app | grep -A5 Events
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+
+Your notes: Config, Environment Variables

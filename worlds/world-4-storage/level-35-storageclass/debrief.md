@@ -201,3 +201,16 @@ metadata:
 ---
 
 **Well done!** You understand StorageClass fundamentals! 🎉
+
+## Exam angle
+
+List classes before you write a PVC:
+
+```bash
+k get sc
+k describe pvc app-storage | grep -A3 Events
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/storage-classes/
+
+Your notes: Storage

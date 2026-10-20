@@ -748,3 +748,16 @@ In the next levels, you'll explore more advanced networking concepts like Networ
 
 **Mission Complete!** 🎉  
 You've earned 250 XP and leveled up your Kubernetes networking skills!
+
+## Exam angle
+
+Generate Ingress with kubectl create ingress:
+
+```bash
+k create ingress web-ingress --rule="myapp.local/*=web-service:80" $do
+k describe ing web-ingress
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+Your notes: Networking, Gateway API

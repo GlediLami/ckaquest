@@ -869,3 +869,15 @@ In the next levels, you'll explore cross-namespace service communication, servic
 
 **Mission Complete!** 🎉  
 You've earned 200 XP and understood the tradeoffs of sticky sessions!
+
+## Exam angle
+
+One field, no restart needed:
+
+```bash
+k patch svc session-service -p '{"spec":{"sessionAffinity":"ClientIP"}}'
+```
+
+Bookmark: https://kubernetes.io/docs/reference/networking/virtual-ips/#session-affinity
+
+Your notes: Service Networking

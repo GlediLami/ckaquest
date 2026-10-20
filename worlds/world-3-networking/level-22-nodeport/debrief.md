@@ -355,3 +355,16 @@ spec:
 **Remember:** NodePort exposes your service on EVERY node. Always use explicit ports in production!
 
 🎉 **Congratulations on mastering NodePort services!**
+
+## Exam angle
+
+Expose with a fixed nodePort needs YAML or a patch:
+
+```bash
+k expose pod web-app --type=NodePort --port=80 $do > s.yaml   # add nodePort: 30080
+curl <node-ip>:30080
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+
+Your notes: Service Networking

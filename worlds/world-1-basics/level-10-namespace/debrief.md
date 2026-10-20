@@ -75,3 +75,17 @@ You've mastered:
 **Total XP Earned**: 1,450 XP
 
 **Next**: World 2 - Deployments & Scaling awaits!
+
+## Exam angle
+
+You cannot move objects between namespaces. Export, change, recreate, delete the old:
+
+```bash
+k get pod client-app -n default -o yaml > p.yaml
+# set namespace, drop status/uid/resourceVersion
+k apply -f p.yaml && k delete pod client-app -n default
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+
+Your notes: Namespace, Imperative vs Declarative

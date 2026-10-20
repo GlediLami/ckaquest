@@ -149,3 +149,16 @@ May your clusters be stable, your pods always Running, and your deployments fore
 *You're now ready to build the cloud-native future.*
 
 🚀 **GO BUILD AMAZING THINGS!** 🚀
+
+## Exam angle
+
+Many faults at once: fix one, run validate, repeat. Events tell you the next one:
+
+```bash
+k get events --sort-by=.lastTimestamp | tail
+k describe rs -l app=chaos-app
+```
+
+Bookmark: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+
+Your notes: Application Failure, RBAC, Network Policy

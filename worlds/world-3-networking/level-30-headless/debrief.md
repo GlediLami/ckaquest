@@ -1341,3 +1341,16 @@ You've completed **World 3: Networking & Services** (2,300 XP)!
 
 **Remember:** For StatefulSets, always use `clusterIP: None`. Your database cluster will thank you!
 
+## Exam angle
+
+clusterIP is immutable. Export, set clusterIP: None, replace:
+
+```bash
+k get svc web-cluster -o yaml > s.yaml
+k replace --force -f s.yaml
+k run t --rm -it --image=busybox -- nslookup web-0.web-cluster
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+
+Your notes: DNS in Kubernetes, Workloads

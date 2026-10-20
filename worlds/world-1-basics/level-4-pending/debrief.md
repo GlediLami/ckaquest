@@ -130,3 +130,16 @@ You've mastered three pod states:
 - ✅ Pending (resource constraints)
 
 Next up: Learn how labels and selectors connect services to pods!
+
+## Exam angle
+
+Read the scheduler's reason first, then compare with node capacity:
+
+```bash
+k describe pod hungry-app | grep -A3 Events
+k describe node ckaquest-worker | grep -A6 Allocatable
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+
+Your notes: Resource Requirements, Manual Scheduling

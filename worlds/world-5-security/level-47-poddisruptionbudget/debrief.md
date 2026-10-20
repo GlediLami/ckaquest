@@ -97,3 +97,16 @@ spec:
 - **Level 50:** CHAOS FINALE!
 
 **Great work!** 🎉🛡️
+
+## Exam angle
+
+Check PDB math before a drain:
+
+```bash
+k get pdb web-pdb
+k scale deploy web-app --replicas=3
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+
+Your notes: Node Maintenance

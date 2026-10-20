@@ -151,3 +151,16 @@ kubectl exec <pod> -c <container> -it -n <namespace> -- sh
 ## What's Next?
 
 You've mastered multi-container debugging! Next challenge: A mysterious application failure that's only visible in the logs—time to become a log detective! 🕵️
+
+## Exam angle
+
+Name the container, or you only see the first one:
+
+```bash
+k logs app-with-logging -c <sidecar>
+k get pod app-with-logging -o jsonpath='{.status.containerStatuses[*].name}'
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+
+Your notes: Multi-Container Pods, Application Logs

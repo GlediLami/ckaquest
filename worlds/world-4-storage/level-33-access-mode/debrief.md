@@ -731,3 +731,15 @@ Now that you understand access modes, you're ready for:
 ---
 
 **Well done!** You've mastered PV/PVC access modes. Remember: choose the right access mode for your application's needs! 🎉
+
+## Exam angle
+
+Access modes on PV and PVC must match. PVC spec is immutable, so recreate it:
+
+```bash
+k get pv,pvc -o custom-columns=NAME:.metadata.name,MODES:.spec.accessModes
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
+
+Your notes: Storage

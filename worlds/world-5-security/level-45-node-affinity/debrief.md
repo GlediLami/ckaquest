@@ -477,3 +477,16 @@ Now that you understand NodeAffinity, you're ready for:
 ---
 
 **Excellent work!** You've mastered advanced pod scheduling! 🎉📍
+
+## Exam angle
+
+Label the node, then copy nodeAffinity from the docs:
+
+```bash
+k label node ckaquest-worker accelerator=gpu
+k get pod gpu-workload -o wide
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+
+Your notes: Node Affinity, Labels and Selectors

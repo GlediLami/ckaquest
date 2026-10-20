@@ -116,3 +116,16 @@ tolerations:
 - **Level 50:** CHAOS FINALE!
 
 **Excellent work!** 🎉⚡
+
+## Exam angle
+
+Read the taint exactly, then copy it into the toleration:
+
+```bash
+k describe node ckaquest-worker | grep Taint
+k explain pod.spec.tolerations
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+
+Your notes: Taints and Tolerations

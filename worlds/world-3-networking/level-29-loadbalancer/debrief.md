@@ -864,3 +864,14 @@ You've mastered Kubernetes service types and cloud provider integration. Next up
 
 *"The difference between a $50/month and $5,000/month cloud bill often comes down to understanding service types."* - Kubernetes Cost Optimization Guide
 
+## Exam angle
+
+LoadBalancer stays <pending> without a cloud. Change the type:
+
+```bash
+k patch svc web-service -p '{"spec":{"type":"NodePort","ports":[{"port":80,"nodePort":30080}]}}'
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+
+Your notes: Service Networking

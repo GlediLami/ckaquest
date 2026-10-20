@@ -396,3 +396,16 @@ You've learned how to configure PodDisruptionBudgets to protect applications whi
 Next level: Blue-Green deployments! You'll learn how service selector misconfigurations can cause traffic routing issues.
 
 **Key takeaway**: PDBs must allow at least 1 eviction, otherwise they block all maintenance operations. Balance protection with operational flexibility!
+
+## Exam angle
+
+Create PDBs imperatively, and check ALLOWED DISRUPTIONS:
+
+```bash
+k create pdb db-proxy-pdb --selector=app=database-proxy --min-available=2
+k get pdb
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+
+Your notes: Node Maintenance

@@ -801,3 +801,16 @@ Now that you understand NetworkPolicy, you're ready for:
 ---
 
 **Excellent work!** You've mastered Kubernetes network security! 🎉🔒
+
+## Exam angle
+
+Default deny plus allow rules. Remember DNS egress on port 53:
+
+```bash
+k get netpol
+k exec backend -- nc -zv -w2 database 5432
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+
+Your notes: Network Policy

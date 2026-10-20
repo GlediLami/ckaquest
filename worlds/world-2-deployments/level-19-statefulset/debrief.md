@@ -498,3 +498,16 @@ You've learned the critical difference between Deployments (stateless) and State
 Next level (FINAL LEVEL OF WORLD 2!): ReplicaSet chaos! You'll learn why manually creating ReplicaSets without a Deployment causes management nightmares.
 
 **Key takeaway**: Never use Deployments for stateful workloads like databases. Always use StatefulSets with PersistentVolumes for data persistence and stable pod identities!
+
+## Exam angle
+
+There is no kubectl create statefulset. Start from a Deployment and change it:
+
+```bash
+k create deploy database --image=... $do > sts.yaml
+# kind: StatefulSet, add serviceName, remove strategy
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+
+Your notes: Workloads, Storage

@@ -793,3 +793,14 @@ You've mastered readiness probes and endpoint management. Next, you'll tackle:
 
 *"In production, traffic should only flow to pods that are ready. Readiness probes are not optional—they're essential."* - Kubernetes SRE Handbook
 
+## Exam angle
+
+Not Ready pods are removed from endpoints. Watch it happen:
+
+```bash
+k get ep web-service -w
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/
+
+Your notes: Service Networking, Application Failure

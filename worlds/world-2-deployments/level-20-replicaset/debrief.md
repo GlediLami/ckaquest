@@ -466,3 +466,16 @@ You'll learn:
 - Service mesh basics
 
 **Key takeaway**: Deployments are the abstraction you should use. They manage ReplicaSets for you and provide rolling updates, rollbacks, and declarative management. Never create ReplicaSets directly!
+
+## Exam angle
+
+Generate the Deployment, then delete the bare ReplicaSet:
+
+```bash
+k create deploy web-app --image=... --replicas=3 $do > d.yaml
+k delete rs web-app-rs
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+
+Your notes: Workloads, Imperative vs Declarative

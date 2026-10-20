@@ -160,3 +160,15 @@ spec:
 ---
 
 **Well done!** You understand volume permissions! 🎉
+
+## Exam angle
+
+fsGroup makes the volume group-owned by that GID:
+
+```bash
+k explain pod.spec.securityContext.fsGroup
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+
+Your notes: Security Contexts

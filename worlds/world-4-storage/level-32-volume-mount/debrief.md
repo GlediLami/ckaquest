@@ -578,3 +578,16 @@ Now that you understand volume mount paths, you're ready for:
 ---
 
 **Well done!** You've mastered volume mount path configuration. Remember: the path is part of your application's contract! 🎉
+
+## Exam angle
+
+Check where the volume is mounted versus where the app looks:
+
+```bash
+k get pod web-app -o jsonpath='{.spec.containers[0].volumeMounts}'
+k exec web-app -- ls /app/config
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/volumes/
+
+Your notes: Storage

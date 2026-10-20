@@ -174,3 +174,17 @@ curl localhost:9999
 ## What's Next?
 
 You've learned single-container pod basics. Next challenge introduces multi-container pods where a sidecar container crashes and affects the whole pod!
+
+## Exam angle
+
+port is what clients call. targetPort is what the container listens on:
+
+```bash
+k get svc web-service -o wide
+k get ep web-service
+k run t --rm -it --image=busybox -- wget -qO- web-service
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/
+
+Your notes: Service Networking, Network Troubleshooting

@@ -217,3 +217,16 @@ You've mastered all storage concepts:
 ---
 
 **Congratulations!** You're now a Kubernetes storage expert! 🎉🚀
+
+## Exam angle
+
+Generate the PVC from the docs page, then swap the volume in the pod:
+
+```bash
+k get pod data-app -o yaml > p.yaml   # emptyDir -> persistentVolumeClaim
+k replace --force -f p.yaml
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+
+Your notes: Storage

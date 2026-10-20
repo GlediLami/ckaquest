@@ -537,3 +537,17 @@ Now that you understand RBAC, you're ready for:
 ---
 
 **Well done!** You've mastered Kubernetes RBAC - the foundation of cluster security! 🎉🔐
+
+## Exam angle
+
+Two commands, then prove it with auth can-i:
+
+```bash
+k create role pod-reader-role --verb=get,list,watch --resource=pods
+k create rolebinding pod-reader-rb --role=pod-reader-role --serviceaccount=ckaquest:pod-reader
+k auth can-i list pods --as=system:serviceaccount:ckaquest:pod-reader
+```
+
+Bookmark: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+
+Your notes: RBAC, Service Accounts

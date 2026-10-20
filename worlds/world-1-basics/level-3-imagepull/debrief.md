@@ -84,3 +84,16 @@ You've now mastered two pod failure modes:
 - ✅ ImagePullBackOff (bad image reference)
 
 Next, you'll learn about pod scheduling issues when resources aren't available!
+
+## Exam angle
+
+Change the image without opening an editor:
+
+```bash
+k set image pod/web-app web-app=nginx:1.27
+k describe pod web-app | grep -A5 Events
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/containers/images/
+
+Your notes: Application Failure, Image Security

@@ -666,3 +666,16 @@ Now that you understand SecurityContext, you're ready for:
 ---
 
 **Excellent work!** You've mastered container security - a critical foundation for production Kubernetes! 🎉🔐
+
+## Exam angle
+
+Pod and container level securityContext are different blocks. Know which fields live where:
+
+```bash
+k explain pod.spec.containers.securityContext
+k exec web-app -- id
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+
+Your notes: Security Contexts

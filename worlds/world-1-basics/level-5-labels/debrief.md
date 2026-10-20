@@ -157,3 +157,17 @@ Labels are used everywhere in Kubernetes:
 - Volume claims selecting storage
 
 Next challenge: You'll debug a container port mismatch!
+
+## Exam angle
+
+Empty endpoints mean a selector mismatch. Compare both sides:
+
+```bash
+k get ep backend-service
+k get pod --show-labels
+k get svc backend-service -o jsonpath='{.spec.selector}'
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/
+
+Your notes: Labels and Selectors, Service Networking

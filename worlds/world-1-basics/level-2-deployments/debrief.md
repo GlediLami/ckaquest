@@ -177,3 +177,15 @@ You now understand:
 ---
 
 💡 **Pro tip:** In production, use Horizontal Pod Autoscaler (HPA) to automatically scale based on CPU/memory usage. Manual replica counts are for when you know exactly what you need.
+
+## Exam angle
+
+Scale imperatively. No YAML needed:
+
+```bash
+k scale deploy web --replicas=3
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
+Your notes: Workloads, Imperative vs Declarative

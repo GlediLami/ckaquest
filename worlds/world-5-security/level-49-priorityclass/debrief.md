@@ -48,3 +48,16 @@ preemptionPolicy: PreemptLowerPriority
 Combines ALL World 5 concepts in one epic challenge!
 
 **Great work!** 🚀⭐
+
+## Exam angle
+
+priorityClassName is immutable on a pod. Create the classes, then replace the pods:
+
+```bash
+k create priorityclass high-priority --value=1000
+k replace --force -f pod.yaml
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+
+Your notes: Priority Classes

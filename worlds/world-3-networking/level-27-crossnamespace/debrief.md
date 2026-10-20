@@ -976,3 +976,15 @@ In the next levels, you'll explore service endpoint management with readiness pr
 
 **Mission Complete!** 🎉  
 You've earned 250 XP and mastered cross-namespace service discovery!
+
+## Exam angle
+
+Short names only work inside the same namespace. Use <svc>.<ns>:
+
+```bash
+k exec frontend-app -- wget -qO- api-service.backend-ns
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+
+Your notes: DNS in Kubernetes, Namespace

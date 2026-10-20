@@ -361,3 +361,16 @@ You've learned how to configure rollout strategies for zero-downtime deployments
 Next level: PodDisruptionBudgets! You'll learn how to protect your pods from being evicted during cluster maintenance.
 
 **Key takeaway**: Always ensure `maxUnavailable` is less than your total replicas, and prefer having `maxSurge > 0` for smoother rollouts!
+
+## Exam angle
+
+Strategy fields live under spec.strategy.rollingUpdate:
+
+```bash
+k explain deploy.spec.strategy.rollingUpdate
+k patch deploy critical-api -p '{"spec":{"strategy":{"rollingUpdate":{"maxUnavailable":1}}}}'
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+
+Your notes: Workloads

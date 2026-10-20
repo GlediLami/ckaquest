@@ -506,3 +506,16 @@ You've learned how to use blue-green deployments for instant traffic switching a
 Next level: Canary deployments! You'll learn how incorrect replica ratios can affect canary testing accuracy.
 
 **Key takeaway**: In blue-green deployments, deploying the new version is only half the job - you must also update the service selector to route traffic to it!
+
+## Exam angle
+
+Switch traffic by patching the selector:
+
+```bash
+k patch svc app-service -p '{"spec":{"selector":{"version":"green"}}}'
+k get ep app-service
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/
+
+Your notes: Labels and Selectors, Service Networking

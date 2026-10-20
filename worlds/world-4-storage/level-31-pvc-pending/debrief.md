@@ -915,3 +915,16 @@ When PVC is Pending:
 *"A PersistentVolumeClaim is a promise. A PersistentVolume is the fulfillment. Both must agree on the terms."* - Kubernetes Storage Handbook
 
 **Remember:** For production databases, always use `persistentVolumeReclaimPolicy: Retain`. Your data's survival depends on it!
+
+## Exam angle
+
+A PVC binds only if class, access mode and size all match:
+
+```bash
+k get pv,pvc
+k describe pvc app-storage-claim | grep -A3 Events
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+
+Your notes: Storage

@@ -285,3 +285,15 @@ pod-1.database-service.ckaquest.svc.cluster.local → 10.244.2.8
 **Remember:** Service names are case-sensitive and must match exactly. When in doubt, `kubectl get svc` is your friend!
 
 🎉 **Congratulations on mastering Kubernetes DNS!**
+
+## Exam angle
+
+Service DNS name: <svc>.<ns>.svc.cluster.local. Test from inside:
+
+```bash
+k run t --rm -it --image=busybox -- nslookup database-service
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+
+Your notes: DNS in Kubernetes

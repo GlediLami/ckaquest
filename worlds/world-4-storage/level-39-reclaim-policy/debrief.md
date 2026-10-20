@@ -136,3 +136,15 @@ kubectl delete pvc my-data
 ---
 
 **Well done!** You understand reclaim policies! 🎉
+
+## Exam angle
+
+persistentVolumeReclaimPolicy can be patched on a live PV:
+
+```bash
+k patch pv important-data -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming
+
+Your notes: Storage

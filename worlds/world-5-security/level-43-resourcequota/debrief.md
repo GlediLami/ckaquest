@@ -514,3 +514,15 @@ Now that you understand ResourceQuotas, you're ready for:
 ---
 
 **Well done!** You've mastered resource management - critical for production Kubernetes clusters! 🎉💰
+
+## Exam angle
+
+Read the quota usage before you size the pod:
+
+```bash
+k describe quota compute-quota
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+Your notes: Resource Requirements, Admission Controllers

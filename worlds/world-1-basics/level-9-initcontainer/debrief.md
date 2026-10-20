@@ -46,3 +46,16 @@ kubectl describe pod <name> -n <namespace>
 ## What's Next
 
 Final level: Namespace isolation issues!
+
+## Exam angle
+
+Init containers have their own logs:
+
+```bash
+k logs web-with-init -c <init-name>
+k get pod web-with-init   # Init:0/1 means the first init container runs
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+
+Your notes: Init Containers, DNS in Kubernetes

@@ -425,3 +425,16 @@ You've learned the critical difference between liveness and readiness probes, an
 Next level: HorizontalPodAutoscaler! You'll learn how to automatically scale pods based on CPU/memory metrics.
 
 **Key takeaway**: Readiness probes protect your users from unready pods. Always configure them for production deployments!
+
+## Exam angle
+
+Probes are not in kubectl create. Copy the block from the docs page:
+
+```bash
+k edit deploy slow-startup-app
+k get ep slow-app-service -w
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+
+Your notes: Workloads, Service Networking

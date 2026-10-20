@@ -43,3 +43,16 @@ kubectl logs <pod> --since=1h -n <namespace>
 ## What's Next
 
 Next: Init containers that block pod startup!
+
+## Exam angle
+
+A crashed container keeps its last logs. Ask for them:
+
+```bash
+k logs database-app --previous
+k set env pod/... does not work on pods: edit the YAML and replace --force
+```
+
+Bookmark: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/
+
+Your notes: Application Logs, Environment Variables

@@ -920,3 +920,16 @@ In the next levels, you'll explore session affinity for stateful applications, c
 
 **Mission Complete!** 🎉  
 You've earned 250 XP and mastered Kubernetes NetworkPolicy!
+
+## Exam angle
+
+NetworkPolicy is never imperative. Know one template by heart. Test with a pod that has the right label:
+
+```bash
+k get netpol backend-network-policy -o yaml
+k exec frontend -- wget -qO- -T2 backend-service:8080
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+
+Your notes: Network Policy

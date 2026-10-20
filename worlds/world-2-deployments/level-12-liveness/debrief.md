@@ -254,3 +254,16 @@ You've learned how to configure liveness probes correctly.
 Next level: Readiness probes! You'll learn how to prevent traffic from reaching pods before they're ready to handle requests.
 
 **Key takeaway**: Liveness probes should be simple and reliable. When in doubt, use a TCP socket probe or a very basic HTTP endpoint that just returns 200.
+
+## Exam angle
+
+Liveness failures show as restarts and Unhealthy events:
+
+```bash
+k describe pod <pod> | grep -i unhealthy
+k edit deploy api-server
+```
+
+Bookmark: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+
+Your notes: Application Failure, Workloads

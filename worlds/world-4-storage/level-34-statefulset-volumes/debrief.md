@@ -557,3 +557,17 @@ Now that you understand StatefulSet storage, you're ready for:
 ---
 
 **Well done!** You've mastered StatefulSet volumeClaimTemplates. Remember: stateful apps need stateful storage! 🎉
+
+## Exam angle
+
+volumeClaimTemplates cannot be added to a live StatefulSet. Delete and recreate:
+
+```bash
+k delete sts postgres-cluster
+k apply -f sts.yaml
+k get pvc
+```
+
+Bookmark: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+
+Your notes: Storage, Workloads
