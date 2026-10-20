@@ -1,2 +1,1 @@
-# Same content as hint-1 for brevity
-See hint-1.txt for all three hints combined.
+Search "Pod Security Standards" on kubernetes.io. The restricted table lists each field. Put runAsNonRoot, runAsUser and seccompProfile in the pod securityContext, and allowPrivilegeEscalation and capabilities in the container securityContext.

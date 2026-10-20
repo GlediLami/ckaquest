@@ -1,311 +1,133 @@
-# CKAQuest 🕹️⚙️
+# CKAQuest
 
-[![Platform Support](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)]()
-[![Shell](https://img.shields.io/badge/shell-bash-green)]()
-[![Kubernetes](https://img.shields.io/badge/kubernetes-learning-326CE5)]()
+A game for preparing for the CKA exam (Certified Kubernetes Administrator, curriculum v1.37).
 
-Learn Kubernetes by fixing it.
+Every level breaks something on a real Kubernetes cluster, or asks you to build something the way an exam task would. You fix it in a terminal with `kubectl`, `ssh` and `vim`. Then the game checks your work and gives you points.
 
-CKAQuest is a **local, game-based Kubernetes training platform** with an interactive GUI-like terminal interface. Each mission breaks something in Kubernetes. Your job is to fix it.
+The goal is to be ready for the exam. You play the levels while you work through a CKA course and the Kubernetes docs. When the exam simulator is done, you also test yourself under exam conditions: a 2-hour timer, weighted tasks, and no hints.
 
-**50 progressive challenges across 5 worlds** - from beginner to advanced.
+## Status
 
-No cloud. No AWS. No costs.
+Work in progress.
 
-## Features
+| Part | State |
+|---|---|
+| Worlds 1 to 5: pods, deployments, networking, storage, security (50 levels) | Playable. 44 tested clean. Levels 12, 14, 37, 45 to 50 are being fixed. |
+| World 6: cluster troubleshooting (levels 51 to 60) | Playable, all 10 tested |
+| Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, lifecycle, drills | Planned |
+| Exam simulator | Planned |
+| Fully offline mode | Planned |
 
-- 📊 **Real-time Monitoring** - Watch Kubernetes resources update live with "check" command
-- 💡 **Progressive Hints** - Unlocks gradually as you need help
-- 📚 **Step-by-Step Guides** - Beginner-friendly walkthroughs when you need them
-- **Post-Mission Debriefs** - Learn WHY your fix worked with real-world examples
-- 🎯 **Clear Mission Briefings** - Know difficulty, time estimate, and concepts
-- 🏆 **XP & Progress System** - Track your learning journey and achievements
-- 🎮 **Multi-Terminal Workflow** - Learn real-world debugging patterns
-- 💾 **Auto-Save Progress** - Never lose your achievements
-- 🔄 **Reset Levels** - Get stuck? Clean slate anytime
+The full plan is in [docs/PLAN.md](docs/PLAN.md).
 
-## 🛡️ Safety First
+## What you need
 
-CKAQuest includes **comprehensive safety guards** (enabled by default):
-- ✅ Prevents deletion of critical namespaces (kube-system, default, etc.)
-- ✅ Blocks destructive cluster-wide operations
-- ✅ Limits operations to `ckaquest` namespace via RBAC
-- ✅ Confirms risky operations before execution
-- ✅ Safe for beginners - hard to break things!
+Linux, WSL2 or macOS. Windows only through WSL2.
 
-[Learn more about safety guards →](docs/SAFETY.md)
+- Docker (Docker Desktop on macOS and WSL2, Docker Engine on Linux)
+- [kind](https://kind.sigs.k8s.io/) **0.33 or newer**. Older versions cannot run the v1.37 node image.
+- kubectl, helm, jq, openssl
+- Python 3.9 or newer
+- About 3 GB of free RAM for the cluster
 
-## Requirements
-- Docker Desktop (running)
-- kubectl
-- kind
-- bash
-- python3 (3.9+)
-- jq
-
-## Platform Support
-
-CKAQuest works on **Linux, macOS, and Windows**!
-
-- ✅ **Linux** - Native bash support
-- ✅ **macOS** - Native bash support  
-- ✅ **Windows** - Requires Git Bash (see Windows installation below)
-
-## Installation
-
-### Linux & macOS
-
-Quick setup - just run:
-```bash
-./install.sh
-```
-
-### Windows Installation
-
-CKAQuest supports Windows! Follow these steps:
-
-#### Prerequisites
-
-1. **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
-   - Install and enable WSL2 backend (recommended)
-   - **Start Docker Desktop** before running CKAQuest
-
-2. **Git for Windows** - [Download](https://git-scm.com/download/win)
-   - ✅ Includes Git Bash (required!)
-   - ✅ Includes essential Unix utilities
-   - **Important:** Always use Git Bash, not PowerShell or CMD
-
-3. **kubectl** - Choose one installation method:
-   ```bash
-   # Option 1: Using Chocolatey (in PowerShell as Admin)
-   choco install kubernetes-cli
-   
-   # Option 2: Using Scoop
-   scoop install kubectl
-   
-   # Option 3: Manual download
-   # Visit: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
-   ```
-
-4. **Kind** - Choose one installation method:
-   ```bash
-   # Option 1: Using Chocolatey (in PowerShell as Admin)
-   choco install kind
-   
-   # Option 2: Using Scoop
-   scoop install kind
-   
-   # Option 3: Using Go (if you have Go installed)
-   go install sigs.k8s.io/kind@latest
-   ```
-
-5. **Python 3.9+**
-   - **Recommended:** Microsoft Store (search "Python 3.11" or newer)
-   - Or download from [python.org](https://www.python.org/downloads/windows/)
-
-6. **jq** ( Required for advanced )
-   ```bash
-   # Option 1: Using Chocolatey
-   choco install jq
-   
-   # Option 2: Using Scoop
-   scoop install jq
-   ```
-
-#### Running on Windows
-
-⚠️ **CRITICAL:** Always use **Git Bash**, not PowerShell or CMD!
+## Install
 
 ```bash
-# 1. Open Git Bash (not PowerShell/CMD!)
-# 2. Clone the repository
-git clone https://github.com/Manoj-engineer/ckaquest.git
+git clone https://github.com/GlediLami/ckaquest.git
 cd ckaquest
-
-# 3. Run installation
 ./install.sh
+```
 
-# 4. Start playing
+This creates a Python venv and a kind cluster called `ckaquest`: one control plane and two workers, Kubernetes v1.37.0. It also installs metrics-server, the Gateway API CRDs and the VPA CRDs. It puts vim, shell completion and etcdctl on the nodes.
+
+The cluster has its own kubeconfig in `~/.ckaquest/kubeconfig`. Your `~/.kube/config` and your other clusters are not touched.
+
+## Play
+
+You need two terminals.
+
+**Terminal 1** runs the game:
+
+```bash
 ./play.sh
 ```
 
-#### Windows Troubleshooting
-
-**Issue:** `TypeError: 'type' object is not subscriptable` when running `./play.sh`
-- **Cause:** Python 3.8 or older is being used. CKAQuest requires **Python 3.9+**
-- **Solution (macOS):**
-  ```bash
-  brew install python@3.11
-  ./install.sh
-  ```
-- **Solution (Linux):**
-  ```bash
-  sudo apt install python3.11
-  sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
-  ./install.sh
-  ```
-- **Solution (Windows):** Install Python 3.11+ from Microsoft Store or [python.org](https://www.python.org/downloads/windows/)
-
-**Issue:** `bash: command not found`
-- **Solution:** Make sure you're using Git Bash, not PowerShell or CMD
-
-**Issue:** `docker: command not found`  
-- **Solution:** Start Docker Desktop and wait until it's fully running
-
-**Issue:** Scripts show `^M` errors  
-- **Solution:** This is fixed by `.gitattributes`, but if you still see it:
-  ```bash
-  git config core.autocrlf input
-  git rm --cached -r .
-  git reset --hard
-  ```
-#### Alternative: WSL2
-
-For the best experience on Windows, use Windows Subsystem for Linux:
+**Terminal 2** is where you work, like the exam terminal:
 
 ```bash
-# In PowerShell (as Administrator)
-wsl --install -d Ubuntu
-
-# Then restart your computer and use Ubuntu terminal for CKAQuest
+source ./env.sh
 ```
 
-This provides a native Linux environment and the smoothest experience.
+After that, this terminal talks only to the CKAQuest cluster. You get:
 
-## Quick Start
+- `k` as an alias for `kubectl`, with completion
+- `$do` for `--dry-run=client -o yaml` and `$now` for `--force --grace-period 0`
+- `ssh controlplane`, `ssh node01` and `ssh node02` to log into the nodes
+- `~/ckaquest-work/` for files that tasks ask you to write
+
+In the game, each level shows the task, the CKA domain it belongs to and the doc pages you may open in the exam. Commands inside a level:
+
+| Command | What it does |
+|---|---|
+| `validate` | Checks your work, one line per check, with a score |
+| `task` | Shows the task again |
+| `check` | Watches the level's namespace for 10 seconds |
+| `hints` | Unlocks the next hint (3 per level) |
+| `guide` | Step-by-step help |
+| `solution` | The reference solution |
+| `reset` | Restores the cluster and starts the level again |
+| `skip`, `quit` | Skip the level, or save and exit |
+
+After you clear a level you get a debrief: what went wrong, why, and what the exam likes to ask about it.
+
+Some levels break the cluster itself, for example the kubelet or the API server. The game repairs this when you finish, skip or reset the level. If you quit in the middle, it repairs it before the next level starts.
+
+## Cluster commands
+
 ```bash
-# One-time setup
-./install.sh
-
-# Start playing
-./play.sh
+bin/cq-cluster status     # nodes and add-ons
+bin/cq-cluster rebuild    # delete and recreate the cluster, if something is really broken
+bin/cq-cluster down       # delete the cluster
+docker stop ckaquest-control-plane ckaquest-worker ckaquest-worker2   # pause it and free RAM
+docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 ```
 
-## 🎮 How to Play
+## Worlds
 
-1. **Start the game** - Run `./play.sh` (keeps the game running)
-2. **Read the mission briefing** - Understand what's broken  
-3. **OPEN A NEW TERMINAL** ⚠️ - Keep the game running in the first terminal!
-4. **Use kubectl to investigate** - Check pods, logs, and events in the NEW terminal
-5. **Fix the issue** - Apply corrections using kubectl commands
-6. **Return to game terminal** - Choose an action (check/validate/guide)
-7. **Earn XP** - Complete missions to level up!
+| World | Topics | CKA domain |
+|---|---|---|
+| 1 Basics | CrashLoopBackOff, image pulls, Pending pods, labels, ports, init containers, logs | Workloads, Troubleshooting |
+| 2 Deployments | Rollback, probes, HPA, rollouts, PDB, blue/green, canary, StatefulSet | Workloads |
+| 3 Networking | Selectors, NodePort, DNS, Ingress, NetworkPolicy, endpoints, headless services | Services and Networking |
+| 4 Storage | PVC Pending, mounts, access modes, StorageClass, ConfigMaps, Secrets, reclaim policy | Storage |
+| 5 Security | RBAC, securityContext, ResourceQuota, affinity, taints, Pod Security, PriorityClass | Workloads, Architecture |
+| 6 Cluster troubleshooting | kubelet down or misconfigured, scheduler, API server, controller manager, CoreDNS, kube-proxy, `kubectl top` and in-place resize, drain with a PDB, static pods | Troubleshooting (30% of the exam) |
 
-## 🎯 Available Commands During Play
+## Tests
 
-- `check` - Monitor resource status in real-time (watch for changes!)
-- `guide` - Show step-by-step solution walkthrough *(Coming soon - will be updated in future)*
-- `hints` - Display progressive hints (unlocks more on each use)
-- `solution` - View the solution.yaml file
-- `validate` - Test if your solution works
-- `skip` - Skip to the next level (no XP awarded)
-- `quit` - Exit the game (progress is auto-saved)
+Every level has a reference fix. The harness deploys each level, checks that the broken state fails, applies the fix, and checks that it passes:
 
-## 🎓 Post-Mission Debriefs
-
-After completing each mission, you'll get a detailed debrief explaining:
-- ✅ What actually happened and why
-- 🧠 The correct mental model for this concept
-- 🚨 Real-world production incident examples
-- 💼 Interview questions you can now answer
-- 🔧 kubectl commands you mastered
-
-**This is where the real learning happens!**
-
-## 🔧 Reset Levels
-
-Get stuck or want to retry? Reset any level from any world:
 ```bash
-# First, activate the virtual environment
-source venv/bin/activate
-
-# Reset levels from any world
-python3 engine/reset.py level-1-pods                # World 1
-python3 engine/reset.py level-15-rollout            # World 2
-python3 engine/reset.py level-28-endpoints          # World 3
-python3 engine/reset.py level-38-volume-permissions # World 4
-python3 engine/reset.py level-45-node-affinity      # World 5
+tests/run-levels.sh world-6      # one world
+tests/run-levels.sh level-53     # one level
 ```
 
-Or reset everything:
-```bash
-python3 engine/reset.py all
-```
+A full run takes a while. Run it in the background.
 
-## 📚 Learning Path
+## Writing a level
 
-### 🎯 World 1: Core Kubernetes Basics (Levels 1-10) 
-**Difficulty**: Beginner | **Total XP**: 1,000  
-Master the fundamentals of Kubernetes debugging and troubleshooting.
+A level is a folder in `worlds/world-N-name/level-NN-name/`:
 
-- ✅ Level 1: CrashLoopBackOff Challenge (100 XP)
-- ✅ Level 2: Deployment Zero Replicas (100 XP)
-- ✅ Level 3: ImagePullBackOff Mystery (100 XP)
-- ✅ Level 4: Pending Pod Problem (100 XP)
-- ✅ Level 5: Lost Connection - Labels & Selectors (100 XP)
-- ✅ Level 6: Port Mismatch Mayhem (100 XP)
-- ✅ Level 7: Sidecar Sabotage (100 XP)
-- ✅ Level 8: Pod Logs Mystery (100 XP)
-- ✅ Level 9: Init Container Gridlock (100 XP)
-- ✅ Level 10: Namespace Confusion (100 XP)
+| File | Purpose |
+|---|---|
+| `mission.yaml` | Name, task text, CKA domain, namespace, doc links, XP |
+| `setup.sh` | Optional. Prepares the scenario, for example by breaking a node. |
+| `broken.yaml` | Optional. Applied after `setup.sh`. |
+| `validate.sh` | Checks the result with `lib/validate.sh` |
+| `solve.sh` or `solution.yaml` | Reference fix, used by the tests |
+| `cleanup.sh` | Optional. Undoes changes outside the namespace. |
+| `hint-1.txt` to `hint-3.txt`, `solution.md`, `debrief.md` | Learning content |
 
-### 🏆 World 2: Deployments & Scaling (Levels 11-20) 
-**Difficulty**: Intermediate | **Total XP**: 1,350  
-Master deployment strategies, scaling, and health checks.
+## License
 
-- ✅ Rolling updates, rollbacks, HPA, liveness/readiness probes
-- ✅ PodDisruptionBudgets, canary deployments, anti-affinity
-- ✅ Resource management, pod lifecycle, and production patterns
-
-### 🏆 World 3: Networking & Services (Levels 21-30) 
-**Difficulty**: Intermediate | **Total XP**: 2,100  
-Master service discovery, load balancing, and network policies.
-
-- ✅ ClusterIP, NodePort, LoadBalancer services
-- ✅ DNS resolution, Ingress controllers, NetworkPolicies
-- ✅ Session affinity, cross-namespace communication, headless services
-
-### 🏆 World 4: Storage & Stateful Apps (Levels 31-40) 
-**Difficulty**: Advanced | **Total XP**: 2,600  
-Master persistent storage, StatefulSets, and configuration management.
-
-- ✅ PersistentVolumes, PVCs, access modes, StorageClasses
-- ✅ StatefulSets, volume permissions, reclaim policies
-- ✅ ConfigMaps, Secrets, and production storage patterns
-
-### 🏆 World 5: Security & Production Ops (Levels 41-50) 
-**Difficulty**: Advanced | **Total XP**: 3,150  
-Production-ready Kubernetes: RBAC, security, resource management, and chaos engineering.
-
-- ✅ RBAC (ServiceAccounts, Roles, RoleBindings)
-- ✅ SecurityContext, Pod Security Standards (restricted)
-- ✅ ResourceQuotas, NetworkPolicies, node scheduling
-- ✅ Taints/Tolerations, PodDisruptionBudgets, PriorityClass
-- ✅ **Level 50**: 🔥 **The Chaos Finale** - 9 simultaneous failures in a production scenario!
-
-**Total Journey**: 50 Levels | 10,200 XP | Beginner → Kubernetes Master 🏆
-
-📖 **Full Blueprint**: See [docs/50-CHALLENGE-BLUEPRINT.md](docs/50-CHALLENGE-BLUEPRINT.md) for detailed descriptions of all 50 challenges.
-
-
-## 🛠️ Manual Play (Advanced)
-
-If you prefer the old-school bash script:
-```bash
-./engine/start_game.sh
-```
-
-## ⭐ Support the Project
-
-If CKAQuest helped you learn Kubernetes, please consider:
-
-- **⭐ Star this repo** - Help others discover this free resource!
-- **🐦 Share** - Tell your teammates and friends about it
-- **💬 Feedback** - Open an issue with suggestions or bugs
-- **🤝 Contribute** - Add new levels or improve existing ones
-
-Your support helps keep this project free and accessible to everyone learning Kubernetes! 
-
-## 📖 Contributing
-
-Want to add more missions? Check out [docs/contributing.md](docs/contributing.md)
+Apache-2.0, see [License](License). Based on K8sQuest by Manoj ([Manoj-engineer/k8squest](https://github.com/Manoj-engineer/k8squest)).

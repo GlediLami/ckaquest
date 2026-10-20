@@ -1,2 +1,1 @@
-# Same content as hint-1 for brevity
-See hint-1.txt for all three hints combined.
+restricted needs: runAsNonRoot true, a non-zero runAsUser (or an image with a non-root user), allowPrivilegeEscalation false, capabilities drop ALL, seccompProfile RuntimeDefault.

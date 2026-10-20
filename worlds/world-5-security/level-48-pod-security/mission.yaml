@@ -1,28 +1,44 @@
 level: 48
-title: "Pod Security Standards: Restricted"
-objective: "Fix the broken resources and make the validation pass"
-name: "Pod Security Standards: Restricted"
+title: 'Pod Security Standards: Restricted'
+objective: Make the pod manifest compliant and run it
+name: 'Pod Security Standards: Restricted'
 difficulty: advanced
 xp: 350
 xp_reward: 350
 world: 5
 concepts:
-  - pod-security-standards
-  - pod-security-admission
-  - restricted
-  - securitycontext
-description: |
-  Your namespace enforces the "restricted" Pod Security Standard!
-  
-  Pods must meet strict security requirements, but your pod violates
-  the restricted policy by running as root with privilege escalation enabled.
-  
-  Error: "pods must not set runAsUser to 0"
-  
-  Your mission: Update pod to meet restricted security standards.
-
+- pod-security-standards
+- pod-security-admission
+- restricted
+- securitycontext
+description: The namespace enforces the restricted Pod Security Standard and the app pod is rejected
 learning_objectives:
-  - Understand Pod Security Standards (privileged, baseline, restricted)
-  - Configure pods to meet restricted requirements
-  - Apply security best practices
-  - Debug pod security admission failures
+- Understand Pod Security Standards (privileged, baseline, restricted)
+- Configure pods to meet restricted requirements
+- Apply security best practices
+- Debug pod security admission failures
+namespace: pss-lab
+domain: workloads
+exam: true
+task: 'Context: `kind-ckaquest`
+
+
+  Namespace **pss-lab** enforces the **restricted** Pod Security Standard.
+
+
+  The manifest `~/ckaquest-work/48/secure-app.yaml` is rejected when you create it.
+
+
+  Fix the manifest so it complies with **restricted**, then create the pod. Requirements:
+
+
+  - Pod name **secure-app**, namespace **pss-lab**, image and command unchanged.
+
+  - The pod is **Running**.
+
+  - Do not change the labels of namespace **pss-lab**.
+
+  '
+docs:
+- https://kubernetes.io/docs/concepts/security/pod-security-standards/
+- https://kubernetes.io/docs/tasks/configure-pod-container/security-context/

@@ -752,6 +752,12 @@ class CKAQuest:
     def reset_namespace(self, namespace):
         """Remove leftovers from earlier levels in a shared namespace"""
         subprocess.run(
+            ["kubectl", "label", "namespace", namespace,
+             "pod-security.kubernetes.io/enforce-", "pod-security.kubernetes.io/audit-",
+             "pod-security.kubernetes.io/warn-"],
+            capture_output=True, text=True,
+        )
+        subprocess.run(
             ["kubectl", "delete",
              "all,cm,secret,pvc,netpol,ing,role,rolebinding,sa,quota,limits,hpa,pdb",
              "--all", "-n", namespace, "--ignore-not-found", "--timeout=90s"],
@@ -801,9 +807,9 @@ class CKAQuest:
             progress.update(task, description="Deploying the scenario...")
             self.progress["dirty_level"] = str(level_path.relative_to(CQ_ROOT))
             self.save_progress()
-            if (level_path / "setup.sh").exists():
-                result = self.run_level_script(level_path, "setup.sh", mission)
-            else:
+            # setup.sh prepares the cluster (nodes, history, files), then broken.yaml is applied
+            result = self.run_level_script(level_path, "setup.sh", mission)
+            if (result is None or result.returncode == 0) and (level_path / "broken.yaml").exists():
                 result = subprocess.run(
                     ["kubectl", "apply", "-f", str(level_path / "broken.yaml")],
                     capture_output=True, text=True, env=script_env(mission),

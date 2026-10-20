@@ -14,7 +14,7 @@ Status: on 2026-10-20 work stopped after World 6 was written. This file is the p
 | Part | State |
 |---|---|
 | Repo `~/projects/ckaquest`, Apache-2.0, base imported from K8sQuest | Done, 2 commits, local only |
-| Own kind cluster `ckaquest`, 3 nodes, v1.37.0, own kubeconfig `~/.ckaquest/kubeconfig` | Done. Your `kind-k8squest` and `~/.kube/config` untouched. |
+| Own kind cluster `ckaquest`, 3 nodes, v1.37.0, own kubeconfig `~/.ckaquest/kubeconfig` | Done. Other clusters and `~/.kube/config` stay untouched. |
 | `env.sh` exam shell: `k`, `$do`, `$now`, completion, `ssh node01` | Done |
 | Node tools: vim, completion, kubectl, etcdctl/etcdutl 3.7.0 | Done, not committed |
 | Engine: auto worlds, task panel, domain, docs links, setup/cleanup, reset | Done |
@@ -135,7 +135,7 @@ Everything gets downloaded once while you are online. After that, the clusters, 
 
 Decided: exam mode uses **2 clusters**.
 
-Your Lenovo LOQ has 16 GB. WSL2 gets about 10 GB now. Your `kind-k8squest` game cluster also runs.
+Reference machine: a 16 GB laptop, WSL2 with about 10 GB. Other kind clusters may run at the same time.
 
 | What | RAM (rough) |
 |---|---|
@@ -147,12 +147,12 @@ Your Lenovo LOQ has 16 GB. WSL2 gets about 10 GB now. Your `kind-k8squest` game 
 
 Ways to make it fit, in this order:
 
-1. **Only one thing runs at a time.** `exam.sh start` stops other kind clusters with `docker stop` (the K8sQuest one, the campaign nodes) and `exam.sh end` starts them again. Stopped kind clusters keep their state.
+1. **Only one thing runs at a time.** `exam.sh start` stops other kind clusters with `docker stop` (other games, the campaign nodes) and `exam.sh end` starts them again. Stopped kind clusters keep their state.
 2. **Small cluster2**: 1 control plane + 1 worker, no metrics-server.
 3. **Add-ons on demand** only for the tasks in the chosen set.
 4. **Measure first** (phase 2 spike): `docker stats` during a full mock. Only then decide on more RAM.
 5. **If still tight: give WSL 12 GB.** In `%UserProfile%\.wslconfig` set `[wsl2]` `memory=12GB`, then `wsl --shutdown`. That leaves Windows 4 GB, which is fine while you only run a browser and a terminal. Do it only if step 4 shows the need.
-- Heavy runs (harness over all levels) are capped with `systemd-run` (as in your memory note).
+- Heavy runs (harness over all levels) are capped with `systemd-run` .
 - macOS (work MacBook, arm64): all images must be multi-arch. The offline pack builds per architecture.
 
 ## 7. Coverage matrix (curriculum v1.37)

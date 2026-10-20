@@ -25,6 +25,8 @@ level_ns() {
 run_in() { (cd "$1" && NAMESPACE="$2" PATH="$CQ_ROOT/bin/shims:$CQ_ROOT/bin:$PATH" bash "$3"); }
 
 reset_default_ns() {
+  kubectl label namespace ckaquest pod-security.kubernetes.io/enforce- pod-security.kubernetes.io/audit- \
+    pod-security.kubernetes.io/warn- >/dev/null 2>&1
   kubectl delete all,cm,secret,pvc,netpol,ing,role,rolebinding,sa,quota,limits,hpa,pdb \
     --all -n ckaquest --ignore-not-found --timeout=90s >/dev/null 2>&1
 }
@@ -53,7 +55,8 @@ test_level() {
 
   if [ -f "$dir/setup.sh" ]; then
     out="$(run_in "$dir" "$ns" setup.sh 2>&1)" || { echo "SETUP-FAIL"; echo "$name SETUP-FAIL" >> "$RESULTS"; echo "$out" | tail -5 | sed 's/^/    /'; return; }
-  else
+  fi
+  if [ -f "$dir/broken.yaml" ]; then
     out="$(kubectl apply -f "$dir/broken.yaml" 2>&1)" || { echo "SETUP-FAIL"; echo "$name SETUP-FAIL" >> "$RESULTS"; echo "$out" | tail -5 | sed 's/^/    /'; return; }
   fi
   sleep "${BROKEN_WAIT:-8}"

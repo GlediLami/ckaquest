@@ -8,7 +8,7 @@ NAMESPACE=${1:-ckaquest}
 echo "🔧 Setting up Chaos Finale level..."
 
 # Get the first node (works for both kind and k3s)
-NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
+NODE_NAME=ckaquest-worker
 
 if [ -z "$NODE_NAME" ]; then
     echo "❌ No nodes found in the cluster"
