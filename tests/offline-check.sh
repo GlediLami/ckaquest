@@ -18,8 +18,17 @@ FILTERS=("${@:-level-1-pods level-23-dns level-65-etcd-backup level-83-kustomize
 docker network inspect "$NET" >/dev/null 2>&1 || docker network create --internal "$NET" >/dev/null
 
 echo "==> cluster $NAME on internal network $NET (no internet)"
+img="$(grep -m1 -oE 'kindest/node:[^ ]+' "$CQ_ROOT/cluster/kind-config.yaml")"
+ver="$(echo "$img" | sed -E 's/.*:(v[0-9.]+).*/\1/')"
+docker image inspect "ckaquest-node:$ver" >/dev/null 2>&1 || { echo "no ckaquest-node:$ver image: run bin/cq-offline prepare"; exit 1; }
+sed "s|$img|ckaquest-node:$ver|" "$CQ_ROOT/cluster/kind-config.yaml" > "$CQ_HOME/kind-config-offline.yaml"
 KIND_EXPERIMENTAL_DOCKER_NETWORK="$NET" "$CQ_KIND" create cluster --name "$NAME" \
-  --config "$CQ_ROOT/cluster/kind-config.yaml" --kubeconfig "$KUBECONFIG" --wait 180s || exit 1
+  --config "$CQ_HOME/kind-config-offline.yaml" --kubeconfig "$KUBECONFIG" --wait 180s || exit 1
+for node in $("$CQ_KIND" get nodes --name "$NAME"); do
+  role=worker; [[ "$node" == *control-plane ]] && role=controlplane
+  docker cp "$CQ_ROOT/cluster/node-bootstrap.sh" "$node:/root/.cq-node-bootstrap.sh"
+  docker exec "$node" bash /root/.cq-node-bootstrap.sh "$role" || echo "bootstrap failed on $node"
+done
 
 echo "==> proof that nodes have no internet"
 if docker exec "$NAME-control-plane" curl -s -m 5 https://registry.k8s.io >/dev/null; then

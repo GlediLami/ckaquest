@@ -36,9 +36,11 @@ image_list() {
     grep -rhoE --include='*.yaml' --include='*.sh' '(image: *|--image=)"?[a-z0-9./_-]+(:[A-Za-z0-9._-]+)?' "$CQ_ROOT/worlds" "$CQ_ROOT/charts" 2>/dev/null \
       | sed -E 's/^(image: *|--image=)"?//'
     grep -hoE 'image: *"?[a-z0-9./_-]+(:[A-Za-z0-9._@-]+)?' "$VENDOR"/*.yaml 2>/dev/null | sed -E 's/^image: *"?//'
+    echo "ghcr.io/nginx/nginx-gateway-fabric:$NGF_VERSION"
+    echo "ghcr.io/nginx/nginx-gateway-fabric/nginx:$NGF_VERSION"
     echo "nginx:1.28-alpine"
     echo "curlimages/curl:8.11.1"
-  } | grep -v '{{' | grep -vE 'nonexistent|no-such|broken|xyz' | sort -u
+  } | sed 's/@sha256.*//' | grep -v '{{' | grep -vE 'nonexistent|no-such|broken|xyz' | sort -u
 }
 
 file_for() { echo "$IMG/$(echo "$1" | tr '/:@' '___').tar"; }
@@ -50,6 +52,8 @@ prepare_manifests() {
     log "manifest $name"
     curl -fsSL -o "$VENDOR/$name" "$url" || echo "   failed: $url"
   done
+  # The pack saves one platform per image, so a multi-arch digest in a manifest would not match. Use tags.
+  sed -i -E 's/(image: *"?[^@" ]+)@sha256:[a-f0-9]+/\1/' "$VENDOR"/*.yaml
   if command -v helm >/dev/null && [ ! -s "$VENDOR/nginx-gateway-fabric-$NGF_VERSION.tgz" ]; then
     log "NGF chart $NGF_VERSION"
     helm pull oci://ghcr.io/nginx/charts/nginx-gateway-fabric --version "$NGF_VERSION" -d "$VENDOR" >/dev/null || true
@@ -95,7 +99,28 @@ dpkg-scanpackages . /dev/null > Packages 2>/dev/null"
   docker rm -f "$c" >/dev/null
 }
 
+# kindest/node + node tools (vim, completion, etcdctl), so new nodes need no apt or download.
+prepare_node_images() {
+  local src ver c
+  for src in "$(grep -m1 -oE 'kindest/node:[^ ]+' "$CQ_ROOT/cluster/kind-config.yaml")" "$LAB_NODE_IMAGE"; do
+    ver="$(echo "$src" | sed -E 's/.*:(v[0-9.]+).*/\1/')"
+    docker image inspect "ckaquest-node:$ver" >/dev/null 2>&1 && continue
+    log "node image ckaquest-node:$ver"
+    c="cq-node-build-$ver"
+    docker rm -f "$c" >/dev/null 2>&1
+    docker run -d --name "$c" --entrypoint sleep "$src" 3600 >/dev/null
+    docker cp "$CQ_ROOT/cluster/node-bootstrap.sh" "$c:/root/.cq-node-bootstrap.sh"
+    if docker exec "$c" bash /root/.cq-node-bootstrap.sh tools; then
+      docker exec "$c" rm -f /root/.cq-bootstrapped
+      docker commit --change 'ENTRYPOINT ["/usr/local/bin/entrypoint", "/sbin/init"]' --change 'CMD []' \
+        "$c" "ckaquest-node:$ver" >/dev/null
+    fi
+    docker rm -f "$c" >/dev/null
+  done
+}
+
 cmd_prepare() {
+  prepare_node_images
   prepare_manifests
   prepare_images
   prepare_debs
@@ -129,6 +154,7 @@ cmd_status() {
   echo "images:    $(ls "$IMG"/*.tar 2>/dev/null | wc -l) ($(du -sh "$IMG" 2>/dev/null | cut -f1))"
   echo "manifests: $(ls "$VENDOR" 2>/dev/null | tr '\n' ' ')"
   echo "debs:      $(ls "$DEBS"/*.deb 2>/dev/null | wc -l)"
+  echo "node imgs: $(docker images --format '{{.Repository}}:{{.Tag}}' | grep '^ckaquest-node:' | tr '\n' ' ')"
 }
 
 case "${1:-status}" in

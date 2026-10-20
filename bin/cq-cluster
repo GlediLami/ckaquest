@@ -74,6 +74,20 @@ addon_gateway() {
     --set nginx.service.type=NodePort --wait --timeout 5m >/dev/null
 }
 
+# The offline pack builds ckaquest-node:<version> with the node tools baked in. Use it when present.
+node_image() {
+  local img="$1" ver
+  ver="$(echo "$img" | sed -E 's/.*:(v[0-9.]+).*/\1/')"
+  if docker image inspect "ckaquest-node:$ver" >/dev/null 2>&1; then echo "ckaquest-node:$ver"; else echo "$img"; fi
+}
+
+main_config() {
+  local base img out="$CQ_HOME/kind-config.yaml"
+  img="$(grep -m1 -oE 'kindest/node:[^ ]+' "$CQ_ROOT/cluster/kind-config.yaml")"
+  sed "s|$img|$(node_image "$img")|" "$CQ_ROOT/cluster/kind-config.yaml" > "$out"
+  echo "$out"
+}
+
 offline_load() {
   [ -d "$CQ_HOME/offline/images" ] && "$CQ_ROOT/bin/cq-offline" load || true
 }
@@ -98,7 +112,7 @@ cmd_up() {
     "$CQ_KIND" export kubeconfig --name "$CQ_CLUSTER" --kubeconfig "$KUBECONFIG" >/dev/null
   else
     log "creating cluster $CQ_CLUSTER (1 control plane + 2 workers, v1.37)"
-    "$CQ_KIND" create cluster --name "$CQ_CLUSTER" --config "$CQ_ROOT/cluster/kind-config.yaml" \
+    "$CQ_KIND" create cluster --name "$CQ_CLUSTER" --config "$(main_config)" \
       --kubeconfig "$KUBECONFIG" --wait 180s
   fi
   chmod 600 "$KUBECONFIG"
@@ -148,9 +162,9 @@ networking:
   podSubnet: "10.244.0.0/16"
 nodes:
   - role: control-plane
-    image: $LAB_NODE_IMAGE
+    image: $(node_image "$LAB_NODE_IMAGE")
   - role: worker
-    image: $LAB_NODE_IMAGE
+    image: $(node_image "$LAB_NODE_IMAGE")
 EOF
   log "creating lab cluster $CQ_LAB_CLUSTER (no CNI: $no_cni)"
   # --wait does not work without a CNI, the nodes stay NotReady on purpose
@@ -182,7 +196,7 @@ cmd_bare_up() {
       --privileged --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
       --tmpfs /tmp --tmpfs /run -v /var -v /lib/modules:/lib/modules:ro \
       --cgroupns=private -e container=docker --label io.ckaquest.bare=true \
-      "$LAB_NODE_IMAGE" >/dev/null
+      "$(node_image "$LAB_NODE_IMAGE")" >/dev/null
   done
   sleep 10
   for node in $BARE_NODES; do
