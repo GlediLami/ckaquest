@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+# Offline pack. Run "prepare" once while online. After that, clusters, levels and exams need no network.
+#
+#   cq-offline prepare   download images, add-on manifests, the Calico manifest and the v1.37.1 .debs
+#   cq-offline load      import the saved images into every running CKAQuest node
+#   cq-offline status    what is in the pack
+#
+# Everything goes to ~/.ckaquest/offline. Docs stay online (allowed in the exam).
+set -uo pipefail
+source "$(dirname "$0")/../lib/common.sh"
+source "$CQ_ROOT/cluster/versions.env"
+OFF="$CQ_HOME/offline"
+IMG="$OFF/images"
+VENDOR="$OFF/manifests"
+DEBS="$OFF/debs"
+TARGET="${LAB_UPGRADE_TARGET#v}"
+MINOR="v${TARGET%.*}"
+case "$(uname -m)" in x86_64|amd64) ARCH=amd64 ;; aarch64|arm64) ARCH=arm64 ;; *) ARCH=amd64 ;; esac
+PLATFORM="linux/$ARCH"
+
+log() { printf '\033[36m==>\033[0m %s\n' "$*"; }
+
+manifest_urls() {
+  cat <<EOF
+metrics-server.yaml https://github.com/kubernetes-sigs/metrics-server/releases/download/$METRICS_SERVER_VERSION/components.yaml
+gateway-api.yaml https://github.com/kubernetes-sigs/gateway-api/releases/download/$GATEWAY_API_VERSION/standard-install.yaml
+ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/$INGRESS_NGINX_VERSION/deploy/static/provider/kind/deploy.yaml
+calico.yaml https://raw.githubusercontent.com/projectcalico/calico/$CALICO_VERSION/manifests/calico.yaml
+vpa-crd.yaml https://raw.githubusercontent.com/kubernetes/autoscaler/$VPA_VERSION/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
+EOF
+}
+
+# Every image a level, chart or add-on uses. Images that do not exist on purpose are skipped later.
+image_list() {
+  {
+    grep -rhoE --include='*.yaml' --include='*.sh' '(image: *|--image=)"?[a-z0-9./_-]+(:[A-Za-z0-9._-]+)?' "$CQ_ROOT/worlds" "$CQ_ROOT/charts" 2>/dev/null \
+      | sed -E 's/^(image: *|--image=)"?//'
+    grep -hoE 'image: *"?[a-z0-9./_-]+(:[A-Za-z0-9._@-]+)?' "$VENDOR"/*.yaml 2>/dev/null | sed -E 's/^image: *"?//'
+    echo "nginx:1.28-alpine"
+    echo "curlimages/curl:8.11.1"
+  } | grep -v '{{' | grep -vE 'nonexistent|no-such|broken|xyz' | sort -u
+}
+
+file_for() { echo "$IMG/$(echo "$1" | tr '/:@' '___').tar"; }
+
+prepare_manifests() {
+  mkdir -p "$VENDOR"
+  manifest_urls | while read -r name url; do
+    [ -s "$VENDOR/$name" ] && continue
+    log "manifest $name"
+    curl -fsSL -o "$VENDOR/$name" "$url" || echo "   failed: $url"
+  done
+  if command -v helm >/dev/null && [ ! -s "$VENDOR/nginx-gateway-fabric-$NGF_VERSION.tgz" ]; then
+    log "NGF chart $NGF_VERSION"
+    helm pull oci://ghcr.io/nginx/charts/nginx-gateway-fabric --version "$NGF_VERSION" -d "$VENDOR" >/dev/null || true
+    helm template ngf "$VENDOR/nginx-gateway-fabric-$NGF_VERSION.tgz" -n nginx-gateway > "$VENDOR/ngf-rendered.yaml" 2>/dev/null || true
+  fi
+}
+
+prepare_images() {
+  mkdir -p "$IMG"
+  local img f
+  for img in $(image_list); do
+    [[ "$img" == *:* || "$img" == *@* ]] || img="$img:latest"
+    f="$(file_for "$img")"
+    [ -s "$f" ] && continue
+    if docker pull -q --platform "$PLATFORM" "$img" >/dev/null 2>&1; then
+      docker save --platform "$PLATFORM" "$img" -o "$f" && log "image $img"
+    else
+      echo "   skip (cannot pull): $img"
+    fi
+  done
+}
+
+prepare_debs() {
+  [ -s "$DEBS/Packages" ] && return 0
+  mkdir -p "$DEBS"
+  log "kubeadm/kubelet/kubectl $TARGET .debs"
+  local c="cq-offline-debs"
+  docker rm -f "$c" >/dev/null 2>&1
+  docker run -d --name "$c" --entrypoint sleep "${LAB_NODE_IMAGE}" 3600 >/dev/null
+  docker exec "$c" bash -c "
+set -e
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq >/dev/null && apt-get install -y -qq curl gpg dpkg-dev >/dev/null
+mkdir -p /etc/apt/keyrings /debs
+curl -fsSL https://pkgs.k8s.io/core:/stable:/$MINOR/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/k.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/k.gpg] https://pkgs.k8s.io/core:/stable:/$MINOR/deb/ /' > /etc/apt/sources.list.d/k.list
+apt-get update -qq >/dev/null
+cd /debs
+v=\$(apt-cache madison kubeadm | awk '{print \$3}' | grep '^$TARGET-' | head -1)
+apt-get download kubeadm=\$v kubelet=\$v kubectl=\$v cri-tools kubernetes-cni >/dev/null
+dpkg-scanpackages . /dev/null > Packages 2>/dev/null"
+  docker cp "$c:/debs/." "$DEBS/"
+  docker rm -f "$c" >/dev/null
+}
+
+cmd_prepare() {
+  prepare_manifests
+  prepare_images
+  prepare_debs
+  cmd_status
+}
+
+running_nodes() {
+  docker ps --format '{{.Names}}' | grep -E "^(${CQ_CLUSTER}|${CQ_LAB_CLUSTER})-(control-plane|worker|worker2|bare-cp|bare-worker)$"
+}
+
+cmd_load() {
+  [ -d "$IMG" ] || { echo "no offline pack. Run: cq-offline prepare (online)"; exit 1; }
+  local node f have
+  for node in $(running_nodes); do
+    have="$(docker exec "$node" ctr -n k8s.io images ls -q 2>/dev/null)"
+    for f in "$IMG"/*.tar; do
+      # tar names encode the image ref, skip what the node already has
+      local ref; ref="$(tar -xOf "$f" index.json 2>/dev/null | grep -o '"io.containerd.image.name":"[^"]*"' | head -1 | cut -d'"' -f4)"
+      [ -n "$ref" ] && grep -qx "$ref" <<<"$have" && continue
+      docker exec -i "$node" ctr -n k8s.io images import --platform "$PLATFORM" - < "$f" >/dev/null 2>&1
+    done
+    log "images loaded into $node"
+    if [ -s "$DEBS/Packages" ]; then
+      docker exec "$node" mkdir -p /var/cache/cq-debs
+      docker cp "$DEBS/." "$node:/var/cache/cq-debs/" >/dev/null
+    fi
+  done
+}
+
+cmd_status() {
+  echo "images:    $(ls "$IMG"/*.tar 2>/dev/null | wc -l) ($(du -sh "$IMG" 2>/dev/null | cut -f1))"
+  echo "manifests: $(ls "$VENDOR" 2>/dev/null | tr '\n' ' ')"
+  echo "debs:      $(ls "$DEBS"/*.deb 2>/dev/null | wc -l)"
+}
+
+case "${1:-status}" in
+  prepare) cmd_prepare ;;
+  load) cmd_load ;;
+  status) cmd_status ;;
+  list) image_list ;;
+  *) echo "usage: cq-offline prepare|load|status|list"; exit 1 ;;
+esac

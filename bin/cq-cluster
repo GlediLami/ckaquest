@@ -35,7 +35,7 @@ check_prereqs() {
 
 install_metrics_server() {
   log "metrics-server $METRICS_SERVER_VERSION"
-  kubectl apply -f "https://github.com/kubernetes-sigs/metrics-server/releases/download/${METRICS_SERVER_VERSION}/components.yaml" >/dev/null
+  kubectl apply -f "$(src metrics-server.yaml "https://github.com/kubernetes-sigs/metrics-server/releases/download/${METRICS_SERVER_VERSION}/components.yaml")" >/dev/null
   # kind kubelets use self-signed serving certs
   if ! kubectl -n kube-system get deploy metrics-server -o jsonpath='{.spec.template.spec.containers[0].args}' | grep -q kubelet-insecure-tls; then
     kubectl -n kube-system patch deploy metrics-server --type=json \
@@ -45,15 +45,21 @@ install_metrics_server() {
 
 install_crds() {
   log "Gateway API CRDs $GATEWAY_API_VERSION"
-  kubectl apply --server-side -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml" >/dev/null
+  kubectl apply --server-side -f "$(src gateway-api.yaml "https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml")" >/dev/null
   log "VPA CRDs ($VPA_VERSION)"
-  kubectl apply -f "https://raw.githubusercontent.com/kubernetes/autoscaler/${VPA_VERSION}/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml" >/dev/null
+  kubectl apply -f "$(src vpa-crd.yaml "https://raw.githubusercontent.com/kubernetes/autoscaler/${VPA_VERSION}/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml")" >/dev/null
+}
+
+# Offline pack copy if present (bin/cq-offline prepare), else the URL.
+src() {
+  local f="$CQ_HOME/offline/manifests/$1"
+  if [ -s "$f" ]; then echo "$f"; else echo "$2"; fi
 }
 
 addon_ingress() {
   if kubectl -n ingress-nginx get deploy ingress-nginx-controller >/dev/null 2>&1; then return 0; fi
   log "ingress-nginx $INGRESS_NGINX_VERSION"
-  kubectl apply -f "https://raw.githubusercontent.com/kubernetes/ingress-nginx/${INGRESS_NGINX_VERSION}/deploy/static/provider/kind/deploy.yaml" >/dev/null
+  kubectl apply -f "$(src ingress-nginx.yaml "https://raw.githubusercontent.com/kubernetes/ingress-nginx/${INGRESS_NGINX_VERSION}/deploy/static/provider/kind/deploy.yaml")" >/dev/null
   kubectl -n ingress-nginx rollout status deploy/ingress-nginx-controller --timeout=180s >/dev/null
 }
 
@@ -61,9 +67,15 @@ addon_gateway() {
   if kubectl get gatewayclass nginx >/dev/null 2>&1; then return 0; fi
   command -v helm >/dev/null || die "helm not found (needed for the Gateway controller)"
   log "NGINX Gateway Fabric $NGF_VERSION (gatewayClassName: nginx)"
-  helm upgrade --install ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric \
+  local chart="oci://ghcr.io/nginx/charts/nginx-gateway-fabric"
+  [ -s "$CQ_HOME/offline/manifests/nginx-gateway-fabric-$NGF_VERSION.tgz" ] && chart="$CQ_HOME/offline/manifests/nginx-gateway-fabric-$NGF_VERSION.tgz"
+  helm upgrade --install ngf "$chart" \
     --version "$NGF_VERSION" -n nginx-gateway --create-namespace \
     --set nginx.service.type=NodePort --wait --timeout 5m >/dev/null
+}
+
+offline_load() {
+  [ -d "$CQ_HOME/offline/images" ] && "$CQ_ROOT/bin/cq-offline" load || true
 }
 
 bootstrap_nodes() {
@@ -94,6 +106,7 @@ cmd_up() {
   install_metrics_server
   install_crds
   bootstrap_nodes "$CQ_CLUSTER"
+  offline_load
   cq_ensure_namespace ckaquest
   kubectl config set-context --current --namespace=default >/dev/null
   log "ready. In your kubectl terminal run:  source $CQ_ROOT/env.sh"
@@ -147,6 +160,7 @@ EOF
     "$CQ_KIND" create cluster --name "$CQ_LAB_CLUSTER" --config "$cfg" --kubeconfig "$KUBECONFIG" --wait 180s
   fi
   bootstrap_nodes "$CQ_LAB_CLUSTER"
+  offline_load
   # kind switches the current context to the new cluster. Switch back.
   kubectl config use-context "$CQ_CONTEXT" >/dev/null
 }
@@ -179,6 +193,7 @@ cmd_bare_up() {
   done
   wait
   install_proxy_fix ckaquest-bare-cp
+  offline_load
   log "bare nodes ready: $BARE_NODES"
 }
 

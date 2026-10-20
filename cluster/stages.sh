@@ -24,6 +24,11 @@ bare_init() {
 mkdir -p /root/.kube && cp /etc/kubernetes/admin.conf /root/.kube/config"
 }
 calico_manifest() {
+  local vendored="$CQ_HOME/offline/manifests/calico.yaml"
+  if [ -s "$vendored" ]; then
+    docker cp "$vendored" "$(cq_node_name bare-controlplane):/root/calico.yaml" >/dev/null
+    return 0
+  fi
   bare controlplane "test -s /root/calico.yaml || curl -fsSL -o /root/calico.yaml https://raw.githubusercontent.com/projectcalico/calico/$CALICO_VERSION/manifests/calico.yaml"
 }
 bare_cni() {
@@ -49,6 +54,14 @@ bare_joined() {
 
 lab_version() { kubectl --context "$CQ_LAB_CONTEXT" get node "$(cq_node_name lab-controlplane)" -o jsonpath='{.status.nodeInfo.kubeletVersion}' 2>/dev/null; }
 lab_repo() {
+  if [ -s "$CQ_HOME/offline/debs/Packages" ]; then
+    # Offline: a local apt repo with the target .debs. The commands stay the same.
+    for n in lab-controlplane lab-node01; do
+      docker cp "$CQ_HOME/offline/debs/." "$(cq_node_name $n):/var/cache/cq-debs/" >/dev/null
+      cq_node_sh "$n" "echo 'deb [trusted=yes] file:/var/cache/cq-debs ./' > /etc/apt/sources.list.d/kubernetes.list; apt-get update -qq -o Dir::Etc::sourceparts=/etc/apt/sources.list.d -o Dir::Etc::sourcelist=/dev/null >/dev/null 2>&1"
+    done
+    return 0
+  fi
   for n in lab-controlplane lab-node01; do
     cq_node_sh "$n" "test -f /etc/apt/sources.list.d/kubernetes.list && exit 0
 apt-get update -qq >/dev/null; apt-get install -y -qq curl gpg >/dev/null 2>&1

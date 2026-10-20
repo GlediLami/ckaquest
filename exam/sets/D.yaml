@@ -1,0 +1,21 @@
+name: D
+description: 'Mock D: API server down, etcd backup, DNS'
+minutes: 120
+tasks:
+- level: 54
+- level: 57
+- level: 59
+- level: 1
+- level: 72
+- level: 61
+- level: 65
+- level: 81
+- level: 70
+- level: 78
+- level: 21
+- level: 30
+- level: 96
+- level: 88
+- level: 49
+- level: 33
+- level: 40

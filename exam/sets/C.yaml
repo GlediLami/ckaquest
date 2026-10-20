@@ -1,0 +1,21 @@
+name: C
+description: 'Mock C: controller manager, static pods, Gateway TLS'
+minutes: 120
+tasks:
+- level: 55
+- level: 60
+- level: 59
+- level: 50
+- level: 3
+- level: 80
+- level: 84
+- level: 86
+- level: 102
+- level: 74
+- level: 76
+- level: 44
+- level: 90
+- level: 95
+- level: 45
+- level: 34
+- level: 38

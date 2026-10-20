@@ -10,7 +10,7 @@ import select
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import yaml
@@ -99,6 +99,11 @@ def discover_levels(world_path):
         d for d in sorted(world_path.iterdir(), key=natural_sort_key)
         if d.is_dir() and (d / "mission.yaml").exists()
     ]
+
+
+def parse_minutes(text):
+    m = re.match(r"\s*(\d+)", str(text or ""))
+    return int(m.group(1)) if m else 0
 
 
 def level_namespace(mission):
@@ -381,11 +386,53 @@ class CKAQuest:
         stats.add_row("📊 PROGRESS", f"[{progress_bar}] {completion:.0f}%")
         if self.progress.get("current_level"):
             stats.add_row("🎯 CURRENT MISSION", self.progress["current_level"])
+        stats.add_row("🔥 STREAK", f"{self.streak()} day(s)")
         stats.add_row("☸️  CLUSTER", f"{CQ_CONTEXT} (kubeconfig {os.environ['KUBECONFIG']})")
         console.print(
             Panel(stats, title="[bold yellow]⚡ PLAYER STATUS ⚡[/bold yellow]", border_style="yellow", box=box.HEAVY)
         )
+        mastery = self.domain_mastery()
+        bars = Table(show_header=False, box=box.SIMPLE)
+        for dom, pct in mastery.items():
+            bars.add_row(CKA_DOMAINS[dom], "█" * int(pct / 5) + "░" * (20 - int(pct / 5)), f"{pct:.0f}%")
+        ready, detail = self.readiness(mastery)
+        console.print(Panel(bars, title=f"[bold cyan]Domain mastery  |  readiness {ready:.0f}% ({detail})[/bold cyan]",
+                            subtitle="[dim]book the exam above 80%[/dim]", border_style="cyan"))
         console.print()
+
+    def streak(self):
+        days = sorted(set(self.progress.get("play_days", [])), reverse=True)
+        streak, day = 0, date.today()
+        for d in days:
+            if d == day.isoformat():
+                streak += 1
+                day -= timedelta(days=1)
+            elif d < day.isoformat():
+                break
+        return streak
+
+    def domain_mastery(self):
+        """Share of cleared levels per CKA domain, from the whole campaign"""
+        total, done = {d: 0 for d in CKA_DOMAINS}, {d: 0 for d in CKA_DOMAINS}
+        for _, level in self.all_levels():
+            dom = self.load_mission(level).get("domain")
+            if dom in total:
+                total[dom] += 1
+                done[dom] += level.name in self.progress["completed_levels"]
+        return {d: (100 * done[d] / total[d] if total[d] else 0) for d in CKA_DOMAINS}
+
+    def readiness(self, mastery):
+        """Half campaign mastery (exam weights), half the last 3 mock exams"""
+        weights = {"troubleshooting": 30, "architecture": 25, "networking": 20, "workloads": 15, "storage": 10}
+        campaign = sum(mastery[d] * w for d, w in weights.items()) / 100
+        hist_file = CQ_HOME / "exam" / "history.json"
+        try:
+            scores = [h["score"] for h in json.loads(hist_file.read_text())][-3:]
+        except (OSError, ValueError, KeyError):
+            scores = []
+        if not scores:
+            return campaign / 2, "no mock exam yet"
+        return (campaign + sum(scores) / len(scores)) / 2, f"last {len(scores)} mock(s) {sum(scores) / len(scores):.0f}%"
 
     def load_mission(self, level_path):
         """Load mission metadata"""
@@ -918,7 +965,9 @@ class CKAQuest:
         self.show_terminal_instructions(mission)
 
         current_hint_level = 0
+        used_guide = used_solution = False
         attempts = 0
+        started = time.time()
         actions = ["check", "task", "hints", "guide", "solution", "validate", "reset", "skip", "quit"]
         while True:
             console.print()
@@ -948,11 +997,13 @@ class CKAQuest:
                 if RETRO_UI_ENABLED:
                     show_power_up_notification("guide")
                 self.show_guide(level_path)
+                used_guide = True
 
             elif action == "solution":
                 if RETRO_UI_ENABLED:
                     show_power_up_notification("solution")
                 self.show_solution_file(level_path)
+                used_solution = True
 
             elif action == "reset":
                 if Confirm.ask("Restore and re-deploy this level from scratch?", default=False):
@@ -965,7 +1016,21 @@ class CKAQuest:
                 attempts += 1
                 console.print(f"\n[dim]⚔️  ATTEMPT #{attempts}[/dim]")
                 if self.validate_mission(level_path, mission):
-                    xp_earned = mission["xp"]
+                    elapsed = int(time.time() - started)
+                    par = parse_minutes(mission.get("expected_time")) * 60
+                    star = bool(par) and elapsed <= par and not (used_guide or used_solution)
+                    # Help costs XP: 15% per hint, 25% for the guide, 50% for the solution. Beating par adds 20%.
+                    factor = max(0.25, 1 - 0.15 * current_hint_level - 0.25 * used_guide - 0.5 * used_solution)
+                    xp_earned = int(mission["xp"] * factor * (1.2 if star else 1))
+                    stats = self.progress.setdefault("level_stats", {}).setdefault(level_name, {})
+                    stats["best_seconds"] = min(elapsed, stats.get("best_seconds", elapsed))
+                    stats["star"] = stats.get("star", False) or star
+                    days = self.progress.setdefault("play_days", [])
+                    if date.today().isoformat() not in days:
+                        days.append(date.today().isoformat())
+                    console.print(f"[cyan]⏱️  {elapsed // 60}m{elapsed % 60:02d}s"
+                                  + (f" (par {par // 60}m)" if par else "")
+                                  + ("  ⭐ beat par without guide or solution" if star else "") + "[/cyan]")
                     first_clear = level_name not in self.progress["completed_levels"]
                     if first_clear:
                         self.progress["total_xp"] += xp_earned

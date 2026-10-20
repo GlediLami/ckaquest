@@ -1,0 +1,21 @@
+name: A
+description: 'Mock A: exam-like mix, upgrade on cluster2'
+minutes: 120
+tasks:
+- level: 51
+- level: 54
+- level: 56
+- level: 58
+- level: 72
+- level: 65
+- level: 61
+- level: 79
+- level: 101
+- level: 71
+- level: 77
+- level: 25
+- level: 89
+- level: 91
+- level: 92
+- level: 31
+- level: 94

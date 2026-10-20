@@ -1,0 +1,21 @@
+name: E
+description: 'Mock E: scheduler, CoreDNS, Helm, upgrade'
+minutes: 120
+tasks:
+- level: 51
+- level: 53
+- level: 56
+- level: 58
+- level: 28
+- level: 62
+- level: 82
+- level: 85
+- level: 101
+- level: 73
+- level: 77
+- level: 22
+- level: 91
+- level: 92
+- level: 47
+- level: 94
+- level: 37

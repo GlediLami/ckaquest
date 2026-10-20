@@ -48,7 +48,7 @@ PASS_MARK = 66
 # What a level changes outside its namespace. Two tasks with the same key never go in one set.
 TOUCHES = {
     51: "kubelet-node01", 60: "kubelet-node01", 68: "kubelet-node01",
-    52: "kubelet-node02", 59: "node02-drain",
+    52: "node02", 59: "node02",
     53: "control-plane", 54: "control-plane", 55: "control-plane", 64: "control-plane",
     66: "control-plane", 69: "control-plane", 67: "cp-kubeconfig",
     56: "coredns", 78: "coredns", 57: "kube-proxy",

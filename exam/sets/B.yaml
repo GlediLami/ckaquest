@@ -1,0 +1,21 @@
+name: B
+description: 'Mock B: control plane and kube-proxy faults'
+minutes: 120
+tasks:
+- level: 52
+- level: 53
+- level: 57
+- level: 58
+- level: 67
+- level: 63
+- level: 70
+- level: 83
+- level: 85
+- level: 73
+- level: 75
+- level: 23
+- level: 87
+- level: 93
+- level: 46
+- level: 35
+- level: 39
