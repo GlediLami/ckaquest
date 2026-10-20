@@ -1,0 +1,1 @@
+The pod keeps crashing. Use `kubectl describe pod nginx-broken -n k8squest` to see the Events section. Look for error messages about what's failing.

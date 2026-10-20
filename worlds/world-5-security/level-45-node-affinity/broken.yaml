@@ -1,0 +1,30 @@
+# BROKEN: NodeAffinity doesn't match any nodes
+# Problem: Required affinity with wrong label key/value
+# Result: Pod stuck in Pending - can't find matching node
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-workload
+  namespace: k8squest
+spec:
+  containers:
+  - name: ml-training
+    image: nginx:latest
+    command: ['sh', '-c', 'echo "GPU workload running"; sleep 3600']
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: gpu-type  # ❌ Wrong key! Nodes labeled 'accelerator'
+            operator: In
+            values:
+            - nvidia-tesla  # ❌ Wrong value! Nodes have 'gpu'
+            
+# Actual node labels (check with: kubectl get nodes --show-labels):
+# - kubernetes.io/hostname=kind-control-plane
+# - accelerator=gpu (NOT gpu-type=nvidia-tesla)
+#
+# Result: No nodes match, pod stays Pending
+# Error: "didn't match Pod's node affinity/selector"

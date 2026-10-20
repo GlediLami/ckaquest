@@ -1,0 +1,8 @@
+💡 Near-Solution Hint:
+
+Steps to fix:
+1. Delete resources: `kubectl delete -f broken.yaml`
+2. Edit broken.yaml and change the service's targetPort from 8080 to 80
+3. Apply: `kubectl apply -f broken.yaml`
+4. Test (optional): `kubectl port-forward service/web-service 8080:80 -n k8squest`
+   Then visit http://localhost:8080 in your browser

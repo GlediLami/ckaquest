@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - |
+      echo "Checking for existing data..."
+      
+      if [ -f /data/persistent.txt ]; then
+        echo "✅ Found existing data:"
+        cat /data/persistent.txt
+        echo ""
+        echo "✅ Data persisted across pod restarts!"
+      else
+        echo "First run - creating initial data"
+      fi
+      
+      echo ""
+      echo "Appending new data..."
+      echo "Data written at: $(date)" >> /data/persistent.txt
+      echo "Pod: $HOSTNAME" >> /data/persistent.txt
+      
+      echo ""
+      echo "Current data:"
+      cat /data/persistent.txt
+      
+      echo ""
+      echo "✅ Using PVC - data will PERSIST across pod restarts!"
+      sleep 3600
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: app-data  # ✅ Persistent! Data survives pod restart

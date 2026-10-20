@@ -1,0 +1,8 @@
+🔍 Observation Hint:
+
+Check the pod status: `kubectl get pod web-with-init -n k8squest`
+
+The STATUS column shows "Init:0/1" meaning the init container hasn't completed.
+
+Run `kubectl describe pod web-with-init -n k8squest` and look at the Init Containers section.
+Check the logs: `kubectl logs web-with-init -c wait-for-service -n k8squest`

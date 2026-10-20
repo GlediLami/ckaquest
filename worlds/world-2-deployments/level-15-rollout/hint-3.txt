@@ -1,0 +1,27 @@
+💡 Near-Solution Hint:
+
+Fix the rollout strategy to ensure zero downtime.
+
+Steps:
+1. Edit the deployment:
+   `kubectl edit deployment critical-api -n k8squest`
+
+2. Find the `strategy` section and change:
+
+```yaml
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1     # Only 1 pod down at a time
+      maxSurge: 1           # Allow 1 extra pod during rollout
+```
+
+This ensures:
+- With 3 replicas, at least 2 pods always running (3 - 1 = 2)
+- Can create up to 4 pods during rollout (3 + 1 = 4)
+- Zero downtime guaranteed!
+
+3. Save and verify:
+   `kubectl get deployment critical-api -n k8squest -o yaml | grep -A 5 strategy`
+
+Try a rollout now - it should be smooth with no downtime!

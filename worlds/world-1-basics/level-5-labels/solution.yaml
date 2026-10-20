@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-app
+  namespace: k8squest
+  labels:
+    app: backend
+    tier: api
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Hello from backend!"
+    ports:
+    - containerPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: k8squest
+spec:
+  selector:
+    app: backend
+    tier: api
+  ports:
+  - port: 80
+    targetPort: 5678

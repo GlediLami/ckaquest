@@ -1,0 +1,1 @@
+The deployment exists, but something's off. Check how many pods are supposed to be running.

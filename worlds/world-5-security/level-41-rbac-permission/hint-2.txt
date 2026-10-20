@@ -1,0 +1,55 @@
+🎯 HINT 2: Understanding RBAC
+
+The problem is missing Role and RoleBinding!
+
+📚 RBAC Components:
+
+**1. ServiceAccount (WHO)**
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-reader  # The "user"
+```
+
+**2. Role (WHAT permissions)**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader-role
+rules:
+- apiGroups: [""]  # Core API
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]  # What actions allowed
+```
+
+**3. RoleBinding (WHO gets WHAT)**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-reader-binding
+roleRef:
+  kind: Role
+  name: pod-reader-role  # The WHAT
+subjects:
+- kind: ServiceAccount
+  name: pod-reader  # The WHO
+```
+
+🔍 How It Works:
+
+1. ServiceAccount = Identity (who the pod runs as)
+2. Role = Permission definition (what can be done)
+3. RoleBinding = Grants Role to ServiceAccount
+
+**Current State:**
+- ✅ ServiceAccount exists
+- ❌ No Role (no permissions defined)
+- ❌ No RoleBinding (ServiceAccount not granted anything)
+
+**Result:** Permission denied!
+
+💡 The Solution:
+Create Role with pod list permissions, then create RoleBinding to grant it to the ServiceAccount!

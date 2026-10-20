@@ -1,0 +1,175 @@
+# SOLUTION: The Perfect Storm - FIXED!
+# All World 5 concepts applied correctly
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+
+---
+# ✅ 1. ResourceQuota - Reasonable limits
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: chaos-quota
+  namespace: k8squest
+spec:
+  hard:
+    requests.cpu: "2"  # ✅ Increased
+    requests.memory: "2Gi"
+    pods: "10"
+
+---
+# ✅ 2. RBAC - ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+  namespace: k8squest
+
+---
+# ✅ 3. RBAC - Role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-role
+  namespace: k8squest
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+
+---
+# ✅ 4. RBAC - RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-binding
+  namespace: k8squest
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: app-role
+subjects:
+- kind: ServiceAccount
+  name: app-sa
+
+---
+# ✅ 5. NetworkPolicy - Allow necessary traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app
+  namespace: k8squest
+spec:
+  podSelector:
+    matchLabels:
+      app: chaos
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+  - to:  # DNS
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - port: 53
+      protocol: UDP
+
+---
+# ✅ 6. PriorityClass
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: production-priority
+value: 1000
+globalDefault: false
+description: "Production workloads"
+
+---
+# ✅ 7. Deployment - ALL FIXES APPLIED!
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-app
+  namespace: k8squest
+spec:
+  replicas: 2  # ✅ Reduced to fit quota
+  selector:
+    matchLabels:
+      app: chaos
+  template:
+    metadata:
+      labels:
+        app: chaos
+    spec:
+      serviceAccountName: app-sa
+      priorityClassName: production-priority  # ✅ Priority
+      tolerations:  # ✅ Tolerate taints
+      - key: "dedicated"
+        operator: "Exists"
+        effect: "NoSchedule"
+      affinity:  # ✅ Node affinity (if needed)
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: Exists
+      securityContext:  # ✅ Pod-level security
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: app
+        image: nginx:latest
+        command: ['sh', '-c', 'echo "🎉 ALL SYSTEMS OPERATIONAL! The storm has passed!"; sleep 3600']
+        resources:
+          requests:
+            cpu: "200m"  # ✅ Fits quota
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        securityContext:  # ✅ Container security
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+          readOnlyRootFilesystem: false
+
+---
+# ✅ 8. PodDisruptionBudget - Realistic
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: chaos-pdb
+  namespace: k8squest
+spec:
+  minAvailable: 1  # ✅ Realistic for 2 replicas
+  selector:
+    matchLabels:
+      app: chaos
+
+# 🎉 ALL FIXED!
+# ✅ RBAC: ServiceAccount + Role + RoleBinding
+# ✅ SecurityContext: Non-root, no escalation, capabilities dropped
+# ✅ ResourceQuota: Reduced requests to fit quota
+# ✅ NetworkPolicy: Allow necessary ingress/egress + DNS
+# ✅ Node Affinity: Configured (preferred)
+# ✅ Tolerations: Can schedule on tainted nodes
+# ✅ PDB: Realistic minAvailable
+# ✅ Pod Security: Meets restricted standard
+# ✅ PriorityClass: Production priority assigned
+#
+# THE STORM HAS PASSED! 🌈

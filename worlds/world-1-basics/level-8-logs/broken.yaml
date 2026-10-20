@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: postgres
+    image: postgres:latest
+    ports:
+    - containerPort: 5432

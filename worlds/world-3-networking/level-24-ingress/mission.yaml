@@ -1,0 +1,12 @@
+name: "Ingress Path Mismatch"
+description: "Ingress created but traffic doesn't reach backend service"
+objective: "Fix the Ingress path rules to route traffic correctly"
+xp: 250
+difficulty: "intermediate"
+expected_time: "20m"
+concepts:
+  - Ingress
+  - Path-based routing
+  - Ingress rules
+  - Service backend
+  - HTTP routing

@@ -1,0 +1,30 @@
+# 💡 HINT 1: Observing the Problem
+
+## Check Pod Status
+```bash
+kubectl get pod regular-app -n k8squest
+```
+Status: **Pending**
+
+## Check Events
+```bash
+kubectl describe pod regular-app -n k8squest
+```
+Error: `node(s) had untolerated taint {dedicated: gpu}`
+
+## Check Node Taints
+```bash
+kubectl describe node kind-control-plane | grep Taints
+```
+You'll see: `Taints: dedicated=gpu:NoSchedule`
+
+## The Problem
+- Node has taint: `dedicated=gpu:NoSchedule`
+- Pod needs matching toleration
+- Without toleration, pod can't schedule
+
+## The Fix
+Add toleration to pod spec matching the taint.
+
+---
+**Next hint** explains taints and tolerations.

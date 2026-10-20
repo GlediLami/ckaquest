@@ -1,0 +1,27 @@
+# 💡 HINT 2: Understanding PDB
+
+## PodDisruptionBudget
+
+Ensures minimum availability during voluntary disruptions (drains, updates).
+
+```yaml
+spec:
+  minAvailable: 2  # Keep 2 pods running
+  # OR
+  maxUnavailable: 1  # Max 1 pod down
+```
+
+## Your Problem
+
+- Deployment: 2 replicas
+- PDB: minAvailable 3
+- 3 > 2 = Impossible!
+
+## Solutions
+
+1. **Increase replicas** to 3+
+2. **Reduce minAvailable** to ≤ 2
+3. **Use maxUnavailable** instead
+
+---
+**Next hint** shows the solution.

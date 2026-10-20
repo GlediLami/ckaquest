@@ -1,0 +1,12 @@
+name: "ImagePullBackOff Mystery"
+description: "A pod is stuck trying to pull a container image that doesn't exist"
+objective: "Fix the image reference so the pod can start successfully"
+xp: 100
+difficulty: beginner
+expected_time: 10m
+concepts:
+  - ImagePullBackOff
+  - container images
+  - image tags
+  - kubectl describe
+  - debugging pod failures

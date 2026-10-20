@@ -1,0 +1,8 @@
+🔍 Observation Hint:
+
+Check the pod status: `kubectl get pod app-with-logging -n k8squest`
+
+Look at the READY column. You should see something like "1/2" meaning only 1 of 2 containers is ready.
+
+Run `kubectl describe pod app-with-logging -n k8squest` and look at the container statuses.
+Which container is failing?

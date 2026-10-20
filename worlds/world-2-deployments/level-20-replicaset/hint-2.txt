@@ -1,0 +1,20 @@
+🧭 Direction Hint:
+
+The problem: You have a standalone ReplicaSet.
+
+ReplicaSets are a LOW-LEVEL resource that:
+- Ensures desired number of pods are running
+- Replaces crashed pods
+- But does NOT handle updates gracefully
+
+Deployments are a HIGH-LEVEL resource that:
+- Creates and manages ReplicaSets for you
+- Handles rolling updates automatically
+- Provides rollback capability
+- Tracks rollout history
+
+Think of it like:
+- ReplicaSet = "Keep 3 pods running" (simple)
+- Deployment = "Manage versions, updates, rollbacks" (smart)
+
+You should almost NEVER create ReplicaSets directly. Always use Deployments!

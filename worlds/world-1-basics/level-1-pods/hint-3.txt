@@ -1,0 +1,1 @@
+The error says "executable file not found" for "nginxzz". This command doesn't exist! The nginx container should just run normally without a custom command. Delete the pod and apply the solution.yaml which removes the bad command override.

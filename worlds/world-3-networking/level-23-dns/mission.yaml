@@ -1,0 +1,12 @@
+name: "DNS Resolution Failing"
+description: "Pods can't resolve service names via DNS"
+objective: "Fix DNS configuration so pods can resolve service names"
+xp: 250
+difficulty: "intermediate"
+expected_time: "20m"
+concepts:
+  - Kubernetes DNS
+  - Service DNS names
+  - FQDN format
+  - CoreDNS
+  - DNS troubleshooting

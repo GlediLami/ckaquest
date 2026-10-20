@@ -1,0 +1,32 @@
+🔍 HINT 1: Observing the Problem
+
+Let's understand the reclaim policy issue:
+
+1️⃣ Check the PersistentVolume:
+   kubectl get pv
+   kubectl describe pv important-data
+   
+   What is the RECLAIM POLICY?
+
+2️⃣ Check the PVC:
+   kubectl get pvc data-claim -n k8squest
+   
+   Is it Bound to the PV?
+
+3️⃣ Look at what happens with different policies:
+   kubectl get pv important-data -o jsonpath='{.spec.persistentVolumeReclaimPolicy}'
+   
+   Is it "Delete" or "Retain"?
+
+4️⃣ Understand the risk:
+   • Delete policy: PV and data deleted when PVC removed
+   • Retain policy: PV released but data kept (manual cleanup)
+
+📝 Key Observation:
+The PV has "Delete" policy, which will WIPE ALL DATA when the PVC is deleted!
+
+🤔 Questions:
+• What happens to data with "Delete" policy?
+• What happens with "Retain" policy?
+• Which is safer for production data?
+• How do you change the reclaim policy?

@@ -1,0 +1,20 @@
+🧭 Direction Hint:
+
+You have two deployments running:
+- app-blue (old version)
+- app-green (new version)
+
+The service selector is:
+```yaml
+selector:
+  app: myapp
+  version: blue  # Problem!
+```
+
+This means the service only routes traffic to pods with BOTH labels:
+- app=myapp ✅
+- version=blue ✅ (matches app-blue pods)
+
+The app-green pods have version=green, so they don't match!
+
+Users are still seeing the OLD (blue) version.

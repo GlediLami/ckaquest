@@ -1,0 +1,81 @@
+# 💡 HINT 2: Understanding NodeAffinity
+
+## What is NodeAffinity?
+
+NodeAffinity allows you to constrain which nodes pods can be scheduled on based on node labels.
+
+## Two Types
+
+### 1. Required (Hard Constraint)
+
+```yaml
+requiredDuringSchedulingIgnoredDuringExecution:
+  nodeSelectorTerms:
+  - matchExpressions:
+    - key: accelerator
+      operator: In
+      values:
+      - gpu
+```
+
+**Means:** Pod MUST schedule on node with this label, or not at all.
+
+### 2. Preferred (Soft Constraint)
+
+```yaml
+preferredDuringSchedulingIgnoredDuringExecution:
+- weight: 100
+  preference:
+    matchExpressions:
+    - key: disk-type
+      operator: In
+      values:
+      - ssd
+```
+
+**Means:** Prefer nodes with this label, but schedule elsewhere if needed.
+
+## Operators
+
+- **In:** Label value must be in the list
+- **NotIn:** Label value must NOT be in the list
+- **Exists:** Label key must exist (any value)
+- **DoesNotExist:** Label key must NOT exist
+- **Gt:** Numeric label value greater than
+- **Lt:** Numeric label value less than
+
+## Your Current Problem
+
+Your pod wants:
+```yaml
+- key: gpu-type  # ❌ Nodes don't have this key
+  values: [nvidia-tesla]  # ❌ Or this value
+```
+
+But check node labels:
+```bash
+kubectl get nodes --show-labels
+```
+
+You'll see labels like:
+- `kubernetes.io/hostname=kind-control-plane`
+- `node-role.kubernetes.io/control-plane=`
+- Maybe `accelerator=gpu` (if we add it)
+
+## The Solution
+
+Option 1: Fix the nodeAffinity to match existing labels
+Option 2: Add labels to nodes to match affinity
+
+For this level: **Label a node** then use correct affinity.
+
+```bash
+# Add label to node
+kubectl label nodes kind-control-plane accelerator=gpu
+
+# Then update pod affinity to match
+```
+
+---
+
+**Next hint** shows the complete solution.

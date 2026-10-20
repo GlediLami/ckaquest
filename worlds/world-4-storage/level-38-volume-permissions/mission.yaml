@@ -1,0 +1,23 @@
+level: 38
+title: "Volume Permission Denied"
+objective: "Fix the broken resources and make the validation pass"
+name: "Volume Permission Denied"
+world: "Storage & Stateful Apps"
+difficulty: "advanced"
+xp: 300
+concepts:
+  - volume-permissions
+  - fsgroup
+  - securitycontext
+  - runasuser
+  - pod-security
+description: |
+  A pod is crashing with "Permission denied" errors when trying to write to
+  its mounted volume. The filesystem permissions don't match the user the
+  container is running as!
+  
+learning_objectives:
+  - Understand volume ownership and permissions
+  - Learn to configure fsGroup and runAsUser
+  - Debug permission issues in containers
+  - Properly configure security contexts

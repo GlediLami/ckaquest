@@ -1,0 +1,58 @@
+# 💡 HINT 1: Observation
+
+## Check Pod Status
+
+```bash
+kubectl get pod gpu-workload -n k8squest
+```
+
+You'll see it's **Pending**.
+
+## Check Pod Events
+
+```bash
+kubectl describe pod gpu-workload -n k8squest
+```
+
+Look for the error:
+```
+Events:
+  Warning  FailedScheduling  ... 0/3 nodes are available: 
+  3 node(s) didn't match Pod's node affinity/selector
+```
+
+## Check Node Labels
+
+```bash
+kubectl get nodes --show-labels
+```
+
+Look at what labels your nodes actually have.
+
+## Check Pod's NodeAffinity
+
+```bash
+kubectl get pod gpu-workload -n k8squest -o yaml | grep -A 10 nodeAffinity
+```
+
+Compare the affinity requirements with actual node labels.
+
+## The Problem
+
+The pod requires:
+```yaml
+- key: gpu-type
+  values: [nvidia-tesla]
+```
+
+But nodes don't have this label!
+
+## The Fix
+
+1. Check what labels nodes actually have
+2. Update nodeAffinity to match OR label nodes appropriately
+3. Re-apply the pod
+
+---
+
+**Next hint** explains nodeAffinity in detail.

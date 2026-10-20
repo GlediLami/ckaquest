@@ -1,0 +1,117 @@
+---
+# ServiceAccount for K8sQuest players
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8squest-player
+  namespace: k8squest
+
+---
+# Role with permissions only in k8squest namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: k8squest-player-role
+  namespace: k8squest
+rules:
+  # Allow all operations on common resources within k8squest namespace
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/log
+      - pods/exec
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumeclaims
+      - events
+    verbs: ["*"]
+  
+  # Allow all operations on apps resources
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - replicasets
+      - statefulsets
+      - daemonsets
+    verbs: ["*"]
+  
+  # Allow all operations on batch resources
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: ["*"]
+  
+  # Allow all operations on networking
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: ["*"]
+  
+  # Read-only access to resource quotas and limit ranges
+  - apiGroups: [""]
+    resources:
+      - resourcequotas
+      - limitranges
+    verbs: ["get", "list"]
+
+---
+# RoleBinding to grant permissions to the ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: k8squest-player-binding
+  namespace: k8squest
+subjects:
+  - kind: ServiceAccount
+    name: k8squest-player
+    namespace: k8squest
+roleRef:
+  kind: Role
+  name: k8squest-player-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ClusterRole for minimal read-only cluster-wide access
+# (allows viewing nodes, namespaces, etc. but NOT modifying)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8squest-viewer
+rules:
+  # View nodes (for understanding cluster)
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - namespaces
+    verbs: ["get", "list"]
+  
+  # View storage classes (for storage challenges)
+  - apiGroups: ["storage.k8s.io"]
+    resources:
+      - storageclasses
+    verbs: ["get", "list"]
+  
+  # View metrics (for observability challenges)
+  - apiGroups: ["metrics.k8s.io"]
+    resources:
+      - nodes
+      - pods
+    verbs: ["get", "list"]
+
+---
+# ClusterRoleBinding for read-only cluster access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8squest-viewer-binding
+subjects:
+  - kind: ServiceAccount
+    name: k8squest-player
+    namespace: k8squest
+roleRef:
+  kind: ClusterRole
+  name: k8squest-viewer
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,39 @@
+# BROKEN: ResourceQuota exceeded
+# Problem: Pod requests more resources than namespace quota allows
+# Result: Pod stuck in Pending - insufficient quota
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: k8squest
+spec:
+  hard:
+    requests.cpu: "2"  # Total CPU requests limited to 2 cores
+    requests.memory: "2Gi"  # Total memory requests limited to 2Gi
+    limits.cpu: "4"  # Total CPU limits to 4 cores
+    limits.memory: "4Gi"  # Total memory limits to 4Gi
+    pods: "10"  # Maximum 10 pods
+
+---
+# This pod requests too much!
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-hungry-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    resources:
+      requests:
+        cpu: "2500m"  # ❌ Requests 2.5 CPUs but quota only allows 2 total!
+        memory: "1Gi"
+      limits:
+        cpu: "3"
+        memory: "2Gi"
+
+# Result: Pod can't be scheduled
+# Error: "exceeded quota: compute-quota, requested: requests.cpu=2500m"
+# Quota only has 2 CPUs available, pod wants 2.5 CPUs

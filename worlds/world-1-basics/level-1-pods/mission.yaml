@@ -1,0 +1,11 @@
+name: Fix the Crashing Pod
+description: Pod is crashing due to a bad command
+objective: Pod must be Running
+xp: 100
+difficulty: beginner
+expected_time: 10m
+concepts:
+  - pods
+  - kubectl describe
+  - CrashLoopBackOff
+  - container commands

@@ -1,0 +1,11 @@
+🧭 Direction Hint:
+
+The "log-sidecar" container is crashing. To see why:
+
+`kubectl logs app-with-logging -c log-sidecar -n k8squest`
+
+The error shows that the file `/var/log/nonexistent.log` doesn't exist. The `tail -f` command fails immediately when the file is missing, causing the container to crash.
+
+You need to fix the command to either:
+1. Create the file first, or
+2. Use a different command that doesn't require a pre-existing file

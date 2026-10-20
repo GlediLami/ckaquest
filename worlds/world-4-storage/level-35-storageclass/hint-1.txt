@@ -1,0 +1,34 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate why the PVC is stuck in Pending:
+
+1️⃣ Check PVC status:
+   kubectl get pvc app-storage -n k8squest
+   kubectl describe pvc app-storage -n k8squest
+   
+   What's the STATUS? Look at Events section!
+
+2️⃣ Check what StorageClass the PVC wants:
+   kubectl get pvc app-storage -n k8squest -o yaml | grep storageClassName
+   
+   What storage class is it requesting?
+
+3️⃣ List available StorageClasses:
+   kubectl get storageclass
+   kubectl get sc
+   
+   Does the requested StorageClass exist?
+
+4️⃣ Check pod status:
+   kubectl get pod data-processor -n k8squest
+   kubectl describe pod data-processor -n k8squest
+   
+   Can the pod start without its PVC?
+
+📝 Key Observation:
+The PVC references a StorageClass that doesn't exist in the cluster!
+
+🤔 Questions:
+• What is a StorageClass?
+• How do you find available storage classes?
+• Can you create a new StorageClass or use an existing one?

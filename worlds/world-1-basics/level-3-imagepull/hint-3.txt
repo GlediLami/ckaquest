@@ -1,0 +1,9 @@
+💡 Near-Solution Hint:
+
+The image tag "nonexistent-tag-xyz-123" doesn't exist. You need to change it to a valid tag.
+
+Steps to fix:
+1. Delete the broken pod: `kubectl delete pod web-app -n k8squest`
+2. Edit broken.yaml and change the image to: nginx:latest
+3. Apply: `kubectl apply -f broken.yaml`
+4. Verify: `kubectl get pod web-app -n k8squest`

@@ -1,0 +1,107 @@
+# 💡 HINT 1: Observation and Analysis
+
+Start by understanding the network connectivity problem:
+
+## Step 1: Check Pod Status
+
+```bash
+kubectl get pods -n k8squest
+```
+
+Both pods should be Running.
+
+## Step 2: Check Backend Pod Logs
+
+```bash
+kubectl logs backend -n k8squest
+```
+
+You'll see connection failures:
+```
+nc: database (5432): Connection refused
+nc: database (5432): Connection timed out
+```
+
+## Step 3: Examine NetworkPolicies
+
+```bash
+kubectl get networkpolicy -n k8squest
+```
+
+You should see a policy named `deny-all`.
+
+```bash
+kubectl describe networkpolicy deny-all -n k8squest
+```
+
+Look at the output:
+```yaml
+Spec:
+  PodSelector:     <none>  # Applies to ALL pods
+  Allowing ingress traffic: <none>  # ❌ Blocks all incoming
+  Allowing egress traffic: <none>   # ❌ Blocks all outgoing
+```
+
+## Understanding the Problem
+
+**Default Kubernetes behavior:**
+- Without NetworkPolicy: All traffic allowed (open)
+
+**With empty NetworkPolicy:**
+```yaml
+spec:
+  podSelector: {}  # All pods
+  policyTypes:
+  - Ingress
+  - Egress
+  # No rules = DENY ALL
+```
+
+**Result:**
+- Backend can't send traffic to database (egress blocked)
+- Database can't receive traffic (ingress blocked)
+- Even DNS doesn't work!
+
+## Step 4: Check Service & DNS
+
+If the hostname `database` does not resolve, confirm a Service exists:
+
+```bash
+kubectl get svc database -n k8squest
+kubectl get endpoints database -n k8squest
+```
+
+If the Service or endpoints are missing, DNS will not resolve the short name `database`.
+Create a ClusterIP Service selecting the `app: database` pod so `database` resolves.
+
+## What You Need to Fix
+
+You need TWO NetworkPolicies:
+
+1. **Database Ingress:** Allow incoming connections from backend
+2. **Backend Egress:** Allow outgoing connections to database (+ DNS)
+
+## Testing Network Connectivity
+
+```bash
+# Test from backend to database
+kubectl exec backend -n k8squest -- nc -vz database 5432
+
+# Should succeed after fix
+```
+
+## 💡 Quick Fix Option
+
+You can apply the solution incrementally without deleting the broken state:
+
+```bash
+kubectl apply -f solution.yaml
+```
+
+NetworkPolicies are **additive** - the new allow policies will combine with the existing deny-all,
+and the allow rules take precedence for matching pods. The backend pod may show an error (different
+command), but the NetworkPolicies will still apply correctly.
+
+---
+
+**Next hint** explains NetworkPolicy syntax and rules.

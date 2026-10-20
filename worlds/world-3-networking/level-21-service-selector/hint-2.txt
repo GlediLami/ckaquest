@@ -1,0 +1,11 @@
+🧭 Direction Hint:
+
+The problem is with the service selector!
+
+The service is looking for pods with label `app: backend-app`, but the pod has `app: backend`.
+
+You need to either:
+1. Change the service selector to match the pod labels, OR
+2. Change the pod labels to match the service selector
+
+Option 1 is easier - just edit the service!

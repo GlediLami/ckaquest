@@ -1,0 +1,109 @@
+✅ SOLUTION HINT
+
+Complete Fix:
+=============
+
+Here's exactly what to change in broken.yaml:
+
+**Change This:**
+```yaml
+spec:
+  rules:
+  - host: myapp.local
+    http:
+      paths:
+      - path: /api        # ❌ WRONG PATH
+        pathType: Prefix
+```
+
+**To This:**
+```yaml
+spec:
+  rules:
+  - host: myapp.local
+    http:
+      paths:
+      - path: /           # ✅ CORRECT PATH
+        pathType: Prefix
+```
+
+Step-by-Step:
+-------------
+
+1. **Edit the broken.yaml file:**
+   Find the Ingress resource and locate the `path: /api` line.
+   Change it to `path: /`
+
+2. **Apply the fix:**
+   ```bash
+   kubectl apply -f broken.yaml
+   ```
+
+3. **Verify the change:**
+   ```bash
+   kubectl describe ingress web-ingress -n k8squest
+   ```
+
+   You should see:
+   ```
+   Rules:
+     Host           Path  Backends
+     ----           ----  --------
+     myapp.local
+                    /     web-service:80 (10.244.0.x:80)
+   ```
+
+4. **Test the Ingress:**
+   ```bash
+   # Add entry to /etc/hosts if needed
+   echo "127.0.0.1 myapp.local" | sudo tee -a /etc/hosts
+
+   # Test with curl (if Ingress controller is running)
+   curl http://myapp.local/
+   ```
+
+Why This Works:
+---------------
+
+**Path Matching Logic:**
+- Request: http://myapp.local/ → Path: "/"
+- Ingress rule: path: "/" + pathType: Prefix
+- Match: "/" starts with "/" ✅
+- Route: Request goes to web-service:80
+
+**Before (broken):**
+- Request: http://myapp.local/ → Path: "/"
+- Ingress rule: path: "/api" + pathType: Prefix
+- Match: "/" does NOT start with "/api" ❌
+- Result: 404 Not Found
+
+Alternative Solution (Optional):
+---------------------------------
+
+If you actually WANTED to serve the app at /api, you could:
+
+1. Keep path: /api in Ingress
+2. Access the app at http://myapp.local/api/
+3. Or use an Ingress annotation to rewrite the path:
+
+```yaml
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+```
+
+This would strip "/api" and send "/" to the backend. But for this level, 
+the simple fix is changing the path to "/".
+
+Validation:
+-----------
+
+After applying, run:
+```bash
+./validate.sh
+```
+
+You should see: ✅ VALIDATION PASSED!
+
+---
+Check solution.yaml to see the complete working configuration.

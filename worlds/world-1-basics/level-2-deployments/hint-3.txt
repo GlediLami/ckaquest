@@ -1,0 +1,1 @@
+The deployment has `replicas: 0` which means no pods are running! Scale it up with: `kubectl scale deployment web --replicas=1 -n k8squest` (or edit the deployment and set replicas to a number greater than 0)

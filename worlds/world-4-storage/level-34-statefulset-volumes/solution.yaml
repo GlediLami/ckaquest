@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-cluster
+  namespace: k8squest
+spec:
+  serviceName: postgres
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:14
+        env:
+        - name: POSTGRES_PASSWORD
+          value: secretpassword
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database-storage  # ✅ References volumeClaimTemplate
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:  # ✅ Each pod gets its own PVC!
+  - metadata:
+      name: database-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: k8squest
+spec:
+  clusterIP: None  # Headless service for StatefulSet
+  selector:
+    app: postgres
+  ports:
+  - port: 5432

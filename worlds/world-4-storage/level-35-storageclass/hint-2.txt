@@ -1,0 +1,44 @@
+🎯 HINT 2: Understanding StorageClass
+
+The problem is the PVC references a non-existent StorageClass!
+
+📚 StorageClass Explained:
+
+StorageClass defines HOW storage is provisioned:
+- What storage backend to use (EBS, NFS, etc.)
+- What parameters (disk type, IOPS, etc.)
+- Reclaim policy defaults
+
+**Current (Broken):**
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+spec:
+  storageClassName: premium-ssd  # ❌ Doesn't exist!
+```
+
+Result: PVC stuck in Pending, waiting for storage that will never come
+
+**Solution Options:**
+
+Option 1: Use existing StorageClass
+```yaml
+storageClassName: standard  # ✅ Use what's available
+```
+
+Option 2: Create the missing StorageClass (advanced)
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: premium-ssd
+provisioner: <appropriate-provisioner>
+```
+
+🔍 Find available StorageClasses:
+```bash
+kubectl get sc
+# Look for (default) marker or any available classes
+```
+
+💡 Action: Change PVC to use an existing StorageClass (usually "standard")

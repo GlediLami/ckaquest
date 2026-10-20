@@ -1,0 +1,10 @@
+🧭 Direction Hint:
+
+NodePort services expose pods on a static port on each node.
+
+Three ports are involved:
+- **targetPort**: Container port (80)
+- **port**: Service ClusterIP port (80)
+- **nodePort**: External access port (needs to be 30080)
+
+You need to add `nodePort: 30080` to the service spec!

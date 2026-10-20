@@ -1,0 +1,27 @@
+# K8sQuest - Git Line Ending Configuration
+# Ensures shell scripts work correctly across platforms (Windows/Mac/Linux)
+
+# Shell scripts must use LF (Unix line endings) to work properly
+*.sh text eol=lf
+
+# Python files should use LF
+*.py text eol=lf
+
+# YAML files should use LF
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# JSON files should use LF
+*.json text eol=lf
+
+# Text files can use native line endings
+*.txt text
+*.md text
+
+# Binary files should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

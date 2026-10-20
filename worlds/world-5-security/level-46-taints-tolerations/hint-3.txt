@@ -1,0 +1,56 @@
+# 💡 HINT 3: Complete Solution
+
+## Add Toleration to Pod
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: regular-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+  tolerations:  # ✅ Add this!
+  - key: "dedicated"  # ✅ Matches taint key
+    operator: "Equal"
+    value: "gpu"  # ✅ Matches taint value
+    effect: "NoSchedule"  # ✅ Matches taint effect
+```
+
+## Alternative: Tolerate Any Value
+
+```yaml
+tolerations:
+- key: "dedicated"
+  operator: "Exists"  # Any value
+  effect: "NoSchedule"
+```
+
+## Apply and Verify
+
+```bash
+# Ensure node is tainted
+kubectl taint nodes kind-control-plane dedicated=gpu:NoSchedule --overwrite
+
+# Apply solution
+kubectl apply -f solution.yaml
+
+# Verify
+kubectl get pod regular-app -n k8squest
+# Should be Running
+
+# Run validation
+./validate.sh
+```
+
+## Key Points
+
+1. **Taint = repel** pods
+2. **Toleration = allow** scheduling
+3. All parts must match: key, value, effect
+4. operator: "Equal" (exact) or "Exists" (any value)
+
+---
+Run `./validate.sh` to verify!

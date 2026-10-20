@@ -1,0 +1,11 @@
+🧭 Direction Hint:
+
+The Events show something like "0/1 nodes are available: 1 Insufficient cpu" or "Insufficient memory".
+
+This means the pod is requesting more resources than any node in your cluster can provide.
+
+Check what resources the pod is requesting:
+`kubectl get pod hungry-app -n k8squest -o yaml | grep -A 4 resources:`
+
+Compare this to available node capacity:
+`kubectl describe nodes | grep -A 5 Allocatable`

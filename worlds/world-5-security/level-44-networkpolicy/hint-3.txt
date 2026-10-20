@@ -1,0 +1,164 @@
+# 💡 HINT 3: Complete Solution
+
+## The Complete Fix
+
+Replace the deny-all policy with two specific policies:
+
+### 1. Database Ingress Policy
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-database-ingress
+  namespace: k8squest
+spec:
+  podSelector:
+    matchLabels:
+      app: database  # ✅ Apply to database pod
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend  # ✅ Allow from backend pods only
+    ports:
+    - protocol: TCP
+      port: 5432  # ✅ PostgreSQL port
+```
+
+**What this does:**
+- Applies to pods with label `app=database`
+- Allows ingress (incoming) traffic
+- Only from pods with label `app=backend`
+- Only on port 5432 (PostgreSQL)
+- Blocks everything else
+
+### 2. Backend Egress Policy
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-egress
+  namespace: k8squest
+spec:
+  podSelector:
+    matchLabels:
+      app: backend  # ✅ Apply to backend pod
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database  # ✅ Allow to database pods
+    ports:
+    - protocol: TCP
+      port: 5432  # ✅ PostgreSQL port
+  - to:  # ✅ CRITICAL: Allow DNS resolution!
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53  # ✅ DNS port
+```
+
+**What this does:**
+- Applies to pods with label `app=backend`
+- Allows egress (outgoing) traffic to:
+  1. Database pods on port 5432
+  2. DNS service in kube-system namespace on port 53
+- Blocks everything else
+
+### Why DNS Is Critical
+
+Without DNS egress rule:
+```bash
+kubectl exec backend -n k8squest -- nslookup database
+# Timeout! Can't resolve hostname
+```
+
+With DNS egress rule:
+```bash
+kubectl exec backend -n k8squest -- nslookup database
+# Success! Returns IP address
+```
+
+## Applying the Fix
+
+```bash
+# Remove the deny-all policy
+kubectl delete networkpolicy deny-all -n k8squest
+
+# Apply the new policies
+kubectl apply -f solution.yaml
+
+# Wait a few seconds for policies to propagate
+sleep 5
+
+# Test connectivity
+kubectl logs backend -n k8squest
+
+# Should see successful connections now!
+```
+
+## Verification
+
+```bash
+# Check policies are created
+kubectl get networkpolicy -n k8squest
+
+# Describe database policy
+kubectl describe networkpolicy allow-database-ingress -n k8squest
+
+# Describe backend policy
+kubectl describe networkpolicy allow-backend-egress -n k8squest
+
+# Test from backend to database
+kubectl exec backend -n k8squest -- nc -vz database 5432
+# Should output: database (10.x.x.x:5432) open
+```
+
+## Network Flow Diagram
+
+```
+Backend Pod                Database Pod
+(app=backend)             (app=database)
+     |                         |
+     |--[DNS lookup]---------->|
+     |  (port 53 UDP)          |
+     |  kube-system/dns        |
+     |                         |
+     |--[Connect]------------->|
+     |  (port 5432 TCP)        |
+     |  ✅ ALLOWED             |
+     |  (egress + ingress      |
+     |   policies permit)      |
+     |                         |
+```
+
+## Security Achieved
+
+✅ **Database only accepts connections from backend**  
+✅ **Backend can only connect to database and DNS**  
+✅ **No other traffic allowed**  
+✅ **Principle of least privilege**
+
+## Best Practices Applied
+
+1. **Specific pod selectors** - Target exact pods
+2. **Specific ports** - Only necessary ports
+3. **DNS egress** - Always allow DNS resolution
+4. **Separate policies** - Ingress and egress separate
+5. **Descriptive names** - Clear what policy does
+
+---
+
+**Run the validation script** to verify everything works!
+
+```bash
+./validate.sh
+```

@@ -1,0 +1,37 @@
+✅ HINT 3: Complete Solution
+
+Fix: Change mountPath from /data to /app/config
+
+📝 Key Changes:
+
+In the main container:
+```yaml
+containers:
+- name: app
+  volumeMounts:
+  - name: config-volume
+    mountPath: /app/config  # ✅ Changed from /data
+```
+
+In the init container:
+```yaml
+initContainers:
+- name: setup-config
+  volumeMounts:
+  - name: config-volume
+    mountPath: /app/config  # ✅ Changed from /data
+  command:
+  - sh
+  - -c
+  - echo "app_name=MyApp" > /app/config/app.conf  # ✅ Updated path
+```
+
+🚀 Apply:
+```bash
+kubectl delete pod web-app -n k8squest
+kubectl apply -f solution.yaml
+kubectl logs web-app -n k8squest
+# Should show: "Config loaded successfully"
+```
+
+💡 Remember: mountPath determines where the volume appears in the container filesystem!

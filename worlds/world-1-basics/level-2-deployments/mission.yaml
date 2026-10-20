@@ -1,0 +1,11 @@
+name: Fix the Deployment
+description: Deployment has zero replicas
+objective: Deployment must have available replicas
+xp: 150
+difficulty: beginner
+expected_time: 8m
+concepts:
+  - deployments
+  - scaling
+  - replicas
+  - kubectl scale

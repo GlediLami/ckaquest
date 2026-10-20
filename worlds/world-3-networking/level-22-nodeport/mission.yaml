@@ -1,0 +1,12 @@
+name: "NodePort Not Accessible"
+description: "NodePort service created but can't access from outside cluster"
+objective: "Fix the NodePort service configuration to enable external access"
+xp: 200
+difficulty: "intermediate"
+expected_time: "15m"
+concepts:
+  - NodePort service
+  - port vs nodePort vs targetPort
+  - external access
+  - service types
+  - port configuration

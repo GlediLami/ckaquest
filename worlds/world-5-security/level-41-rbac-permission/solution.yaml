@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-reader
+  namespace: k8squest
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role  # ✅ Define what permissions are allowed
+metadata:
+  name: pod-reader-role
+  namespace: k8squest
+rules:
+- apiGroups: [""]  # "" indicates core API group
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]  # Read-only access to pods
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding  # ✅ Bind Role to ServiceAccount
+metadata:
+  name: pod-reader-binding
+  namespace: k8squest
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-reader-role
+subjects:
+- kind: ServiceAccount
+  name: pod-reader
+  namespace: k8squest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-lister
+  namespace: k8squest
+spec:
+  serviceAccountName: pod-reader  # Now has proper permissions!
+  containers:
+  - name: app
+    image: bitnami/kubectl:latest
+    command:
+    - sh
+    - -c
+    - |
+      echo "Attempting to list pods..."
+      kubectl get pods -n k8squest
+      
+      if [ $? -eq 0 ]; then
+        echo "✅ Success! Can list pods"
+        sleep 3600
+      else
+        echo "❌ ERROR: Permission denied - cannot list pods"
+        echo "Check RBAC configuration!"
+        exit 1
+      fi

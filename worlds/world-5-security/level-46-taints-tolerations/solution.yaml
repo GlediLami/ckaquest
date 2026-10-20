@@ -1,0 +1,33 @@
+# SOLUTION: Pod with matching toleration
+
+# First, ensure node is tainted (usually done by platform team)
+# kubectl taint nodes kind-control-plane dedicated=gpu:NoSchedule --overwrite
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: regular-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    command: ['sh', '-c', 'echo "✅ Application running on tainted node"; echo "Node: $NODE_NAME"; nginx -g "daemon off;"']
+    env:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  tolerations:  # ✅ Added tolerations!
+  - key: "dedicated"  # ✅ Must match taint key
+    operator: "Equal"  # ✅ Exact match
+    value: "gpu"  # ✅ Must match taint value
+    effect: "NoSchedule"  # ✅ Must match taint effect
+    
+# This toleration allows the pod to schedule on nodes with taint:
+#   dedicated=gpu:NoSchedule
+#
+# Pod now schedules successfully!
+#
+# NOTE: Toleration doesn't REQUIRE the taint - it just allows scheduling
+# if the taint exists. The pod can still schedule on untainted nodes too.

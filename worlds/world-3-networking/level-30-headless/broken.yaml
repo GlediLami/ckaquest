@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+---
+# ❌ BROKEN: Regular ClusterIP service doesn't provide per-pod DNS
+# StatefulSets need headless service (clusterIP: None) for stable pod identities
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-cluster
+  namespace: k8squest
+spec:
+  # ❌ ClusterIP service (has virtual IP)
+  # This gives us: web-cluster.k8squest.svc.cluster.local → random pod
+  # But NOT: web-0.web-cluster.k8squest.svc.cluster.local → specific pod
+  clusterIP: 10.96.100.50  # Regular ClusterIP (not headless)
+  selector:
+    app: web-cluster
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+  namespace: k8squest
+spec:
+  serviceName: web-cluster  # References the service above
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-cluster
+  template:
+    metadata:
+      labels:
+        app: web-cluster
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+          name: web

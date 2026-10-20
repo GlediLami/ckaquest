@@ -1,0 +1,60 @@
+🔍 OBSERVATION HINT
+
+What to Look For:
+==================
+
+Users are randomly getting logged out of your application. They successfully log in, 
+but their next request shows them as not authenticated. This is a classic sign of 
+session management issues in a distributed system.
+
+Check These Areas:
+------------------
+
+1. **Client Logs**
+   Check what responses the client is getting:
+   ```bash
+   kubectl logs client -n k8squest
+   ```
+
+   Look for:
+   • Are responses coming from different pods?
+   • "Session Pod 1", "Session Pod 2", "Session Pod 3" alternating?
+
+2. **Service Configuration**
+   View the Service:
+   ```bash
+   kubectl describe service session-service -n k8squest
+   ```
+
+   Look for:
+   • Session Affinity: None (or missing)
+   • This means load-balancing is RANDOM
+
+3. **The Problem**
+   ```
+   Request 1: User logs in → Goes to Pod 1 → Session stored in Pod 1
+   Request 2: User accesses page → Goes to Pod 2 → No session! Logged out!
+   Request 3: User tries again → Goes to Pod 3 → No session! Still logged out!
+   Request 4: User tries again → Goes to Pod 1 → Session found! Logged in!
+   ```
+
+🎯 Key Questions:
+-----------------
+
+• How does the Service decide which pod to send each request to?
+• What happens to session data when a request goes to a different pod?
+• Is there a way to ensure the same client always goes to the same pod?
+
+💭 Think About:
+---------------
+
+Imagine you're at a restaurant with 3 cashiers. You order from Cashier 1, but when 
+you come back to pick up your food, you're randomly assigned to Cashier 2. Cashier 2 
+has no record of your order!
+
+Solution? Make sure you always go back to the SAME cashier (sticky sessions).
+
+In Kubernetes, this is called "session affinity" or "sticky sessions."
+
+---
+Read hint-2.txt when you need more specific direction.

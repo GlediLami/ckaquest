@@ -1,0 +1,12 @@
+name: "Service Selector Mismatch"
+description: "A service exists but pods aren't receiving traffic"
+objective: "Fix the service so it routes traffic to the backend pods"
+xp: 200
+difficulty: "intermediate"
+expected_time: "15m"
+concepts:
+  - services
+  - label selectors
+  - service endpoints
+  - kubectl describe svc
+  - ClusterIP

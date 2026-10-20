@@ -1,0 +1,12 @@
+🧭 Direction Hint:
+
+The deployment is stuck because the new image doesn't exist. Check:
+
+`kubectl describe deployment web-app -n k8squest`
+
+Look at the Events section. You'll see ImagePullBackOff errors.
+
+Check the rollout history:
+`kubectl rollout history deployment/web-app -n k8squest`
+
+You can rollback to the previous version!

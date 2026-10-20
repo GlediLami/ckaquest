@@ -1,0 +1,23 @@
+💡 Near-Solution Hint:
+
+Install metrics-server for kind/local clusters:
+
+1. Download the metrics-server manifest:
+   `curl -Lo metrics-server.yaml https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
+
+2. For kind/Docker Desktop, add `--kubelet-insecure-tls` flag:
+   `kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]' --dry-run=client`
+
+3. OR easier - apply this one-liner:
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+   kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+   ```
+
+4. Wait for metrics-server to start:
+   `kubectl wait --for=condition=available --timeout=60s deployment/metrics-server -n kube-system`
+
+5. Verify HPA now works:
+   `kubectl get hpa -n k8squest`
+   
+TARGETS should now show actual CPU percentage!

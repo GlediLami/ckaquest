@@ -1,0 +1,44 @@
+🎯 HINT 2: Understanding Access Modes
+
+The problem is the access mode is wrong for multi-node shared storage!
+
+📚 Access Modes Explained:
+
+**ReadWriteOnce (RWO)**
+- Volume can be mounted by ONE node only
+- Multiple pods on SAME node can share it
+- Most common mode, works with most storage types
+```yaml
+accessModes:
+  - ReadWriteOnce  # ❌ Not for multi-node deployments with shared storage
+```
+
+**ReadWriteMany (RWX)**
+- Volume can be mounted by MULTIPLE nodes simultaneously
+- All pods across any nodes can share it
+- Requires network storage (NFS, CephFS, etc.)
+```yaml
+accessModes:
+  - ReadWriteMany  # ✅ Perfect for shared content across nodes
+```
+
+**ReadOnlyMany (ROX)**
+- Multiple nodes can mount, but read-only
+- Good for static content distribution
+
+🔍 Your Situation:
+
+In Kind (single-node):
+- All 3 pods run fine with ReadWriteOnce (all on same node)
+- But this is WRONG for production multi-node clusters!
+
+In Production (multi-node):
+- Deployment with 3 replicas spreads across nodes
+- With ReadWriteOnce, only pods on first node can mount
+- Other pods stuck: "Volume already exclusively attached"
+
+💡 The Solution:
+Change to ReadWriteMany in BOTH PV and PVC!
+
+⚠️  But here's the catch: You can't just edit the PVC...
+You'll discover why when you try to apply the fix!

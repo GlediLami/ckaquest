@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: web
+    image: nginx:nonexistent-tag-xyz-123
+    ports:
+    - containerPort: 80

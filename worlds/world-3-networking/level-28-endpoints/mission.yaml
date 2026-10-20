@@ -1,0 +1,36 @@
+name: "Service Endpoints Not Updating"
+objective: "Add readiness probes so Service endpoints update correctly"
+world: 3
+level: 28
+xp: 200
+difficulty: intermediate
+
+description: |
+  A service's endpoints aren't updating when pods restart or become unhealthy. 
+  Traffic continues routing to broken pods, causing errors. The issue is missing 
+  readiness probes—Kubernetes doesn't know when pods are actually ready to serve 
+  traffic. You need to add readiness probes to fix this.
+
+concepts:
+  - Readiness probes
+  - Service endpoints
+  - Pod health checks
+  - Traffic routing
+
+learning_objectives:
+  - Understand how readiness probes affect service endpoints
+  - Configure HTTP/TCP/Exec readiness probes
+  - Learn the difference between liveness and readiness probes
+  - Debug service endpoint issues
+
+scenario: |
+  You've deployed a web application behind a service. When pods restart, they need 
+  a few seconds to initialize (connect to database, load cache, etc.), but the 
+  service starts sending traffic immediately. Users get errors during this warm-up 
+  period because pods aren't actually ready yet.
+
+success_criteria:
+  - Pods have readiness probes configured
+  - Service only routes to ready pods
+  - Endpoints update automatically as pods become ready/unready
+  - No traffic sent to pods during initialization

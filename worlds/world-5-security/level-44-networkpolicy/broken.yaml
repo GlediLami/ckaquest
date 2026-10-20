@@ -1,0 +1,78 @@
+# BROKEN: NetworkPolicy blocks all traffic
+# Problem: Too restrictive - blocks legitimate communication
+# Result: Pods can't communicate with each other
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+
+---
+# Database pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database
+  namespace: k8squest
+  labels:
+    app: database
+    tier: data
+spec:
+  containers:
+  - name: postgres
+    image: postgres:13
+    env:
+    - name: POSTGRES_PASSWORD
+      value: example
+    ports:
+    - containerPort: 5432
+
+---
+# Service for database (so "database" resolves inside the cluster)
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  selector:
+    app: database
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP
+
+---
+# Backend pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: k8squest
+  labels:
+    app: backend
+    tier: api
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ['sh', '-c', 'while true; do nc -vz database 5432; sleep 5; done']
+
+---
+# NetworkPolicy that blocks EVERYTHING
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: k8squest
+spec:
+  podSelector: {}  # Applies to all pods
+  policyTypes:
+  - Ingress
+  - Egress
+  # ❌ No ingress rules = block all incoming
+  # ❌ No egress rules = block all outgoing
+  
+# Result: Backend can't connect to database (egress blocked)
+# Result: Database can't receive connections (ingress blocked)

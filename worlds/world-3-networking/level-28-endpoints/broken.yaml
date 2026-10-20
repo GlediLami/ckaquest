@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app-1
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Pod 1 ready"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+    # ❌ MISSING: readinessProbe
+    # Without readiness probe, pod is immediately added to endpoints
+    # Even if the app inside isn't ready yet!
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app-2
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Pod 2 ready"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+    # ❌ MISSING: readinessProbe
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: k8squest
+spec:
+  selector:
+    app: web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: k8squest
+spec:
+  containers:
+  - name: client
+    image: busybox:1.36
+    command: ['sh', '-c', 'while true; do echo "Request:"; wget -q -O- --timeout=2 http://web-service 2>&1 || echo "Failed"; sleep 2; done']

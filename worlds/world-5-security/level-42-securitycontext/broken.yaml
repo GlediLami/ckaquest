@@ -1,0 +1,27 @@
+# BROKEN: Container security misconfiguration
+# Problem: SecurityContext not properly configured
+# Result: Pod crashes because runAsNonRoot conflicts with root user
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    securityContext:
+      runAsNonRoot: true  # ❌ Requires non-root but doesn't specify user!
+      # Missing: runAsUser (defaults to root from image)
+      # Missing: allowPrivilegeEscalation: false
+      
+    # This nginx image runs as root by default
+    # With runAsNonRoot: true but no runAsUser, Kubernetes rejects it
+
+# Result: Pod shows CreateContainerConfigError
+# Error: "container has runAsNonRoot and image will run as root"

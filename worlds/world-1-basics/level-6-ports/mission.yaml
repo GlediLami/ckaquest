@@ -1,0 +1,12 @@
+name: "Port Mismatch Mayhem"
+description: "Service is forwarding to the wrong container port, causing connection failures"
+objective: "Fix the port configuration so the service can reach the container"
+xp: 100
+difficulty: beginner
+expected_time: 10m
+concepts:
+  - Container ports
+  - Service ports vs targetPorts
+  - Port mapping
+  - kubectl port-forward
+  - Debugging connectivity

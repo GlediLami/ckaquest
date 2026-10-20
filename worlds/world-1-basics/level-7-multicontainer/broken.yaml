@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-with-logging
+  namespace: k8squest
+spec:
+  containers:
+  - name: main-app
+    image: hashicorp/http-echo:latest
+    args: ["-text=Hello from main app"]
+    ports:
+    - containerPort: 5678
+  - name: log-sidecar
+    image: busybox:latest
+    command: ["sh", "-c", "tail -f /var/log/nonexistent.log"]  # File doesn't exist!
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  volumes:
+  - name: logs
+    emptyDir: {}

@@ -1,0 +1,14 @@
+name: "Stateful App Data Loss"
+description: "Using Deployment for a database causes data loss and pod identity issues"
+objective: "Convert the Deployment to a StatefulSet to provide stable pod identities and persistent storage"
+xp: 200
+difficulty: advanced
+expected_time: 18m
+concepts:
+  - StatefulSet
+  - vs Deployment
+  - persistent storage
+  - pod identity
+  - stable network IDs
+  - headless services
+  - stateful workloads

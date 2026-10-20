@@ -1,0 +1,59 @@
+🎯 HINT 2: Understanding emptyDir vs PVC
+
+The problem is using ephemeral emptyDir for persistent data!
+
+📚 Volume Type Comparison:
+
+**emptyDir (Ephemeral):**
+```yaml
+volumes:
+- name: data
+  emptyDir: {}  # ❌ For persistent data!
+```
+
+Characteristics:
+- Created when pod is assigned to node
+- Initially empty
+- **Deleted when pod is removed/restarted**
+- Data lives only as long as the pod
+- Fast, local storage
+
+Use cases:
+- Scratch space
+- Temporary cache
+- Data sharing between containers in same pod
+- Build artifacts during pod lifetime
+
+**PersistentVolumeClaim (Persistent):**
+```yaml
+volumes:
+- name: data
+  persistentVolumeClaim:
+    claimName: app-data  # ✅ For persistent data!
+```
+
+Characteristics:
+- Backed by PersistentVolume
+- **Survives pod deletion/restart**
+- Data persists independently of pod lifecycle
+- Can be reattached to new pods
+- May have performance overhead (network storage)
+
+Use cases:
+- Databases
+- User uploads
+- Application state
+- Logs that must be retained
+- Any data that must survive pod restarts
+
+🔍 Your Situation:
+
+App writes to `/data/persistent.txt`
+→ Needs data to survive restarts
+→ emptyDir is wrong choice!
+
+💡 The Solution:
+1. Create a PersistentVolumeClaim
+2. Reference it in pod's volumes section
+
+💡 Action: Replace emptyDir with persistentVolumeClaim!

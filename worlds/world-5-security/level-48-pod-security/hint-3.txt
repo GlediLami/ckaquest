@@ -1,0 +1,2 @@
+# Same content as hint-1 for brevity
+See hint-1.txt for all three hints combined.

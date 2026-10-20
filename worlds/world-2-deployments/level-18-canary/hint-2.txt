@@ -1,0 +1,19 @@
+🧭 Direction Hint:
+
+In canary deployments, you typically want:
+- 90% traffic → Stable version
+- 10% traffic → Canary version (new version being tested)
+
+Currently, you have:
+- app-stable: 5 replicas
+- app-canary: 5 replicas
+- Total: 10 pods
+
+This gives 50/50 split (5/10 = 50%)!
+
+For 10% canary with round numbers:
+- Need 9 stable : 1 canary (9/10 = 90%, 1/10 = 10%)
+- OR 18 stable : 2 canary
+- OR 90 stable : 10 canary
+
+The problem: Too many canary replicas!

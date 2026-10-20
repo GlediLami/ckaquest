@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet  # Fixed: Use StatefulSet for stateful workloads
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  serviceName: "database-service"  # Required for StatefulSet
+  replicas: 3
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: db
+        image: hashicorp/http-echo:latest
+        args:
+          - "-text=Database Pod ($(HOSTNAME))"
+          - "-listen=:8080"
+        ports:
+        - containerPort: 8080
+          name: db-port
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+# Benefits of StatefulSet:
+# 1. Stable pod names: database-0, database-1, database-2
+# 2. Stable network identity: database-0.database-service
+# 3. Ordered startup: 0 → 1 → 2
+# 4. Ordered shutdown: 2 → 1 → 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: k8squest
+spec:
+  selector:
+    app: database
+  ports:
+  - port: 80
+    targetPort: 8080
+  clusterIP: None  # Headless service (required for StatefulSet DNS)

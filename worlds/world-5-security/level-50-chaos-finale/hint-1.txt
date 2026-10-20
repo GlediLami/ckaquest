@@ -1,0 +1,53 @@
+# 💡 CHAOS FINALE HINTS
+
+## The Challenge
+Fix ALL 9 World 5 concepts simultaneously!
+
+## Checklist
+
+### ✅ 1. RBAC
+- Create ServiceAccount
+- Create Role (pods: get, list)
+- Create RoleBinding
+
+### ✅ 2. SecurityContext
+- runAsNonRoot: true
+- runAsUser: 1000 (non-zero)
+- allowPrivilegeEscalation: false
+- capabilities.drop: [ALL]
+- seccompProfile: RuntimeDefault
+
+### ✅ 3. ResourceQuota
+- Increase quota OR reduce pod requests
+- Ensure: total requests < quota
+
+### ✅ 4. NetworkPolicy
+- Remove deny-all
+- Create allow policy with ingress/egress
+- DON'T FORGET DNS!
+
+### ✅ 5. Node Affinity (if applicable)
+- Add nodeAffinity matching node labels
+
+### ✅ 6. Taints & Tolerations
+- Add tolerations matching node taints
+
+### ✅ 7. PodDisruptionBudget
+- Set minAvailable ≤ replicas
+- Or use maxUnavailable
+
+### ✅ 8. Pod Security Standards
+- Must meet "restricted" standard
+- All SecurityContext requirements
+
+### ✅ 9. PriorityClass
+- Create a PriorityClass named `production-priority` with value `1000`
+- Assign via priorityClassName in the pod spec
+
+## Strategy
+1. Start with solution.yaml as template
+2. Apply section by section
+3. Debug errors one at a time
+4. Run ./validate.sh to check progress
+
+**You've got this! All concepts learned in Levels 41-49!** 🚀

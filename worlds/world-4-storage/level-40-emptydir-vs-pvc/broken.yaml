@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - |
+      echo "Checking for existing data..."
+      
+      if [ -f /data/persistent.txt ]; then
+        echo "✅ Found existing data:"
+        cat /data/persistent.txt
+      else
+        echo "⚠️  No existing data found (first run or data lost on restart)"
+      fi
+      
+      echo ""
+      echo "Writing new data..."
+      echo "Data written at: $(date)" >> /data/persistent.txt
+      echo "Pod: $HOSTNAME" >> /data/persistent.txt
+      
+      echo "Current data:"
+      cat /data/persistent.txt
+      
+      echo ""
+      echo "⚠️  WARNING: Using emptyDir - data will be LOST on pod restart!"
+      sleep 3600
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    emptyDir: {}  # ❌ Ephemeral! Data lost when pod deleted/restarted

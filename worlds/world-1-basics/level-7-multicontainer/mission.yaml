@@ -1,0 +1,12 @@
+name: "Sidecar Sabotage"
+description: "A multi-container pod where the sidecar container keeps crashing"
+objective: "Fix the sidecar container so the entire pod can run successfully"
+xp: 200
+difficulty: intermediate
+expected_time: 15m
+concepts:
+  - Multi-container pods
+  - Sidecar pattern
+  - Container dependencies
+  - kubectl logs with container selection
+  - Pod lifecycle

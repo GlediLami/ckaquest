@@ -1,0 +1,49 @@
+🎯 HINT 2: Understanding Volume Mounts
+
+The problem is the mountPath doesn't match where the app expects files!
+
+📚 How Volume Mounting Works:
+
+**volumes:** Defines WHAT storage to use
+```yaml
+volumes:
+- name: config-volume      # Give it a name
+  persistentVolumeClaim:
+    claimName: config-pvc  # Reference PVC
+```
+
+**volumeMounts:** Defines WHERE to mount it
+```yaml
+volumeMounts:
+- name: config-volume      # Must match volume name
+  mountPath: /app/config   # Path inside container
+```
+
+🔍 Current Situation:
+
+App expects config at:
+```
+/app/config/app.conf
+```
+
+But volume is mounted at:
+```yaml
+volumeMounts:
+- name: config-volume
+  mountPath: /data  # ❌ Wrong path!
+```
+
+So config file is actually at:
+```
+/data/app.conf  # App can't find it here!
+```
+
+💡 The Solution:
+Change mountPath to match app's expectation:
+```yaml
+volumeMounts:
+- name: config-volume
+  mountPath: /app/config  # ✅ Matches app's path
+```
+
+🎯 Action: Update the mountPath in BOTH init container and main container!

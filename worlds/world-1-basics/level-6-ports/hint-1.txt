@@ -1,0 +1,9 @@
+🔍 Observation Hint:
+
+Check what port the container is listening on:
+`kubectl get pod web-server -n k8squest -o yaml | grep containerPort`
+
+Then check what port the service is forwarding to:
+`kubectl get service web-service -n k8squest -o yaml | grep targetPort`
+
+Do they match?

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment  # PROBLEM! Should be StatefulSet for stateful apps!
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: db
+        image: hashicorp/http-echo:latest  # Simulating a database
+        args: 
+          - "-text=Database Pod ($(HOSTNAME))"
+          - "-listen=:8080"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+# Issues:
+# 1. Pods have random names (database-abc123, database-xyz789)
+# 2. No stable network identity
+# 3. Pods are interchangeable (wrong for databases!)
+# 4. No ordered startup/shutdown
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: k8squest
+spec:
+  selector:
+    app: database
+  ports:
+  - port: 80
+    targetPort: 8080
+  clusterIP: None  # Headless service

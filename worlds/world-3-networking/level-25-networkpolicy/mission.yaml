@@ -1,0 +1,35 @@
+name: "NetworkPolicy Too Restrictive"
+objective: "Fix the overly restrictive NetworkPolicy to allow frontend-to-backend communication"
+world: 3
+level: 25
+xp: 250
+difficulty: intermediate
+
+description: |
+  A NetworkPolicy is blocking legitimate traffic between pods. The frontend can't 
+  reach the backend API, even though both pods are running and healthy. You need 
+  to identify and fix the overly restrictive network policy.
+
+concepts:
+  - NetworkPolicy
+  - Pod-to-pod communication
+  - Label selectors in network policies
+  - Ingress/Egress rules
+
+learning_objectives:
+  - Understand how NetworkPolicy controls traffic between pods
+  - Debug connectivity issues caused by network policies
+  - Configure appropriate ingress rules for pod communication
+  - Use label selectors to allow specific pod-to-pod traffic
+
+scenario: |
+  You've deployed a frontend and backend application in your cluster. The backend 
+  is protected by a NetworkPolicy to prevent unauthorized access. However, the 
+  NetworkPolicy is TOO restrictive - it's blocking the frontend from accessing 
+  the backend API, causing the application to fail.
+
+success_criteria:
+  - Frontend pod can successfully connect to backend service
+  - NetworkPolicy allows traffic from frontend to backend
+  - NetworkPolicy still blocks traffic from other pods (maintains security)
+  - All pods are running and healthy

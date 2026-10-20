@@ -1,0 +1,36 @@
+name: "Session Affinity Missing"
+objective: "Configure sessionAffinity on the Service to maintain user sessions"
+world: 3
+level: 26
+xp: 200
+difficulty: intermediate
+
+description: |
+  A stateful application is randomly losing user sessions. Users log in successfully 
+  but their subsequent requests show them as logged out. The issue is that the 
+  Service is load-balancing requests across multiple pods, and session data isn't 
+  shared between them. You need to enable session affinity to fix this.
+
+concepts:
+  - Session affinity (sticky sessions)
+  - Service load balancing
+  - Stateful vs stateless applications
+  - ClientIP session affinity
+
+learning_objectives:
+  - Understand when session affinity is needed
+  - Configure sessionAffinity: ClientIP on Services
+  - Learn the tradeoffs of sticky sessions vs shared state
+  - Debug session-related issues in distributed applications
+
+scenario: |
+  You've deployed a web application that stores user sessions in memory (not ideal, 
+  but you're migrating from a legacy system). Users report that they get randomly 
+  logged out. The problem? The Service load-balances each request to a different 
+  pod, and session data only exists in the pod that handled the login.
+
+success_criteria:
+  - Service has sessionAffinity: ClientIP configured
+  - Requests from the same client consistently route to the same pod
+  - User sessions persist across multiple requests
+  - Application works correctly with session affinity

@@ -1,0 +1,44 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate why the PVC is stuck in Pending:
+
+1️⃣ Check the PVC status:
+   kubectl get pvc -n k8squest
+   
+   Notice the STATUS column - what does it show?
+
+2️⃣ Get more details about the PVC:
+   kubectl describe pvc app-storage-claim -n k8squest
+   
+   Look for:
+   • Status: Pending
+   • Events: Any error messages
+   • Requested storage and storage class
+
+3️⃣ Check if any PersistentVolumes exist:
+   kubectl get pv
+   
+   Do you see a PV that could satisfy the PVC?
+
+4️⃣ Check the pod status:
+   kubectl get pod database-pod -n k8squest
+   
+   What state is it in? Can you see why?
+
+5️⃣ Describe the pod to see events:
+   kubectl describe pod database-pod -n k8squest
+   
+   Look for messages about volume mounting issues
+
+📝 Key Observations:
+   • PVC is Pending (not Bound)
+   • Pod is ContainerCreating (waiting for volume)
+   • Pod can't start until PVC is bound
+   • PVC can't bind without a matching PV
+
+🤔 Questions to Consider:
+   • What is the PVC requesting (storage size, class, access mode)?
+   • Does a PV exist that matches these requirements?
+   • What happens if PV and PVC requirements don't match?
+
+The PVC and PV specifications need to match perfectly for binding to occur!

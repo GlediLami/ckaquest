@@ -1,0 +1,27 @@
+✅ Solution Hint:
+
+Fix the client pod to use correct service name:
+
+```bash
+kubectl delete pod app-client -n k8squest
+kubectl apply -f solution.yaml -n k8squest
+```
+
+Or edit broken.yaml and change:
+```yaml
+args:
+- |
+  pg_isready -h database -p 5432  # Wrong
+```
+
+To:
+```yaml
+args:
+- |
+  pg_isready -h database-service -p 5432  # Correct!
+```
+
+Then recreate the pod. Check logs to verify connection success:
+```bash
+kubectl logs app-client -n k8squest
+```

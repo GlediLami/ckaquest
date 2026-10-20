@@ -1,0 +1,53 @@
+🎯 HINT 2: Understanding Reclaim Policies
+
+The problem is using "Delete" policy for important data!
+
+📚 Reclaim Policy Options:
+
+**Delete (Dangerous for Production):**
+```yaml
+spec:
+  persistentVolumeReclaimPolicy: Delete  # ❌ Data loss risk!
+```
+
+What happens when PVC deleted:
+1. PVC is removed
+2. PV is automatically deleted
+3. **All data is permanently lost!**
+4. Cannot recover data
+
+**Retain (Safe for Production):**
+```yaml
+spec:
+  persistentVolumeReclaimPolicy: Retain  # ✅ Data preserved!
+```
+
+What happens when PVC deleted:
+1. PVC is removed
+2. PV status changes to "Released"
+3. **Data remains on disk intact**
+4. Admin can recover or clean up manually
+5. PV cannot be auto-rebound (requires manual reclaim)
+
+**Recycle (Deprecated):**
+- Runs `rm -rf` on volume
+- Not recommended, use Delete or Retain
+
+🔍 When to Use Each:
+
+**Use Delete:**
+- Development/testing environments
+- Temporary data
+- Cloud storage with automatic backups
+- Cost savings (auto-cleanup)
+
+**Use Retain:**
+- Production databases
+- Critical application data
+- Compliance requirements
+- When manual review needed before deletion
+
+💡 The Solution:
+Change reclaim policy to Retain for important data!
+
+💡 Action: Set persistentVolumeReclaimPolicy to "Retain" in the PV spec!

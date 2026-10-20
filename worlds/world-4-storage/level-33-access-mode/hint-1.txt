@@ -1,0 +1,33 @@
+🔍 HINT 1: Observing the Problem
+
+Let's check the current configuration:
+
+1️⃣ Check pod status:
+   kubectl get pods -n k8squest -l app=web
+   
+   You'll likely see all 3 pods Running (because Kind is single-node).
+   But is this the RIGHT configuration for production?
+
+2️⃣ Check the PVC access mode:
+   kubectl get pvc shared-pvc -n k8squest -o yaml | grep -A2 accessModes
+   
+   What's the access mode? ReadWriteOnce or ReadWriteMany?
+
+3️⃣ Check the PV access mode:
+   kubectl get pv shared-storage -o yaml | grep -A2 accessModes
+   
+   Does it match what you need for multiple pods?
+
+4️⃣ Run validation to see if configuration is correct:
+   ./validate.sh
+   
+   The validation checks for CORRECT configuration, not just whether pods run!
+
+📝 Key Observation:
+In Kind (single-node), ReadWriteOnce works because all pods are on the same node.
+But in production multi-node clusters, pods on different nodes can't mount RWO volumes!
+
+🤔 Questions:
+• What is ReadWriteOnce? (Hint: one NODE, not one pod)
+• What is ReadWriteMany?
+• Which mode do you need for shared storage across nodes?

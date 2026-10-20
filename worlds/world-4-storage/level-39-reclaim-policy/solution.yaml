@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: important-data
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain  # ✅ Safe! Data preserved when PVC deleted
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data/important
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-claim
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-writer
+  namespace: k8squest
+spec:
+  containers:
+  - name: writer
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - |
+      echo "Writing important data..."
+      echo "Critical production data" > /data/important.txt
+      echo "Timestamp: $(date)" >> /data/important.txt
+      echo "Data written successfully"
+      
+      echo ""
+      echo "✅ Safe: PV has Retain policy - data will be preserved even if PVC is deleted"
+      sleep 3600
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: data-claim

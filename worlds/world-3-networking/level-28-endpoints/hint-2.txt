@@ -1,0 +1,188 @@
+🧭 DIRECTION HINT
+
+The Problem Identified:
+========================
+
+Your pods are MISSING readiness probes. Without them, Kubernetes immediately adds
+pods to service endpoints, even if the application isn't ready to serve traffic yet.
+
+Current Situation:
+------------------
+
+**Pod Configuration (broken.yaml):**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app-1
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    ports:
+    - containerPort: 8080
+    # ❌ NO readinessProbe configured!
+```
+
+What's Happening:
+-----------------
+
+**Without Readiness Probe:**
+```
+1. Pod created
+2. Container starts
+3. Kubernetes immediately adds pod to endpoints  ❌ (assumes ready!)
+4. Service starts sending traffic
+5. Application is still initializing (loading config, connecting to DB, etc.)
+6. Requests fail: "Connection refused" or timeouts
+7. After ~10 seconds, application finishes initialization
+8. Requests now succeed
+```
+
+**Timeline:**
+```
+t=0s:  Pod starts
+t=1s:  Added to endpoints (NO readiness check!)
+t=2s:  Traffic arrives → ERROR (app not ready)
+t=5s:  Traffic arrives → ERROR (app still initializing)
+t=10s: App ready
+t=11s: Traffic arrives → SUCCESS
+```
+
+**Problem:** Users get errors during the 0-10s initialization window!
+
+The Fix:
+--------
+
+Add a **readiness probe** to check if the application is ready before adding it
+to service endpoints.
+
+```yaml
+spec:
+  containers:
+  - name: app
+    readinessProbe:
+      httpGet:            # Check HTTP endpoint
+        path: /           # Path to check
+        port: 8080        # Port to check
+      initialDelaySeconds: 5   # Wait 5s before first check
+      periodSeconds: 5          # Check every 5s
+      failureThreshold: 1       # Fail after 1 failed check
+```
+
+How Readiness Probes Work:
+---------------------------
+
+**With Readiness Probe:**
+```
+1. Pod created
+2. Container starts
+3. Kubernetes waits initialDelaySeconds (5s)
+4. Kubernetes runs readiness probe: HTTP GET http://pod-ip:8080/
+5. If HTTP 200: Pod marked READY → Added to endpoints ✅
+6. If HTTP error: Pod NOT ready → NOT in endpoints (no traffic)
+7. Probe runs every periodSeconds (5s)
+8. Pod automatically added/removed from endpoints based on probe
+```
+
+**Timeline:**
+```
+t=0s:  Pod starts
+t=1-4s: Kubernetes waits (initialDelaySeconds)
+t=5s:  First readiness check → FAIL (app still starting)
+t=8s:  App finishes initialization
+t=10s: Readiness check → SUCCESS → Added to endpoints
+t=11s: Traffic arrives → SUCCESS ✅
+```
+
+**Result:** No traffic sent until app is actually ready!
+
+Readiness Probe Types:
+-----------------------
+
+**1. HTTP Probe (most common for web apps):**
+```yaml
+readinessProbe:
+  httpGet:
+    path: /health     # Health check endpoint
+    port: 8080
+    httpHeaders:      # Optional headers
+    - name: Custom-Header
+      value: value
+```
+
+**2. TCP Probe (for non-HTTP services like databases):**
+```yaml
+readinessProbe:
+  tcpSocket:
+    port: 5432        # Try to open TCP connection
+```
+
+**3. Exec Probe (run custom command):**
+```yaml
+readinessProbe:
+  exec:
+    command:
+    - cat
+    - /tmp/ready     # Check if file exists
+```
+
+Configuration Options:
+----------------------
+
+```yaml
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 5    # Wait before first check (app startup time)
+  periodSeconds: 5          # How often to check (default: 10s)
+  timeoutSeconds: 1         # Timeout for each check (default: 1s)
+  successThreshold: 1       # Consecutive successes to mark ready (default: 1)
+  failureThreshold: 1       # Consecutive failures to mark not ready (default: 3)
+```
+
+What to Do:
+-----------
+
+Edit broken.yaml and add readiness probes to both pods:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app-1
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Pod 1 ready"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+    readinessProbe:           # ✅ ADD THIS
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 1
+```
+
+Then apply:
+```bash
+kubectl delete pod web-app-1 web-app-2 -n k8squest
+kubectl apply -f broken.yaml
+kubectl get pods -n k8squest -w
+```
+
+Watch pods transition: Pending → Running (0/1) → Running (1/1)
+
+The (0/1) → (1/1) transition happens when readiness probe succeeds!
+
+---
+Read hint-3.txt if you need the exact solution.

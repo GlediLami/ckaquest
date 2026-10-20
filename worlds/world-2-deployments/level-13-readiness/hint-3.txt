@@ -1,0 +1,26 @@
+💡 Near-Solution Hint:
+
+You need to add a readiness probe that waits for the app to actually be ready.
+
+Steps:
+1. Edit the deployment:
+   `kubectl edit deployment slow-startup-app -n k8squest`
+
+2. Find the `livenessProbe` section, and add a `readinessProbe` right below it:
+
+```yaml
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 22  # Wait for the 20s sleep + 2s buffer
+          periodSeconds: 5
+          successThreshold: 1
+```
+
+3. Save and exit. Pods will be recreated.
+
+4. Watch the pods become ready:
+   `kubectl get pods -n k8squest -l app=slow-app -w`
+
+Now pods won't receive traffic until they're actually ready!

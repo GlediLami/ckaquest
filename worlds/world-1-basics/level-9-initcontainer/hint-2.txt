@@ -1,0 +1,9 @@
+🧭 Direction Hint:
+
+The init container is trying to lookup "nonexistent-service" using `nslookup`, but that service doesn't exist. The container will loop forever waiting for it.
+
+Init containers must complete successfully before the main container starts. This one never will!
+
+You need to either:
+1. Change the command to something that will complete, or
+2. Create the service it's looking for

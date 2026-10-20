@@ -1,0 +1,52 @@
+🎯 HINT 2: Understanding Volume Permissions
+
+The problem is the volume ownership doesn't match the container user!
+
+📚 How Volume Permissions Work:
+
+**Default Behavior:**
+- Volumes are owned by root (user 0, group 0)
+- Container runs as user 1000
+- User 1000 can't write to root-owned directory!
+
+**Container Security Context:**
+```yaml
+containers:
+- securityContext:
+    runAsUser: 1000    # Container runs as this user
+    runAsGroup: 1000   # Container runs as this group
+```
+
+**Pod Security Context with fsGroup:**
+```yaml
+spec:
+  securityContext:
+    fsGroup: 1000  # ✅ Changes volume ownership to group 1000!
+```
+
+🔍 How fsGroup Works:
+
+1. Volume is mounted
+2. Kubernetes changes ownership: `chown -R :1000 /volume`
+3. Volume group = 1000
+4. User 1000 (in group 1000) can now write!
+
+**Without fsGroup:**
+```bash
+drwxr-xr-x  2 root root  4096 /data  # User 1000 can't write
+```
+
+**With fsGroup: 1000:**
+```bash
+drwxrwsr-x  2 root 1000  4096 /data  # Group 1000 can write!
+```
+
+💡 The Solution:
+Add fsGroup to pod's securityContext:
+```yaml
+spec:
+  securityContext:
+    fsGroup: 1000  # Match runAsGroup
+```
+
+💡 Action: Set fsGroup in the pod spec's securityContext!

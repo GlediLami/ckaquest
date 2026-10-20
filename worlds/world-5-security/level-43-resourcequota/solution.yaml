@@ -1,0 +1,43 @@
+# SOLUTION: Adjusted resource requests to fit within quota
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: k8squest
+spec:
+  hard:
+    requests.cpu: "2"  # Total 2 CPUs
+    requests.memory: "2Gi"  # Total 2Gi memory
+    limits.cpu: "4"
+    limits.memory: "4Gi"
+    pods: "10"
+
+---
+# Fixed: Reduced resource requests to fit quota
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-hungry-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    resources:
+      requests:
+        cpu: "500m"  # ✅ Reduced to 0.5 CPUs (fits in 2 CPU quota)
+        memory: "512Mi"  # ✅ Reduced to 512Mi (fits in 2Gi quota)
+      limits:
+        cpu: "1"  # ✅ Reduced limit (fits in 4 CPU quota)
+        memory: "1Gi"  # ✅ Reduced limit (fits in 4Gi quota)
+    command: ["/bin/sh"]
+    args:
+    - -c
+    - |
+      echo "Application running with reasonable resource requests"
+      echo "CPU request: 500m, Memory request: 512Mi"
+      nginx -g 'daemon off;'
+
+# Now pod schedules successfully within quota limits
+# Requests: 500m CPU + 512Mi memory (well within 2 CPU / 2Gi quota)

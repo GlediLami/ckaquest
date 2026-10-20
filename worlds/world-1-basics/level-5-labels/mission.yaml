@@ -1,0 +1,13 @@
+name: "Lost Connection - Labels & Selectors"
+description: "A Service can't find its pods because the label selector doesn't match"
+objective: "Fix either the Service selector or Pod labels so traffic can reach the pod"
+xp: 150
+difficulty: beginner
+expected_time: 15m
+concepts:
+  - Labels
+  - Selectors
+  - Services
+  - kubectl get with label filters
+  - Service endpoints
+  - Pod connectivity

@@ -1,0 +1,23 @@
+level: 34
+title: "StatefulSet Volume Templates"
+objective: "Fix the broken resources and make the validation pass"
+name: "StatefulSet Volume Templates"
+world: "Storage & Stateful Apps"
+difficulty: "advanced"
+xp: 300
+concepts:
+  - statefulset
+  - volumeclaimtemplates
+  - per-pod-storage
+  - dynamic-provisioning
+  - pod-identity
+description: |
+  A StatefulSet for a database cluster has all pods writing to the same PVC!
+  Each pod should have its own dedicated storage, but they're all sharing one volume.
+  This is causing data corruption and conflicts.
+  
+learning_objectives:
+  - Understand StatefulSet volumeClaimTemplates
+  - Learn per-pod persistent storage
+  - Configure dynamic PVC creation
+  - Understand StatefulSet storage patterns

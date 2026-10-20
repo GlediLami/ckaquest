@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: config-storage
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /tmp/k8squest-config
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: config-pvc
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
+---
+# ❌ BROKEN: Volume mounted at wrong path
+# App expects config at /app/config but volume is mounted at /data
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: busybox:1.28
+    command: 
+    - sh
+    - -c
+    - |
+      echo "Starting application..."
+      if [ ! -f /app/config/app.conf ]; then
+        echo "ERROR: Config file not found at /app/config/app.conf"
+        exit 1
+      fi
+      echo "Config loaded successfully"
+      sleep 3600
+    volumeMounts:
+    - name: config-volume
+      mountPath: /data  # ❌ WRONG! App expects /app/config
+  volumes:
+  - name: config-volume
+    persistentVolumeClaim:
+      claimName: config-pvc
+  initContainers:
+  - name: setup-config
+    image: busybox:1.28
+    command:
+    - sh
+    - -c
+    - |
+      echo "app_name=MyApp" > /data/app.conf
+      echo "Config file created at /data/app.conf"
+    volumeMounts:
+    - name: config-volume
+      mountPath: /data

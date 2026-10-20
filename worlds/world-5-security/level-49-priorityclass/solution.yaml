@@ -1,0 +1,64 @@
+# SOLUTION: PriorityClass enabling preemption
+
+# Define priority classes
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: low-priority
+value: 100  # Low value = low priority
+globalDefault: false
+description: "Low priority for development workloads"
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000  # High value = high priority
+preemptionPolicy: PreemptLowerPriority  # ✅ Can preempt lower priority pods
+globalDefault: false
+description: "High priority for critical production workloads"
+
+---
+# Low priority dev pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-workload-1
+  namespace: k8squest
+spec:
+  priorityClassName: low-priority  # ✅ Low priority
+  containers:
+  - name: app
+    image: nginx:latest
+    command: ['sh', '-c', 'echo "Dev workload (low priority)"; sleep 3600']
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+
+---
+# Critical production pod with high priority
+apiVersion: v1
+kind: Pod
+metadata:
+  name: critical-api
+  namespace: k8squest
+spec:
+  priorityClassName: high-priority  # ✅ High priority
+  containers:
+  - name: api
+    image: nginx:latest
+    command: ['sh', '-c', 'echo "✅ Critical API running (high priority)"; sleep 3600']
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+
+# Now when critical-api needs to schedule:
+# 1. Scheduler sees no resources available
+# 2. Checks priority: critical-api (1000) > dev-workload-1 (100)
+# 3. PREEMPTS (evicts) dev-workload-1
+# 4. Schedules critical-api
+#
+# Result: Critical workloads always get resources!

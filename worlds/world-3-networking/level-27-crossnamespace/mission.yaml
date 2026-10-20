@@ -1,0 +1,35 @@
+name: "Cross-namespace Service Communication"
+objective: "Fix cross-namespace service communication using proper DNS FQDN"
+world: 3
+level: 27
+xp: 250
+difficulty: intermediate
+
+description: |
+  A frontend application in the 'k8squest' namespace needs to call an API in the 
+  'backend-ns' namespace, but it can't connect. The issue is using a short service 
+  name instead of the fully-qualified domain name (FQDN). You need to fix the DNS 
+  name to enable cross-namespace communication.
+
+concepts:
+  - Cross-namespace service communication
+  - Kubernetes DNS FQDN format
+  - Service discovery across namespaces
+  - DNS resolution in Kubernetes
+
+learning_objectives:
+  - Understand Kubernetes DNS naming conventions
+  - Use FQDN for cross-namespace service access
+  - Learn when short names work vs when FQDNs are required
+  - Debug DNS resolution issues across namespaces
+
+scenario: |
+  Your company uses namespace isolation—frontend apps in one namespace, backend 
+  services in another. The frontend needs to call the backend API, but it's using 
+  the short service name which only works within the same namespace.
+
+success_criteria:
+  - Frontend can successfully connect to backend service
+  - Using proper FQDN format: service.namespace.svc.cluster.local
+  - DNS resolution works across namespaces
+  - Connection succeeds and returns API response

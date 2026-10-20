@@ -1,0 +1,32 @@
+✅ Solution Hint:
+
+Fix the service selector:
+
+```bash
+kubectl delete svc backend-service -n k8squest
+kubectl apply -f solution.yaml -n k8squest
+```
+
+Or edit it directly:
+```bash
+kubectl edit svc backend-service -n k8squest
+```
+
+Change the selector from:
+```yaml
+selector:
+  app: backend-app  # Wrong
+  tier: api
+```
+
+To:
+```yaml
+selector:
+  app: backend  # Correct - matches pod label
+  tier: api
+```
+
+Then verify endpoints appear:
+```bash
+kubectl get endpoints backend-service -n k8squest
+```

@@ -1,0 +1,7 @@
+🧭 Direction Hint:
+
+The resources are in the "default" namespace, but they should be in the "k8squest" namespace for this quest!
+
+Look at broken.yaml - the metadata sections specify `namespace: default`.
+
+You need to change this to `namespace: k8squest`.

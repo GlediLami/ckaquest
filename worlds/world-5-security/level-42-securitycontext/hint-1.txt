@@ -1,0 +1,81 @@
+# 💡 HINT 1: Observation and Analysis
+
+Start by examining what's happening with the pod:
+
+## Step 1: Check Pod Status
+
+```bash
+kubectl get pod web-app -n k8squest
+```
+
+Look for the status. You might see:
+- `CreateContainerConfigError`
+- `CrashLoopBackOff`
+- Or pod might be stuck in `Pending`
+
+## Step 2: Examine Pod Events
+
+```bash
+kubectl describe pod web-app -n k8squest
+```
+
+Look at the **Events** section at the bottom. You should see an error like:
+```
+Error: container has runAsNonRoot and image will run as root
+```
+
+This tells you the issue: **runAsNonRoot is enabled but no user ID specified!**
+
+## Step 3: Check Current SecurityContext
+
+```bash
+kubectl get pod web-app -n k8squest -o yaml | grep -A 10 securityContext
+```
+
+You'll see:
+```yaml
+securityContext:
+  runAsNonRoot: true
+  # Missing: runAsUser
+  # Missing: allowPrivilegeEscalation setting
+```
+
+## Understanding the Problem
+
+**What's happening:**
+1. SecurityContext has `runAsNonRoot: true`
+2. This tells Kubernetes "don't let container run as root"
+3. But the nginx image defaults to running as root (UID 0)
+4. No `runAsUser` specified to override this
+5. Kubernetes rejects the pod for security reasons
+
+**The conflict:**
+- Policy says: "Must run as non-root"
+- Container wants: "Run as root (default)"
+- Result: Pod creation fails
+
+## What You Need to Fix
+
+You need to tell Kubernetes **which non-root user to use**.
+
+The SecurityContext needs:
+1. Keep `runAsNonRoot: true` ✅
+2. Add `runAsUser: <some-non-zero-UID>` ❌ (missing!)
+3. Add `allowPrivilegeEscalation: false` ❌ (missing!)
+
+## Testing Commands
+
+After fixing:
+```bash
+# Check if pod is running
+kubectl get pod web-app -n k8squest
+
+# Verify what user container is running as
+kubectl exec web-app -n k8squest -- id
+
+# Should show: uid=1000 (not uid=0/root)
+```
+
+---
+
+**Next hint** will explain SecurityContext fields in detail.

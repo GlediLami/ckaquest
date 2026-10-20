@@ -1,0 +1,53 @@
+# SOLUTION: Pod meeting restricted Pod Security Standard
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-app
+  namespace: k8squest
+spec:
+  securityContext:  # ✅ Pod-level security
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:  # ✅ Required for restricted
+      type: RuntimeDefault
+  containers:
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 8080  # Non-privileged port
+    securityContext:  # ✅ Container-level security
+      runAsNonRoot: true  # ✅ Required
+      runAsUser: 1000  # ✅ Non-root
+      allowPrivilegeEscalation: false  # ✅ Required
+      capabilities:  # ✅ Required
+        drop:
+        - ALL
+    command: ["/bin/sh"]
+    args:
+    - -c
+    - |
+      echo "✅ Secure pod running with restricted security standards"
+      echo "User: $(id -u), Group: $(id -g)"
+      while true; do
+        echo "Secure and compliant!" | nc -l -p 8080 || true
+      done
+
+# Pod now meets ALL restricted requirements:
+# ✅ runAsNonRoot: true
+# ✅ runAsUser: non-zero
+# ✅ allowPrivilegeEscalation: false
+# ✅ capabilities: drop ALL
+# ✅ seccompProfile: RuntimeDefault
+#
+# Pod creates successfully and runs securely!

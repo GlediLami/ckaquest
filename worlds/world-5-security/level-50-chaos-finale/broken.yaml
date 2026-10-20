@@ -1,0 +1,102 @@
+# BROKEN: The Perfect Storm - EVERYTHING is broken!
+# Multiple simultaneous failures across all World 5 concepts
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+
+---
+# ResourceQuota - very restrictive
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: chaos-quota
+  namespace: k8squest
+spec:
+  hard:
+    requests.cpu: "1"  # ❌ Too low!
+    requests.memory: "1Gi"
+    pods: "5"
+
+---
+# ServiceAccount exists but NO RBAC!
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+  namespace: k8squest
+# ❌ No Role!
+# ❌ No RoleBinding!
+
+---
+# NetworkPolicy - DENY ALL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: k8squest
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  # ❌ No rules = block everything!
+
+---
+# Deployment with EVERY problem
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-app
+  namespace: k8squest
+spec:
+  replicas: 3  # ❌ Exceeds quota!
+  selector:
+    matchLabels:
+      app: chaos
+  template:
+    metadata:
+      labels:
+        app: chaos
+    spec:
+      serviceAccountName: app-sa
+      # ❌ No priorityClassName!
+      # ❌ No tolerations!
+      # ❌ No nodeAffinity!
+      containers:
+      - name: app
+        image: nginx:latest
+        resources:
+          requests:
+            cpu: "1"  # ❌ Too high for quota!
+            memory: "512Mi"
+        securityContext:
+          runAsUser: 0  # ❌ Root!
+          allowPrivilegeEscalation: true  # ❌ Escalation allowed!
+          # ❌ No capabilities drop!
+          # ❌ Violates restricted policy!
+
+---
+# PDB impossible to satisfy
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: chaos-pdb
+  namespace: k8squest
+spec:
+  minAvailable: 5  # ❌ More than replicas!
+  selector:
+    matchLabels:
+      app: chaos
+
+# RESULT: TOTAL CHAOS!
+# - Pods can't schedule (quota)
+# - Pods can't schedule (security policy)
+# - Pods can't schedule (taints)
+# - Pods can't communicate (network policy)
+# - Pods can't access API (RBAC)
+# - Can't drain nodes (PDB)
+# - Low priority (no preemption)
+#
+# EVERYTHING IS BROKEN! Fix it all! 🔥

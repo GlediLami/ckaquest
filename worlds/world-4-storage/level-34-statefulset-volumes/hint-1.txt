@@ -1,0 +1,32 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate the StatefulSet storage issue:
+
+1️⃣ Check the StatefulSet:
+   kubectl get statefulset postgres-cluster -n k8squest
+   kubectl describe statefulset postgres-cluster -n k8squest
+   
+   How many replicas are there?
+
+2️⃣ Check the pods:
+   kubectl get pods -n k8squest -l app=postgres
+   
+   Are all pods running?
+
+3️⃣ Check PVCs:
+   kubectl get pvc -n k8squest
+   
+   How many PVCs exist? One or multiple?
+
+4️⃣ Look at the StatefulSet spec:
+   kubectl get statefulset postgres-cluster -n k8squest -o yaml | grep -A 10 volumes
+   
+   Is volumeClaimTemplates defined?
+
+📝 Key Observation:
+All pods are trying to share a SINGLE PVC instead of each having their own!
+
+🤔 Questions:
+• Should database pods share the same storage?
+• What is volumeClaimTemplates?
+• How does StatefulSet provide per-pod storage?

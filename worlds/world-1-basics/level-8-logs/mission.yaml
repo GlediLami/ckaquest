@@ -1,0 +1,11 @@
+name: "Pod Logs Mystery"
+description: "The database container exits because of an application configuration error. Diagnose the cause in its logs."
+objective: "Find the missing PostgreSQL configuration in the logs and fix the pod"
+xp: 150
+difficulty: beginner
+expected_time: 12m
+concepts:
+  - kubectl logs
+  - Application debugging
+  - Environment variables
+  - Container troubleshooting

@@ -1,0 +1,38 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate why the service isn't accessible:
+
+1️⃣ Check the service status:
+   kubectl get service web-service -n k8squest
+   
+   Notice the EXTERNAL-IP column - what do you see?
+
+2️⃣ Look for more details:
+   kubectl describe service web-service -n k8squest
+   
+   Pay attention to:
+   • Type: LoadBalancer
+   • LoadBalancer Ingress: <pending>
+   • What does "pending" mean?
+
+3️⃣ Check the service type:
+   kubectl get service web-service -n k8squest -o yaml | grep type:
+   
+   What type of service is this?
+
+4️⃣ Think about your environment:
+   • Are you running in a cloud provider (AWS, GCP, Azure)?
+   • Or are you in a local cluster (kind, minikube, k3d)?
+   • What's the difference?
+
+📝 Key Observation:
+   LoadBalancer services need external load balancer provisioning from cloud providers.
+   In local clusters, they stay in "Pending" state forever because there's no cloud 
+   provider to create the load balancer.
+
+🤔 Questions to Consider:
+   • What service type works in local clusters?
+   • How can you expose a service externally without cloud provider integration?
+   • What are the different Kubernetes service types?
+
+Keep investigating! The service type is the key to solving this issue.

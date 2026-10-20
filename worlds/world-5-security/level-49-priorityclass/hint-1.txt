@@ -1,0 +1,26 @@
+# 💡 HINTS: PriorityClass
+
+## Problem
+Critical pods can't preempt dev pods - all have same priority.
+
+## Solution
+1. Create PriorityClasses with different values
+2. Assign high-priority to critical pods
+3. Scheduler will preempt lower priority when needed
+
+```yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000  # Higher = more important
+preemptionPolicy: PreemptLowerPriority
+```
+
+Assign to pod:
+```yaml
+spec:
+  priorityClassName: high-priority
+```
+
+Run `./validate.sh` to verify!

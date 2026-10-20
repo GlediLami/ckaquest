@@ -1,0 +1,17 @@
+🧭 Direction Hint:
+
+The problem: You're using a Deployment for a database.
+
+Deployments are designed for STATELESS apps (web servers, APIs) where:
+- Any pod can be replaced
+- Pods are interchangeable
+- No stable identity needed
+
+Databases are STATEFUL and need:
+- Stable pod names (database-0, database-1)
+- Stable network IDs (database-0.database-service)
+- Persistent storage per pod
+- Ordered startup (primary before replicas)
+- Ordered shutdown (replicas before primary)
+
+Solution: Use StatefulSet instead of Deployment!

@@ -1,0 +1,18 @@
+# 💡 HINT 1: Check PDB Status
+
+```bash
+kubectl get pdb web-pdb -n k8squest
+```
+
+Look at `ALLOWED DISRUPTIONS` - if 0, drain is blocked.
+
+```bash
+kubectl describe pdb web-pdb -n k8squest
+```
+
+Error: `minAvailable (3) > replicas (2)`
+
+The PDB requires more pods than the deployment has!
+
+---
+**Next hint** explains PodDisruptionBudget.

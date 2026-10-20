@@ -1,0 +1,28 @@
+level: 49
+title: "PriorityClass: Preemption"
+objective: "Fix the broken resources and make the validation pass"
+name: "PriorityClass: Preemption"
+difficulty: advanced
+xp: 300
+xp_reward: 300
+world: 5
+concepts:
+  - priorityclass
+  - preemption
+  - scheduling-priority
+  - eviction
+description: |
+  Critical production pods can't schedule! Node resources are full.
+  
+  Lower-priority development pods are consuming all resources.
+  Your critical API pods need to preempt them to ensure service availability.
+  
+  Error: "0/3 nodes are available: 3 Insufficient cpu"
+  
+  Your mission: Create PriorityClass and assign to critical pods for preemption.
+
+learning_objectives:
+  - Understand PriorityClass and pod priority
+  - Configure preemption for critical workloads
+  - Balance resource allocation by priority
+  - Debug priority-based scheduling

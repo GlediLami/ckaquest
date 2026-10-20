@@ -1,0 +1,55 @@
+🎯 HINT 2: Understanding ConfigMap Keys
+
+The problem is a missing key in the ConfigMap data!
+
+📚 How ConfigMap Keys Work:
+
+**ConfigMap Structure:**
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  key1: "value1"  # ✅ These are the keys
+  key2: "value2"
+```
+
+**Pod References Keys:**
+```yaml
+env:
+- name: MY_VAR
+  valueFrom:
+    configMapKeyRef:
+      name: app-config
+      key: key1  # Must exist in ConfigMap!
+```
+
+🔍 Your Situation:
+
+**Current ConfigMap:**
+```yaml
+data:
+  app_name: "MyApp"
+  app_version: "1.0.0"
+  # ❌ Missing: database_host
+```
+
+**Pod Tries to Use:**
+```yaml
+- name: DATABASE_HOST
+  valueFrom:
+    configMapKeyRef:
+      key: database_host  # ❌ Doesn't exist!
+```
+
+**Result:** Pod can't start - required environment variable undefined
+
+💡 The Solution:
+Add the missing key to ConfigMap:
+```yaml
+data:
+  app_name: "MyApp"
+  app_version: "1.0.0"
+  database_host: "postgres.k8squest.svc.cluster.local"  # ✅ Add this!
+```

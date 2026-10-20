@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: writer-app
+  namespace: k8squest
+spec:
+  securityContext:
+    fsGroup: 1000  # ✅ Set volume ownership to group 1000
+  containers:
+  - name: app
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - |
+      echo "Running as user: $(id -u)"
+      echo "Groups: $(id -G)"
+      echo "Attempting to write to /data..."
+      
+      if ! echo "test data" > /data/test.txt; then
+        echo "ERROR: Permission denied writing to /data"
+        ls -la /data
+        exit 1
+      fi
+      
+      echo "Write successful!"
+      cat /data/test.txt
+      sleep 3600
+    volumeMounts:
+    - name: data
+      mountPath: /data
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000  # ✅ User is in group 1000, matches fsGroup
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: app-data

@@ -1,0 +1,49 @@
+# SOLUTION: Adjusted PDB to match deployment reality
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  replicas: 3  # ✅ Increased to 3 replicas
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        command: ['sh', '-c', 'echo "Web server ready - replica $(hostname)"; nginx -g "daemon off;"']
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+  namespace: k8squest
+spec:
+  minAvailable: 2  # ✅ Reduced from 3 to 2
+  # With 3 replicas, can lose 1 pod during maintenance
+  selector:
+    matchLabels:
+      app: web
+
+# Solution: Either
+# 1. Increase replicas to 3+ (we did this)
+# 2. Reduce minAvailable to ≤ replicas (we did this too)
+#
+# Result:
+# - 3 replicas running
+# - PDB requires 2 minimum
+# - Can evict 1 pod during drain
+# - Node drain succeeds!
+#
+# Alternative using maxUnavailable:
+# spec:
+#   maxUnavailable: 1  # Can be unavailable: 1 pod
+#   # Same effect: with 3 replicas, must keep 2 available

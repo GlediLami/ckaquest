@@ -1,0 +1,23 @@
+level: 41
+title: "RBAC Permission Denied"
+objective: "Fix the broken resources and make the validation pass"
+name: "RBAC Permission Denied"
+world: "Security & Production Ops"
+difficulty: "advanced"
+xp: 300
+concepts:
+  - rbac
+  - role
+  - rolebinding
+  - serviceaccount
+  - permissions
+description: |
+  An application pod is crashing with "Forbidden: pods is forbidden" errors.
+  It's trying to list pods in the namespace but doesn't have the necessary
+  RBAC permissions! The ServiceAccount exists but isn't properly configured.
+  
+learning_objectives:
+  - Understand Kubernetes RBAC (Role-Based Access Control)
+  - Learn to create Roles and RoleBindings
+  - Configure ServiceAccount permissions
+  - Debug permission denied errors

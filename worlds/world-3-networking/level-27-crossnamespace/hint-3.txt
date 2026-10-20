@@ -1,0 +1,249 @@
+✅ SOLUTION HINT
+
+Complete Fix:
+=============
+
+Here's exactly what to change in broken.yaml:
+
+**Find the Frontend Pod:**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: frontend
+    image: busybox:1.36
+    command: 
+      - 'sh'
+      - '-c'
+      - 'while true; do echo "Calling API:"; wget -q -O- http://api-service 2>&1; sleep 5; done'
+                                                              # ❌ SHORT NAME
+```
+
+**Change the Service URL:**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: frontend
+    image: busybox:1.36
+    command: 
+      - 'sh'
+      - '-c'
+      - 'while true; do echo "Calling API:"; wget -q -O- http://api-service.backend-ns.svc.cluster.local 2>&1; sleep 5; done'
+                                                              # ✅ FULL FQDN
+```
+
+**The Change:**
+```
+http://api-service
+   ↓
+http://api-service.backend-ns.svc.cluster.local
+```
+
+Step-by-Step:
+-------------
+
+1. **Edit broken.yaml:**
+   Find the frontend-app pod's command and update the URL from 
+   `http://api-service` to `http://api-service.backend-ns.svc.cluster.local`
+
+2. **Delete the old pod:**
+   ```bash
+   kubectl delete pod frontend-app -n k8squest
+   ```
+
+3. **Apply the fixed configuration:**
+   ```bash
+   kubectl apply -f broken.yaml
+   ```
+
+   You should see:
+   ```
+   namespace/backend-ns unchanged
+   pod/api-server unchanged
+   service/api-service unchanged
+   pod/frontend-app created
+   ```
+
+4. **Watch the logs:**
+   ```bash
+   kubectl logs frontend-app -n k8squest -f
+   ```
+
+   Before the fix (DNS failure):
+   ```
+   Calling API:
+   wget: bad address 'api-service'
+   Calling API:
+   wget: bad address 'api-service'
+   ```
+
+   After the fix (success):
+   ```
+   Calling API:
+   API Response from backend-ns
+   Calling API:
+   API Response from backend-ns
+   ```
+
+5. **Verify DNS resolution:**
+   ```bash
+   kubectl exec frontend-app -n k8squest -- nslookup api-service.backend-ns.svc.cluster.local
+   ```
+
+   Should return:
+   ```
+   Server:    10.96.0.10
+   Address:   10.96.0.10:53
+
+   Name:      api-service.backend-ns.svc.cluster.local
+   Address:   10.96.XXX.XXX
+   ```
+
+Why This Works:
+---------------
+
+**Kubernetes DNS Resolution:**
+
+1. **Short Name (api-service):**
+   ```
+   frontend-app is in namespace: k8squest
+   DNS search domains: k8squest.svc.cluster.local, svc.cluster.local, cluster.local
+   
+   Tries to resolve:
+   - api-service.k8squest.svc.cluster.local    ❌ (service not in k8squest)
+   - api-service.svc.cluster.local             ❌ (ambiguous)
+   - api-service.cluster.local                 ❌ (doesn't exist)
+   - api-service                               ❌ (not a valid host)
+   
+   Result: DNS resolution FAILED
+   ```
+
+2. **FQDN (api-service.backend-ns.svc.cluster.local):**
+   ```
+   Explicitly tells DNS:
+   - Look for service named: api-service
+   - In namespace: backend-ns
+   - Service type: svc
+   - Cluster domain: cluster.local
+   
+   DNS directly resolves:
+   api-service.backend-ns.svc.cluster.local → 10.96.XXX.XXX ✅
+   
+   Result: DNS resolution SUCCEEDED
+   ```
+
+Understanding FQDN Format:
+--------------------------
+
+```
+api-service.backend-ns.svc.cluster.local
+    |          |         |       |
+    |          |         |       +-- Cluster domain (default: cluster.local)
+    |          |         +---------- "svc" for Services (vs "pod" for Pods)
+    |          +-------------------- Namespace where service exists
+    +------------------------------- Service name
+```
+
+**Alternative Formats (all work):**
+
+```bash
+# Full FQDN (most explicit)
+http://api-service.backend-ns.svc.cluster.local
+
+# Short FQDN (omit cluster domain - Kubernetes fills it in)
+http://api-service.backend-ns.svc
+
+# Minimal FQDN (omit svc and cluster domain)
+http://api-service.backend-ns
+
+# SHORT NAME (only works within SAME namespace)
+http://api-service    # Only works if service is in k8squest!
+```
+
+Testing Different Formats:
+---------------------------
+
+```bash
+# Test minimal format (namespace-qualified)
+kubectl exec frontend-app -n k8squest -- wget -q -O- http://api-service.backend-ns
+
+# Test short FQDN
+kubectl exec frontend-app -n k8squest -- wget -q -O- http://api-service.backend-ns.svc
+
+# Test full FQDN (recommended)
+kubectl exec frontend-app -n k8squest -- wget -q -O- http://api-service.backend-ns.svc.cluster.local
+```
+
+All three should work! The full FQDN is most explicit and works even if cluster 
+domain is customized.
+
+Common Mistakes:
+----------------
+
+**Mistake 1: Wrong namespace**
+```yaml
+# ❌ Using wrong namespace
+http://api-service.k8squest.svc.cluster.local
+
+# ✅ Correct namespace
+http://api-service.backend-ns.svc.cluster.local
+```
+
+**Mistake 2: Typo in service name**
+```yaml
+# ❌ Typo (missing hyphen)
+http://apiservice.backend-ns.svc.cluster.local
+
+# ✅ Correct service name
+http://api-service.backend-ns.svc.cluster.local
+```
+
+**Mistake 3: Using pod name instead of service name**
+```yaml
+# ❌ Pod name (pods can't be accessed by name across namespaces)
+http://api-server.backend-ns.svc.cluster.local
+
+# ✅ Service name
+http://api-service.backend-ns.svc.cluster.local
+```
+
+Real-World Example:
+-------------------
+
+Imagine you have:
+- Frontend app in namespace: `production`
+- Database in namespace: `databases`
+- Cache in namespace: `cache`
+
+```yaml
+# Frontend connecting to database
+DATABASE_URL: "postgresql://postgres-service.databases.svc.cluster.local:5432/mydb"
+
+# Frontend connecting to cache
+REDIS_URL: "redis://redis-service.cache.svc.cluster.local:6379"
+
+# Frontend connecting to API in same namespace
+API_URL: "http://api-service:8080"    # Short name works (same namespace)
+```
+
+Validation:
+-----------
+
+Run the validation script:
+```bash
+./validate.sh
+```
+
+You should see: ✅ VALIDATION PASSED!
+
+---
+Check solution.yaml to see the complete working configuration.

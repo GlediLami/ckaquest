@@ -1,0 +1,37 @@
+# BROKEN: Pod violates restricted Pod Security Standard
+# Problem: Multiple security violations
+# Result: Pod rejected by admission controller
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+  labels:
+    pod-security.kubernetes.io/enforce: restricted  # Enforce restricted standard
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    securityContext:
+      runAsUser: 0  # ❌ Root user - violates restricted!
+      allowPrivilegeEscalation: true  # ❌ Violates restricted!
+      # ❌ Missing: runAsNonRoot, capabilities drop, seccompProfile
+      
+# Restricted Pod Security Standard requires:
+# 1. runAsNonRoot: true
+# 2. allowPrivilegeEscalation: false
+# 3. Drop ALL capabilities
+# 4. seccompProfile type RuntimeDefault or Localhost
+# 5. runAsUser must NOT be 0
+#
+# Result: Admission webhook blocks pod creation
+# Error: "pods restricted: runAsNonRoot != true, allowPrivilegeEscalation != false"

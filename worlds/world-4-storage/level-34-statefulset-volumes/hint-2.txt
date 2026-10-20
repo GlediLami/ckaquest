@@ -1,0 +1,38 @@
+🎯 HINT 2: Understanding StatefulSet Storage
+
+The problem is using a static PVC instead of volumeClaimTemplates!
+
+📚 StatefulSet Storage Patterns:
+
+**Wrong: Shared PVC (Current)**
+```yaml
+spec:
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: database-storage  # All pods share this!
+```
+
+Result: All 3 postgres pods write to SAME database files = corruption!
+
+**Correct: volumeClaimTemplates**
+```yaml
+spec:
+  volumeClaimTemplates:  # Each pod gets own PVC
+  - metadata:
+      name: database-storage
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: 5Gi
+```
+
+Result: 
+- postgres-cluster-0 gets database-storage-postgres-cluster-0
+- postgres-cluster-1 gets database-storage-postgres-cluster-1  
+- postgres-cluster-2 gets database-storage-postgres-cluster-2
+
+Each pod has its own isolated database!
+
+�� Action: Remove static PVC and volumes, add volumeClaimTemplates instead!

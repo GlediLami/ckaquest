@@ -1,0 +1,35 @@
+id: 31
+title: "PVC Stuck in Pending"
+objective: "Fix the broken resources and make the validation pass"
+name: "PVC Stuck in Pending"
+difficulty: intermediate
+xp: 250
+xp_reward: 250
+estimated_time: "15 minutes"
+
+description: |
+  Your application pod is stuck in ContainerCreating state because its PersistentVolumeClaim 
+  is in Pending status. The pod needs persistent storage to save database files, but the 
+  storage isn't being provisioned. You need to investigate why the PVC can't bind to a 
+  PersistentVolume and fix the storage configuration.
+
+learning_objectives:
+  - Understand PersistentVolume (PV) and PersistentVolumeClaim (PVC) relationship
+  - Learn how PVC binding works in Kubernetes
+  - Configure PV to match PVC requirements
+  - Understand storage capacity and access modes
+
+concepts:
+  - persistentvolume
+  - persistentvolumeclaim
+  - pvc-binding
+  - storage-capacity
+  - access-modes
+  - volume-provisioning
+
+success_criteria:
+  - PVC successfully bound to a PV
+  - PVC status changes from Pending to Bound
+  - Pod successfully starts and mounts the volume
+
+hints_available: 3

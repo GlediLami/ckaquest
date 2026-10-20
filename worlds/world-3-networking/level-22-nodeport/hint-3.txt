@@ -1,0 +1,24 @@
+✅ Solution Hint:
+
+Edit the service to add explicit NodePort:
+
+```bash
+kubectl edit svc web-nodeport -n k8squest
+```
+
+Or delete and reapply:
+```bash
+kubectl delete svc web-nodeport -n k8squest
+kubectl apply -f solution.yaml -n k8squest
+```
+
+Add this to the ports section:
+```yaml
+ports:
+- protocol: TCP
+  port: 80
+  targetPort: 80
+  nodePort: 30080  # Add this line!
+```
+
+Valid NodePort range: 30000-32767

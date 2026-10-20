@@ -1,0 +1,13 @@
+name: "Traffic to Unready Pods"
+description: "Pods receive traffic before they're ready, causing 502 errors for users"
+objective: "Add a readiness probe to prevent traffic from hitting pods too early"
+xp: 200
+difficulty: intermediate
+expected_time: 15m
+concepts:
+  - readiness probes
+  - service endpoints
+  - traffic routing
+  - pod startup
+  - HTTP probes
+  - liveness vs readiness

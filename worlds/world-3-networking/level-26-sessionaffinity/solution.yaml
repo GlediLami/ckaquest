@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: session-app-1
+  namespace: k8squest
+  labels:
+    app: session-app
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Session Pod 1"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: session-app-2
+  namespace: k8squest
+  labels:
+    app: session-app
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Session Pod 2"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: session-app-3
+  namespace: k8squest
+  labels:
+    app: session-app
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo:latest
+    args:
+      - "-text=Session Pod 3"
+      - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-service
+  namespace: k8squest
+spec:
+  selector:
+    app: session-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  sessionAffinity: ClientIP  # ✅ FIXED! Requests from same client go to same pod
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours (default)
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: k8squest
+spec:
+  containers:
+  - name: client
+    image: busybox:1.36
+    command: ['sh', '-c', 'while true; do echo "Request:"; wget -q -O- http://session-service 2>&1; sleep 2; done']

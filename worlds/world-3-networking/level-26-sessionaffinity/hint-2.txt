@@ -1,0 +1,141 @@
+🧭 DIRECTION HINT
+
+The Problem Identified:
+========================
+
+The Service is missing session affinity configuration. Without it, each request 
+can be load-balanced to ANY backend pod, causing session data to be "lost."
+
+Current Situation:
+------------------
+
+**Service (broken.yaml):**
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-service
+spec:
+  selector:
+    app: session-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  # ❌ MISSING: sessionAffinity configuration!
+```
+
+What's Happening:
+-----------------
+
+1. **Default Behavior:**
+   - Service has `sessionAffinity: None` (default)
+   - Load-balancing algorithm: Random or round-robin
+   - Each request can go to a different pod
+
+2. **With Multiple Pods:**
+   ```
+   Client Request 1 → Service → Pod 1 (user logs in, session saved in Pod 1's memory)
+   Client Request 2 → Service → Pod 2 (no session data, user appears logged out!)
+   Client Request 3 → Service → Pod 3 (no session data, user appears logged out!)
+   Client Request 4 → Service → Pod 1 (session found! User logged in again)
+   Client Request 5 → Service → Pod 2 (no session data, logged out again!)
+   ```
+
+3. **User Experience:**
+   - Intermittent authentication failures
+   - Lost shopping carts
+   - Inconsistent application state
+   - Frustration and abandoned sessions
+
+The Fix:
+--------
+
+Configure **sessionAffinity: ClientIP** to ensure requests from the same client IP 
+always go to the same backend pod.
+
+```yaml
+# Add this to your Service spec:
+spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours (optional)
+```
+
+How Session Affinity Works:
+----------------------------
+
+```yaml
+sessionAffinity: ClientIP
+```
+
+**Mechanism:**
+1. Client makes first request from IP 192.168.1.100
+2. Service picks a backend pod (e.g., Pod 2)
+3. Service remembers: "192.168.1.100 → Pod 2"
+4. All future requests from 192.168.1.100 go to Pod 2
+5. This mapping expires after `timeoutSeconds` (default: 10800s / 3 hours)
+
+**Result:**
+```
+Client Request 1 (192.168.1.100) → Pod 2 (user logs in, session saved)
+Client Request 2 (192.168.1.100) → Pod 2 ✅ (session found!)
+Client Request 3 (192.168.1.100) → Pod 2 ✅ (session found!)
+Client Request 4 (192.168.1.100) → Pod 2 ✅ (session found!)
+```
+
+All requests from the same client consistently go to the same pod!
+
+What to Do:
+-----------
+
+Edit broken.yaml and add sessionAffinity to the Service:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-service
+  namespace: k8squest
+spec:
+  selector:
+    app: session-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  sessionAffinity: ClientIP        # Add this line
+  sessionAffinityConfig:           # Optional configuration
+    clientIP:
+      timeoutSeconds: 10800        # How long to maintain affinity (3 hours)
+```
+
+Then apply:
+```bash
+kubectl apply -f broken.yaml
+kubectl get service session-service -n k8squest -o yaml | grep -A3 sessionAffinity
+```
+
+Verify:
+-------
+
+Watch the client logs after applying:
+```bash
+kubectl logs client -n k8squest -f
+```
+
+You should see ALL responses coming from the SAME pod:
+```
+Request:
+Session Pod 2
+Request:
+Session Pod 2
+Request:
+Session Pod 2
+```
+
+Instead of alternating between Pod 1, 2, and 3.
+
+---
+Read hint-3.txt if you need the exact solution.

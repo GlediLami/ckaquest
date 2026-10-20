@@ -1,0 +1,133 @@
+# 💡 HINT 2: Understanding SecurityContext
+
+## What is SecurityContext?
+
+SecurityContext defines **security settings for a pod or container**. It controls:
+- Which user/group the container runs as
+- What privileges the container has
+- File system permissions
+- Security capabilities
+
+## Key SecurityContext Fields
+
+### 1. runAsNonRoot (Boolean)
+
+```yaml
+securityContext:
+  runAsNonRoot: true
+```
+
+**What it does:**
+- Validates that container doesn't run as root (UID 0)
+- If container tries to run as root, Kubernetes blocks it
+- Security best practice for production
+
+**Why it matters:**
+- Root containers can escape to host system
+- Compromised root container = compromised node
+- Non-root limits damage from breaches
+
+### 2. runAsUser (Integer - User ID)
+
+```yaml
+securityContext:
+  runAsUser: 1000
+```
+
+**What it does:**
+- Specifies which user ID the container runs as
+- Overrides the user set in Docker image
+- Must be non-zero when runAsNonRoot: true
+
+**Common UIDs:**
+- `0` = root (don't use!)
+- `1000` = typical first non-root user
+- `65534` = nobody (minimal permissions)
+
+### 3. allowPrivilegeEscalation (Boolean)
+
+```yaml
+securityContext:
+  allowPrivilegeEscalation: false
+```
+
+**What it does:**
+- Controls if process can gain more privileges than parent
+- Prevents setuid binaries from escalating privileges
+- Essential security hardening
+
+**Why it matters:**
+- Prevents container from gaining root even if it starts as non-root
+- Blocks common privilege escalation attacks
+
+### 4. capabilities (Advanced)
+
+```yaml
+securityContext:
+  capabilities:
+    drop:
+    - ALL  # Drop all Linux capabilities
+    add:
+    - NET_BIND_SERVICE  # Only add what's needed
+```
+
+**What it does:**
+- Fine-grained control over Linux capabilities
+- Best practice: drop ALL, then add only what's needed
+
+## Your Current Configuration (Broken)
+
+```yaml
+securityContext:
+  runAsNonRoot: true  # ✅ Good - requires non-root
+  # ❌ Missing: runAsUser (what user to use?)
+  # ❌ Missing: allowPrivilegeEscalation: false
+```
+
+**The Problem:**
+- Says "must be non-root" but doesn't specify which user
+- Image defaults to root, conflicts with runAsNonRoot
+- Kubernetes rejects it
+
+## The Fix You Need
+
+```yaml
+securityContext:
+  runAsNonRoot: true  # ✅ Validate non-root
+  runAsUser: 1000  # ✅ Specify which non-root user
+  allowPrivilegeEscalation: false  # ✅ Prevent escalation
+```
+
+Now Kubernetes knows:
+1. Run as UID 1000 (non-root) ✅
+2. Verify it's not root ✅
+3. Don't allow privilege escalation ✅
+
+## Pod-level vs Container-level
+
+SecurityContext can be set at two levels:
+
+### Pod Level (applies to all containers)
+```yaml
+spec:
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 2000
+  containers:
+  - name: app
+```
+
+### Container Level (overrides pod level)
+```yaml
+spec:
+  containers:
+  - name: app
+    securityContext:
+      runAsUser: 1000  # Just this container
+```
+
+For this challenge, use **container-level** SecurityContext.
+
+---
+
+**Next hint** will show the complete solution with examples.

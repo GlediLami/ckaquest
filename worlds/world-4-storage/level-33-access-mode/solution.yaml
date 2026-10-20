@@ -1,0 +1,59 @@
+---
+# SOLUTION: Change access modes to ReadWriteMany to allow multiple nodes/pods
+# Remove pod anti-affinity since RWX allows pods to share storage across nodes
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-storage
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany  # ✅ Allows multiple nodes to mount simultaneously!
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data/shared
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-pvc
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteMany  # ✅ Request multi-node access
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-servers
+  namespace: k8squest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      # ✅ No anti-affinity needed - RWX allows pods on any nodes!
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared-content
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: shared-content
+        persistentVolumeClaim:
+          claimName: shared-pvc

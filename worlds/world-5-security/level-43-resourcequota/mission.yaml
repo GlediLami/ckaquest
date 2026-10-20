@@ -1,0 +1,29 @@
+level: 43
+title: "ResourceQuota: Quota Exceeded"
+objective: "Fix the broken resources and make the validation pass"
+name: "ResourceQuota: Quota Exceeded"
+difficulty: advanced
+xp: 300
+xp_reward: 300
+world: 5
+concepts:
+  - resourcequota
+  - limits
+  - requests
+  - namespace-quota
+description: |
+  Your production namespace has hit its resource quota limit!
+  
+  The platform team set quotas to prevent runaway resource consumption,
+  but now legitimate workloads can't start. Pods stuck in Pending state.
+  
+  Error: "exceeded quota: compute-quota, requested: requests.cpu=2"
+  
+  Your mission: Fix resource requests to work within quota limits OR
+  adjust quotas appropriately for production workloads.
+
+learning_objectives:
+  - Understand ResourceQuota constraints
+  - Configure resource requests/limits properly
+  - Balance quotas with application needs
+  - Debug quota-related scheduling failures

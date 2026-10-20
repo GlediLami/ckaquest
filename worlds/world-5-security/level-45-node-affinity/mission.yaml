@@ -1,0 +1,28 @@
+level: 45
+title: "Node Affinity: Scheduling Mismatch"
+objective: "Fix the broken resources and make the validation pass"
+name: "Node Affinity: Scheduling Mismatch"
+difficulty: advanced
+xp: 300
+xp_reward: 300
+world: 5
+concepts:
+  - node-affinity
+  - required-affinity
+  - preferred-affinity
+  - node-labels
+description: |
+  Your GPU workload won't schedule! The pod is stuck in Pending state.
+  
+  The pod has a nodeAffinity requirement for GPU nodes, but the affinity
+  rule doesn't match any nodes in the cluster.
+  
+  Error: "0/3 nodes are available: 3 node(s) didn't match Pod's node affinity"
+  
+  Your mission: Fix the nodeAffinity selector to match actual node labels.
+
+learning_objectives:
+  - Understand required vs preferred affinity
+  - Configure nodeAffinity selectors correctly
+  - Match node label keys and values
+  - Debug scheduling failures

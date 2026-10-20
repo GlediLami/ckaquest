@@ -1,0 +1,13 @@
+name: "HPA Can't Scale"
+description: "HorizontalPodAutoscaler fails to scale pods due to missing metrics"
+objective: "Install metrics-server so HPA can read CPU/memory metrics and scale"
+xp: 250
+difficulty: intermediate  
+expected_time: 18m
+concepts:
+  - HorizontalPodAutoscaler
+  - metrics-server
+  - CPU metrics
+  - autoscaling
+  - kubectl top
+  - resource requests

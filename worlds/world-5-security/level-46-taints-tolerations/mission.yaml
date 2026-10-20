@@ -1,0 +1,28 @@
+level: 46
+title: "Taints & Tolerations: NoSchedule"
+objective: "Fix the broken resources and make the validation pass"
+name: "Taints & Tolerations: NoSchedule"
+difficulty: advanced
+xp: 350
+xp_reward: 350
+world: 5
+concepts:
+  - taints
+  - tolerations
+  - noschedule
+  - noexecute
+description: |
+  Your application pods won't schedule! Nodes are tainted for dedicated workloads.
+  
+  All nodes have a taint "dedicated=gpu:NoSchedule" to reserve them for GPU workloads.
+  Your regular application doesn't have the matching toleration.
+  
+  Error: "0/3 nodes are available: 3 node(s) had untolerated taint"
+  
+  Your mission: Add tolerations to allow scheduling on tainted nodes.
+
+learning_objectives:
+  - Understand taints and tolerations
+  - Configure tolerations correctly
+  - Differentiate NoSchedule, PreferNoSchedule, NoExecute
+  - Debug taint-related scheduling failures

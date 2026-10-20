@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+---
+# ❌ BROKEN: PVC requests 5Gi but PV only provides 1Gi
+# Also, PVC requests storage class "fast" but PV has "standard"
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: app-storage
+spec:
+  capacity:
+    storage: 1Gi  # ❌ Too small! PVC needs 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard  # ❌ Wrong class! PVC needs "fast"
+  hostPath:
+    path: /tmp/k8squest-data
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-storage-claim
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast  # ❌ No PV with this storage class!
+  resources:
+    requests:
+      storage: 5Gi  # ❌ No PV has this much capacity!
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+  namespace: k8squest
+spec:
+  containers:
+  - name: db
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo "Database running" && sleep 3600']
+    volumeMounts:
+    - name: storage
+      mountPath: /data
+  volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: app-storage-claim  # References pending PVC

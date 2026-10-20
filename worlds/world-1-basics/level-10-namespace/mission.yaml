@@ -1,0 +1,12 @@
+name: "Namespace Confusion"
+description: "Resources deployed to wrong namespace, causing connectivity failures"
+objective: "Move the resources to the correct namespace"
+xp: 200
+difficulty: intermediate
+expected_time: 15m
+concepts:
+  - Namespaces
+  - Resource isolation
+  - kubectl namespaces
+  - Cross-namespace communication
+  - Namespace best practices

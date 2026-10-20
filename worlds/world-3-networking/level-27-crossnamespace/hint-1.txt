@@ -1,0 +1,78 @@
+🔍 OBSERVATION HINT
+
+What to Look For:
+==================
+
+Your frontend application is trying to call an API service, but it can't connect. 
+The error message says the host cannot be resolved—a classic DNS issue.
+
+Check These Areas:
+------------------
+
+1. **Frontend Pod Logs**
+   Check what error the frontend is seeing:
+   ```bash
+   kubectl logs frontend-app -n k8squest
+   ```
+
+   Look for:
+   • "could not resolve host"
+   • "bad address"
+   • "name or service not known"
+
+2. **Namespaces**
+   Check which namespaces exist:
+   ```bash
+   kubectl get namespaces
+   ```
+
+   Where is the frontend pod?
+   ```bash
+   kubectl get pod frontend-app -o wide
+   ```
+
+   Where is the backend service?
+   ```bash
+   kubectl get service --all-namespaces
+   ```
+
+3. **Service Names**
+   What service name is the frontend trying to access?
+   ```bash
+   kubectl get pod frontend-app -n k8squest -o yaml | grep command -A5
+   ```
+
+   Does that service exist in the k8squest namespace?
+   ```bash
+   kubectl get service api-service -n k8squest
+   ```
+
+   What about in other namespaces?
+   ```bash
+   kubectl get service api-service -n backend-ns
+   ```
+
+🎯 Key Questions:
+-----------------
+
+• What namespace is the frontend pod in?
+• What namespace is the backend service in?
+• Are they in the SAME namespace or DIFFERENT namespaces?
+• What DNS name is the frontend using to reach the backend?
+
+💭 Think About:
+---------------
+
+Kubernetes DNS works like your phone's contacts:
+
+- **Short name** (like "John"): Only works if John is in your current group
+- **Full name** (like "John from Marketing"): Works across different departments
+
+Similarly:
+- **Short service name** ("api-service"): Only works within same namespace
+- **Qualified name** ("api-service.backend-ns"): Works across namespaces
+
+The frontend is trying to call "api-service" but it's in a different namespace!
+
+---
+Read hint-2.txt when you need more specific direction.

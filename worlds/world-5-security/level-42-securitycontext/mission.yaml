@@ -1,0 +1,29 @@
+level: 42
+title: "SecurityContext: Privilege Escalation"
+objective: "Fix the broken resources and make the validation pass"
+name: "SecurityContext: Privilege Escalation"
+difficulty: intermediate
+xp: 250
+xp_reward: 250
+world: 5
+concepts:
+  - securitycontext
+  - privilege-escalation
+  - runas-nonroot
+  - container-security
+description: |
+  Your security scanner detected a critical vulnerability: containers running as root!
+  
+  A web application is deployed, but the security policy requires:
+  1. Container must run as non-root user
+  2. Privilege escalation must be disabled
+  
+  The pod keeps crashing with "container has runAsNonRoot and image will run as root"
+  
+  Your mission: Configure SecurityContext to run containers securely as non-root.
+
+learning_objectives:
+  - Understand container user contexts
+  - Configure runAsNonRoot and runAsUser
+  - Prevent privilege escalation
+  - Apply security best practices

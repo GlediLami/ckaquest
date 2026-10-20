@@ -1,0 +1,40 @@
+# BROKEN: No priority, critical pods can't preempt dev pods
+# Problem: All pods have default priority, no preemption
+# Result: Critical pods stuck Pending when resources full
+
+# Low priority dev pods consuming resources
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-workload-1
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+
+---
+# Critical production pod with no priority
+apiVersion: v1
+kind: Pod
+metadata:
+  name: critical-api
+  namespace: k8squest
+spec:
+  containers:
+  - name: api
+    image: nginx:latest
+    resources:
+      requests:
+        cpu: "500m"  # Needs resources
+        memory: "512Mi"
+  # ❌ No priorityClassName!
+  # ❌ No PriorityClass defined!
+  # Can't preempt dev-workload-1 even though it's critical
+  
+# Result: If resources full, critical-api stays Pending
+# Error: "Insufficient cpu" - can't evict lower priority pods

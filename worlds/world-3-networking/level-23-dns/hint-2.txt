@@ -1,0 +1,10 @@
+🧭 Direction Hint:
+
+Kubernetes DNS creates records for services in format:
+`<service-name>.<namespace>.svc.cluster.local`
+
+Within same namespace, you can use short name: `<service-name>`
+
+The client is using "database" but service is "database-service".
+
+You need to fix the client pod to use the correct service name!

@@ -1,0 +1,46 @@
+# 💡 HINT 2: Taints & Tolerations
+
+## What Are Taints?
+
+Taints repel pods from nodes (unless pods tolerate the taint).
+
+```bash
+kubectl taint nodes <node> key=value:Effect
+```
+
+## Taint Effects
+
+- **NoSchedule**: Don't schedule new pods
+- **PreferNoSchedule**: Try not to schedule (soft)
+- **NoExecute**: Don't schedule + evict existing pods
+
+## What Are Tolerations?
+
+Tolerations allow pods to schedule on tainted nodes.
+
+```yaml
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "gpu"
+  effect: "NoSchedule"
+```
+
+## Your Situation
+
+**Node taint:**
+```
+dedicated=gpu:NoSchedule
+```
+
+**Pod needs:**
+```yaml
+tolerations:
+- key: "dedicated"  # Match key
+  value: "gpu"  # Match value  
+  effect: "NoSchedule"  # Match effect
+  operator: "Equal"  # Exact match
+```
+
+---
+**Next hint** shows the complete solution.

@@ -1,0 +1,27 @@
+level: 37
+title: "Secret Encoding vs Encryption"
+objective: "Understand why base64 encoding is NOT security"
+name: "Secret Encoding vs Encryption"
+world: "Storage & Stateful Apps"
+difficulty: "intermediate"
+xp: 250
+concepts:
+  - secrets
+  - base64-encoding
+  - encryption-at-rest
+  - secret-management
+  - security
+description: |
+  The database credentials are stored in a Kubernetes Secret using base64 encoding.
+  But here's the critical lesson: base64 is NOT encryption - it's just encoding!
+  Anyone with kubectl access can decode these "secrets" instantly.
+  
+  This level demonstrates why proper secret management requires more than just
+  Kubernetes Secrets. You need encryption-at-rest, RBAC, and ideally external
+  secret managers like Vault or Sealed Secrets.
+  
+learning_objectives:
+  - Understand the difference between encoding and encryption
+  - Learn why base64 provides zero security
+  - Discover how easily Secrets can be decoded
+  - Explore proper secret management strategies

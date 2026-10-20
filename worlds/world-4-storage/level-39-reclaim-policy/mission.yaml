@@ -1,0 +1,22 @@
+level: 39
+title: "Reclaim Policy Data Loss"
+objective: "Fix the broken resources and make the validation pass"
+name: "Reclaim Policy Data Loss"
+world: "Storage & Stateful Apps"
+difficulty: "intermediate"
+xp: 250
+concepts:
+  - reclaim-policy
+  - persistent-volume
+  - data-retention
+  - delete-vs-retain
+description: |
+  Important data was lost when a PVC was deleted! The PV had a "Delete" reclaim
+  policy, so when the claim was removed, all the data was wiped. For production
+  data, we need a safer policy!
+  
+learning_objectives:
+  - Understand PV reclaim policies
+  - Learn difference between Delete and Retain
+  - Prevent accidental data loss
+  - Configure appropriate retention policies

@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+---
+# ✅ FIXED: NodePort type works in local clusters
+# Exposes service on a static port on each node (30000-32767)
+# Accessible via <NodeIP>:<NodePort>
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: k8squest
+spec:
+  type: NodePort  # ✅ Works in local clusters!
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080  # Optional: specify port (default: auto-assign 30000-32767)

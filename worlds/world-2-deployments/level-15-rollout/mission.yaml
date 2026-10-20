@@ -1,0 +1,13 @@
+name: "Zero-Downtime Deployment Failure"
+description: "Rolling update with maxUnavailable: 100% causes complete service outage"
+objective: "Fix the rollout strategy to prevent all pods from being down simultaneously"
+xp: 200
+difficulty: intermediate
+expected_time: 12m
+concepts:
+  - rolling updates
+  - maxUnavailable
+  - maxSurge
+  - deployment strategy
+  - zero-downtime deployments
+  - availability

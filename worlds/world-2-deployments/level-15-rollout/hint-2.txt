@@ -1,0 +1,13 @@
+🧭 Direction Hint:
+
+The problem: `maxUnavailable: 100%` with `maxSurge: 0`
+
+This means:
+- maxUnavailable: 100% → Kubernetes can terminate ALL 3 pods at once (100% of 3 = 3)
+- maxSurge: 0 → Kubernetes cannot create extra pods during rollout
+
+Result: All old pods get terminated, then new pods start → COMPLETE DOWNTIME!
+
+For zero-downtime deployments, you need:
+- maxUnavailable < 100% (ensure some pods always running)
+- OR maxSurge > 0 (allow extra pods during transition)

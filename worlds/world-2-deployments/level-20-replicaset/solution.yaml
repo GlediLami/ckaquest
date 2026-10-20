@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment  # Fixed: Use Deployment (manages ReplicaSets for you)
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: web
+        image: hashicorp/http-echo:latest  # Updated version
+        args: ["-text=Version 2.0", "-listen=:8080"]
+        ports:
+        - containerPort: 8080
+# Benefits of Deployment:
+# 1. Automatic rolling updates
+# 2. Easy rollback (kubectl rollout undo)
+# 3. Declarative updates (just change image and apply)
+# 4. Automatically manages ReplicaSets
+# 5. Rollout history

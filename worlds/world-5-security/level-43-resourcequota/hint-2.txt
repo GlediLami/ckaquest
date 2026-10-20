@@ -1,0 +1,155 @@
+# 💡 HINT 2: Understanding ResourceQuota
+
+## What is ResourceQuota?
+
+ResourceQuota sets **hard limits** on resource consumption per namespace.
+
+**Purpose:**
+- **Multi-tenancy:** Fair resource sharing
+- **Cost control:** Prevent runaway spending
+- **Stability:** Prevent one app from starving others
+- **Planning:** Enforce capacity planning
+
+## ResourceQuota Types
+
+### 1. Compute Resources
+
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+spec:
+  hard:
+    requests.cpu: "2"  # Total CPU requests
+    requests.memory: "2Gi"  # Total memory requests
+    limits.cpu: "4"  # Total CPU limits
+    limits.memory: "4Gi"  # Total memory limits
+```
+
+**What this means:**
+- All pods combined can request max 2 CPUs
+- All pods combined can request max 2Gi memory
+- All pods combined can limit max 4 CPUs
+- All pods combined can limit max 4Gi memory
+
+### 2. Object Count Quotas
+
+```yaml
+spec:
+  hard:
+    pods: "10"  # Max 10 pods
+    services: "5"  # Max 5 services
+    persistentvolumeclaims: "4"  # Max 4 PVCs
+```
+
+### 3. Storage Quotas
+
+```yaml
+spec:
+  hard:
+    requests.storage: "100Gi"  # Total storage requests
+```
+
+## Requests vs Limits
+
+### Requests (Guaranteed)
+
+```yaml
+resources:
+  requests:
+    cpu: "500m"  # Guaranteed 0.5 CPU
+    memory: "512Mi"  # Guaranteed 512Mi memory
+```
+
+**Purpose:**
+- Minimum guaranteed resources
+- Used for pod scheduling
+- Node must have this available
+
+### Limits (Maximum)
+
+```yaml
+resources:
+  limits:
+    cpu: "1"  # Max 1 CPU (can burst up to this)
+    memory: "1Gi"  # Max 1Gi (killed if exceeded)
+```
+
+**Purpose:**
+- Maximum the container can use
+- Prevents resource hogging
+- CPU: throttled if exceeded
+- Memory: pod killed if exceeded (OOMKilled)
+
+## CPU Units
+
+```yaml
+cpu: "1"      # 1 full CPU core
+cpu: "500m"   # 500 millicores = 0.5 CPU
+cpu: "100m"   # 100 millicores = 0.1 CPU
+cpu: "2500m"  # 2.5 CPU cores
+```
+
+**1 CPU = 1000 millicores (m)**
+
+## Memory Units
+
+```yaml
+memory: "1Gi"    # 1 Gibibyte (1024^3 bytes)
+memory: "512Mi"  # 512 Mebibytes (1024^2 bytes)
+memory: "1G"     # 1 Gigabyte (1000^3 bytes)
+memory: "512M"   # 512 Megabytes (1000^2 bytes)
+```
+
+**Prefer:** Gi, Mi (binary units) over G, M
+
+## How Quotas Are Enforced
+
+1. **Pod creation:** Kubernetes checks if adding this pod exceeds quota
+2. **If within quota:** Pod created, quota usage updated
+3. **If exceeds quota:** Pod rejected with error
+
+## Checking Quota Status
+
+```bash
+kubectl describe resourcequota compute-quota -n k8squest
+```
+
+Output shows:
+```
+Resource         Used    Hard
+--------         ----    ----
+requests.cpu     2500m   2        ← PROBLEM: 2.5 > 2!
+requests.memory  1Gi     2Gi      ← OK: 1 < 2
+```
+
+## Your Current Situation
+
+**Quota allows:**
+- 2 CPUs total for all pods
+
+**Your pod wants:**
+- 2.5 CPUs
+
+**Math:** 2.5 > 2 = **REJECTED**
+
+## The Fix
+
+Reduce the pod's CPU request:
+
+```yaml
+resources:
+  requests:
+    cpu: "500m"  # ✅ 0.5 CPUs (well under 2 CPU quota)
+    memory: "512Mi"  # ✅ 512Mi (well under 2Gi quota)
+  limits:
+    cpu: "1"  # Can burst to 1 CPU
+    memory: "1Gi"
+```
+
+**Now:** 0.5 < 2 = **ACCEPTED** ✅
+
+---
+
+**Next hint** provides the complete solution.

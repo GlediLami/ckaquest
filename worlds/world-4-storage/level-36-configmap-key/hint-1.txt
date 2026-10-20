@@ -1,0 +1,33 @@
+🔍 HINT 1: Observing the Problem
+
+Let's find the missing ConfigMap key:
+
+1️⃣ Check pod status:
+   kubectl get pod web-app -n k8squest
+   kubectl describe pod web-app -n k8squest
+   
+   Look at Events - what error do you see?
+
+2️⃣ Check the ConfigMap:
+   kubectl get configmap app-config -n k8squest
+   kubectl describe configmap app-config -n k8squest
+   
+   What keys exist in the ConfigMap?
+
+3️⃣ Check what the pod is trying to use:
+   kubectl get pod web-app -n k8squest -o yaml | grep -A 5 "configMapKeyRef"
+   
+   What keys is the pod requesting?
+
+4️⃣ Compare the two:
+   - What keys exist in ConfigMap?
+   - What keys does the pod need?
+   - Which key is missing?
+
+📝 Key Observation:
+The pod references a ConfigMap key "database_host" that doesn't exist!
+
+🤔 Questions:
+• What keys are currently in the ConfigMap?
+• What key is the pod looking for?
+• How do you add a key to a ConfigMap?

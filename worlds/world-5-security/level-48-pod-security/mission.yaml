@@ -1,0 +1,28 @@
+level: 48
+title: "Pod Security Standards: Restricted"
+objective: "Fix the broken resources and make the validation pass"
+name: "Pod Security Standards: Restricted"
+difficulty: advanced
+xp: 350
+xp_reward: 350
+world: 5
+concepts:
+  - pod-security-standards
+  - pod-security-admission
+  - restricted
+  - securitycontext
+description: |
+  Your namespace enforces the "restricted" Pod Security Standard!
+  
+  Pods must meet strict security requirements, but your pod violates
+  the restricted policy by running as root with privilege escalation enabled.
+  
+  Error: "pods must not set runAsUser to 0"
+  
+  Your mission: Update pod to meet restricted security standards.
+
+learning_objectives:
+  - Understand Pod Security Standards (privileged, baseline, restricted)
+  - Configure pods to meet restricted requirements
+  - Apply security best practices
+  - Debug pod security admission failures

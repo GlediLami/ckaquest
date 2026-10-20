@@ -1,0 +1,26 @@
+💡 Near-Solution Hint:
+
+The proper fix is to create the service that the init container is waiting for!
+
+Steps to fix:
+1. Create a service named "backend-service":
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: backend-service
+     namespace: k8squest
+   spec:
+     selector:
+       app: backend
+     ports:
+     - protocol: TCP
+       port: 80
+       targetPort: 8080
+   ```
+
+2. Apply the service: `kubectl apply -f <your-service-file.yaml>`
+
+3. Once the service exists, the init container's nslookup will succeed and complete!
+
+The pod will automatically proceed to the main container once the init container completes.

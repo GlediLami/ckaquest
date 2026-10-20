@@ -1,0 +1,13 @@
+name: "ReplicaSet Without Deployment"
+description: "Manual ReplicaSet makes updates difficult and breaks automation"
+objective: "Convert the standalone ReplicaSet to a Deployment for better management"
+xp: 150
+difficulty: beginner
+expected_time: 10m
+concepts:
+  - ReplicaSet
+  - Deployment
+  - resource ownership
+  - declarative updates
+  - rollout management
+  - abstraction layers

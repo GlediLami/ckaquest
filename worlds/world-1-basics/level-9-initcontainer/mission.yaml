@@ -1,0 +1,12 @@
+name: "Init Container Gridlock"
+description: "Pod stuck in Init state because the init container never completes"
+objective: "Fix the init container so the main container can start"
+xp: 200
+difficulty: intermediate
+expected_time: 15m
+concepts:
+  - Init containers
+  - Pod initialization
+  - Container dependencies
+  - kubectl describe
+  - Init container debugging

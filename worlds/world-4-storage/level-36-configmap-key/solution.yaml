@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: k8squest
+data:
+  app_name: "MyApp"
+  app_version: "1.0.0"
+  database_host: "postgres.k8squest.svc.cluster.local"  # ✅ Added missing key!
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - |
+      echo "App: $APP_NAME"
+      echo "Version: $APP_VERSION"
+      echo "DB Host: $DATABASE_HOST"
+      if [ -z "$DATABASE_HOST" ]; then
+        echo "ERROR: DATABASE_HOST not configured!"
+        exit 1
+      fi
+      echo "App started successfully"
+      sleep 3600
+    env:
+    - name: APP_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: app_name
+    - name: APP_VERSION
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: app_version
+    - name: DATABASE_HOST
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: database_host  # ✅ Now this key exists!

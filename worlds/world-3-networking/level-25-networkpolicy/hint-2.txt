@@ -1,0 +1,110 @@
+🧭 DIRECTION HINT
+
+The Problem Identified:
+========================
+
+The NetworkPolicy has the WRONG label selector. It's looking for pods with a 
+label that doesn't match the frontend pod.
+
+Current Situation:
+------------------
+
+**Frontend Pod:**
+```yaml
+metadata:
+  labels:
+    app: frontend    # Frontend has this label
+    tier: web
+```
+
+**NetworkPolicy (broken.yaml):**
+```yaml
+spec:
+  podSelector:
+    matchLabels:
+      app: backend      # Applies to backend pods
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: admin-tool   # ❌ Only allows traffic from "admin-tool"!
+    ports:
+    - protocol: TCP
+      port: 8080
+```
+
+What's Happening:
+-----------------
+
+1. **NetworkPolicy applies to:** Pods with `app: backend` ✅ (correct target)
+2. **NetworkPolicy allows traffic from:** Pods with `app: admin-tool` ❌
+3. **Frontend pod has label:** `app: frontend` ✅
+4. **Match?** NO! `frontend` ≠ `admin-tool`
+5. **Result:** All traffic from frontend is DENIED
+
+The Fix:
+--------
+
+Change the NetworkPolicy to allow traffic from pods with label `app: frontend` 
+instead of `app: admin-tool`.
+
+```yaml
+# BEFORE (broken):
+ingress:
+- from:
+  - podSelector:
+      matchLabels:
+        app: admin-tool    # Wrong label
+
+# AFTER (fixed):
+ingress:
+- from:
+  - podSelector:
+      matchLabels:
+        app: frontend      # Correct label
+```
+
+NetworkPolicy Anatomy:
+----------------------
+
+```yaml
+spec:
+  podSelector:           # WHO this policy applies TO
+    matchLabels:
+      app: backend       # Target: backend pods
+  
+  policyTypes:
+  - Ingress              # Controls INCOMING traffic
+  
+  ingress:
+  - from:                # WHO can send traffic TO the target
+    - podSelector:
+        matchLabels:
+          app: frontend  # Source: frontend pods
+    ports:
+    - protocol: TCP
+      port: 8080         # WHAT port is allowed
+```
+
+**Translation:**
+- Apply this policy to pods with `app: backend`
+- Allow incoming traffic from pods with `app: frontend`
+- Only on TCP port 8080
+
+What to Do:
+-----------
+
+1. Edit broken.yaml
+2. Find the NetworkPolicy's `ingress.from.podSelector.matchLabels.app` field
+3. Change it from `admin-tool` to `frontend`
+4. Apply the changes:
+
+```bash
+kubectl apply -f broken.yaml
+kubectl logs frontend -n k8squest
+```
+
+You should see "API Response: Success" instead of timeouts!
+
+---
+Read hint-3.txt if you need the exact solution.

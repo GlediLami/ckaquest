@@ -1,0 +1,47 @@
+✅ HINT 3: Complete Solution
+
+Fix: Use volumeClaimTemplates instead of static PVC
+
+📝 Key Changes:
+
+Remove the separate PVC definition and volumes section:
+```yaml
+# ❌ Delete these:
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-storage
+  
+# And delete from spec:
+volumes:
+- name: database-storage
+  persistentVolumeClaim:
+    claimName: database-storage
+```
+
+Add volumeClaimTemplates to StatefulSet:
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+spec:
+  volumeClaimTemplates:  # ✅ Add this at spec level
+  - metadata:
+      name: database-storage
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard
+```
+
+🚀 Apply:
+```bash
+kubectl delete -f broken.yaml
+kubectl apply -f solution.yaml
+kubectl get pvc -n k8squest
+# Should see 3 PVCs: one per pod
+```
+
+💡 volumeClaimTemplates automatically creates a PVC for each pod!

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-proxy
+  namespace: k8squest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: db-proxy
+  template:
+    metadata:
+      labels:
+        app: db-proxy
+    spec:
+      containers:
+      - name: proxy
+        image: hashicorp/http-echo:latest
+        args: ["-text=DB Proxy", "-listen=:8080"]
+        ports:
+        - containerPort: 8080
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: db-proxy-pdb
+  namespace: k8squest
+spec:
+  minAvailable: 2  # Fixed: Allow 1 pod to be evicted, keep 2 running
+  selector:
+    matchLabels:
+      app: db-proxy

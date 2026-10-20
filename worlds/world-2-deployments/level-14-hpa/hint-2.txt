@@ -1,0 +1,10 @@
+🧭 Direction Hint:
+
+The error likely says: "unable to get metrics for resource cpu" or "the server could not find the requested resource (get services http:heapster:)"
+
+This means Kubernetes can't get CPU/memory metrics because **metrics-server** is not installed!
+
+Check if metrics-server exists:
+`kubectl get deployment metrics-server -n kube-system`
+
+If you get "NotFound", that's your problem. HPA needs metrics-server to function.

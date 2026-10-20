@@ -1,0 +1,37 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate the RBAC permission issue:
+
+1️⃣ Check pod status and logs:
+   kubectl get pod pod-lister -n k8squest
+   kubectl logs pod-lister -n k8squest
+   
+   What error do you see? "Forbidden"?
+
+2️⃣ Check ServiceAccount:
+   kubectl get serviceaccount pod-reader -n k8squest
+   
+   ServiceAccount exists, but does it have permissions?
+
+3️⃣ Check for Role:
+   kubectl get role -n k8squest
+   
+   Is there a Role defined?
+
+4️⃣ Check for RoleBinding:
+   kubectl get rolebinding -n k8squest
+   
+   Is there a RoleBinding connecting ServiceAccount to Role?
+
+5️⃣ Test permissions directly:
+   kubectl auth can-i list pods --as=system:serviceaccount:k8squest:pod-reader -n k8squest
+   
+   Does it say "no"?
+
+📝 Key Observation:
+The ServiceAccount exists but has NO RBAC permissions! Missing Role and RoleBinding.
+
+🤔 Questions:
+• What is RBAC?
+• What's the difference between Role and RoleBinding?
+• How do you grant permissions to a ServiceAccount?

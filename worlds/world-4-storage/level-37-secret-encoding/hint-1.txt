@@ -1,0 +1,38 @@
+🔍 HINT 1: Understanding Secret Encoding
+
+⚠️ **Critical Discovery:** Secrets use base64 encoding, but that's NOT encryption!
+
+Let's investigate why this is a security issue:
+
+1️⃣ Check pod status:
+   kubectl get pod database-client -n k8squest
+   
+   The pod should be Running (the Secret is valid!)
+
+2️⃣ Check the Secret:
+   kubectl get secret db-credentials -n k8squest -o yaml
+   
+   Look at the "data" section - values appear encoded with base64
+
+3️⃣ Decode the username:
+   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}' | base64 -d
+   
+   Output: admin
+
+4️⃣ Decode the password:
+   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.password}' | base64 -d
+   
+   Output: secretpass123
+
+📝 Key Observation:
+Base64 encoding is just ENCODING, not ENCRYPTION!
+Anyone with kubectl access can decode secrets instantly.
+
+🤔 The Problem:
+• base64 looks secure but provides ZERO security
+• It's just encoding (like UTF-8 or ASCII)
+• kubectl get secret ... | base64 -d reveals everything
+• Secrets stored in etcd are also just base64 (not encrypted by default)
+
+💡 What You Need to Learn:
+How is base64 encoding different from encryption, and what should you use instead?

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet  # PROBLEM! Should use Deployment instead
+metadata:
+  name: web-app-rs
+  namespace: k8squest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: web
+        image: hashicorp/http-echo:latest  # Old version
+        args: ["-text=Version 1.0", "-listen=:8080"]
+        ports:
+        - containerPort: 8080
+# Issues with standalone ReplicaSet:
+# 1. No rolling updates (must manually create new RS and delete old)
+# 2. No rollback capability
+# 3. No declarative updates (can't just change image tag)
+# 4. Must manually manage multiple ReplicaSets during updates

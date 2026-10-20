@@ -1,0 +1,22 @@
+level: 40
+title: "EmptyDir Lost on Restart"
+objective: "Fix the broken resources and make the validation pass"
+name: "EmptyDir Lost on Restart"
+world: "Storage & Stateful Apps"
+difficulty: "intermediate"
+xp: 250
+concepts:
+  - emptydir
+  - ephemeral-storage
+  - persistent-storage
+  - volume-lifecycle
+description: |
+  Data keeps disappearing when pods restart! The application is using an emptyDir
+  volume, which is ephemeral and gets wiped on pod restart. For persistent data,
+  we need a PersistentVolumeClaim instead!
+  
+learning_objectives:
+  - Understand emptyDir vs PVC differences
+  - Learn when to use ephemeral vs persistent storage
+  - Recognize data persistence requirements
+  - Choose appropriate volume types

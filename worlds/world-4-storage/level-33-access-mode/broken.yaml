@@ -1,0 +1,60 @@
+---
+# SCENARIO: Multiple pods trying to share storage
+# ReadWriteOnce means only ONE node can mount (would fail in real multi-node cluster)
+# ⚠️  NOTE: In Kind (single-node), this appears to work but uses wrong access mode!
+# In production multi-node cluster, pods on different nodes would fail to mount.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-storage
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce  # ❌ Wrong! Only allows one node to mount at a time
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data/shared
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-pvc
+  namespace: k8squest
+spec:
+  accessModes:
+    - ReadWriteOnce  # ❌ Wrong! Should be ReadWriteMany for shared access
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-servers
+  namespace: k8squest
+spec:
+  replicas: 3  # Multiple pods need shared access
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared-content
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: shared-content
+        persistentVolumeClaim:
+          claimName: shared-pvc

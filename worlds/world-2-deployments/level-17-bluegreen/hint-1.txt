@@ -1,0 +1,17 @@
+🔍 Observation Hint:
+
+Check the deployments:
+`kubectl get deployments -n k8squest`
+
+You should see app-blue and app-green, both with 3/3 replicas.
+
+Check the service:
+`kubectl get service app-service -n k8squest -o yaml | grep -A 5 selector`
+
+Which version is it pointing to?
+
+Check the endpoints:
+`kubectl get endpoints app-service -n k8squest`
+
+Try to access the service and see which version responds:
+`kubectl run -it --rm test --image=busybox --restart=Never -n k8squest -- wget -q -O- app-service`

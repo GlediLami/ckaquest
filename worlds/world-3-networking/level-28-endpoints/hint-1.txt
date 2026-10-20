@@ -1,0 +1,67 @@
+🔍 OBSERVATION HINT
+
+What to Look For:
+==================
+
+Your service exists and pods are running, but you're seeing intermittent errors when 
+pods restart. Sometimes requests work, sometimes they fail with connection errors.
+
+Check These Areas:
+------------------
+
+1. **Service Endpoints**
+   Check what endpoints the service has:
+   ```bash
+   kubectl get endpoints web-service -n k8squest
+   ```
+
+   Do you see pod IPs listed?
+
+2. **Pod Status**
+   Check pod readiness:
+   ```bash
+   kubectl get pods -n k8squest -l app=web
+   ```
+
+   Look at the READY column:
+   • 1/1 = Ready
+   • 0/1 = Not ready
+
+3. **Pod Events**
+   Check pod events:
+   ```bash
+   kubectl describe pod web-app-1 -n k8squest
+   ```
+
+   Look for:
+   • "Readiness probe failed"
+   • "Readiness probe succeeded"
+   • Or... NO readiness probe messages at all?
+
+4. **The Problem**
+   If you see NO readiness probe messages, that's the issue! Without a readiness 
+   probe, Kubernetes doesn't know when pods are actually ready.
+
+🎯 Key Questions:
+-----------------
+
+• When a pod starts, how does Kubernetes know it's ready to serve traffic?
+• What happens if traffic is sent to a pod that's still initializing?
+• How do pods get added to service endpoints?
+
+💭 Think About:
+---------------
+
+Imagine ordering food delivery:
+
+- **Without readiness check:** Driver delivers immediately after restaurant accepts order
+  - Result: You get your food before it's cooked! ❌
+
+- **With readiness check:** Driver waits until food is actually ready
+  - Result: You get hot, properly prepared food ✅
+
+Similarly, without a readiness probe, Kubernetes sends traffic to pods immediately 
+when they start, even if the application inside isn't ready yet!
+
+---
+Read hint-2.txt when you need more specific direction.

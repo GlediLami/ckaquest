@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod
+  namespace: k8squest
+  labels:
+    app: backend
+    tier: api
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: k8squest
+spec:
+  selector:
+    app: backend  # ✅ FIXED! Matches pod label
+    tier: api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+---
+# Test pod to verify connectivity
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-client
+  namespace: k8squest
+spec:
+  containers:
+  - name: curl
+    image: curlimages/curl:latest
+    command: ["sleep", "3600"]

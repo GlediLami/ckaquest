@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database
+  namespace: k8squest
+  labels:
+    app: db
+spec:
+  containers:
+  - name: postgres
+    image: postgres:13
+    env:
+    - name: POSTGRES_PASSWORD
+      value: "secretpassword"
+    ports:
+    - containerPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: k8squest
+spec:
+  selector:
+    app: db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+---
+# Client pod trying to connect
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-client
+  namespace: k8squest
+spec:
+  containers:
+  - name: client
+    image: postgres:13
+    command: ["sh", "-c"]
+    args:
+    # ❌ WRONG! Using wrong DNS name
+    - |
+      while true; do
+        echo "Attempting connection..."
+        pg_isready -h database -p 5432 || echo "Connection failed"
+        sleep 10
+      done

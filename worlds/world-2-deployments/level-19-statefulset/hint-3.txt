@@ -1,0 +1,43 @@
+💡 Near-Solution Hint:
+
+Convert the Deployment to a StatefulSet.
+
+Steps:
+1. Delete the existing Deployment:
+   `kubectl delete deployment database -n k8squest`
+
+2. Create a StatefulSet instead:
+   `kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  serviceName: "database-service"  # Important!
+  replicas: 3
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: db
+        image: hashicorp/http-echo:latest
+        args:
+          - "-text=Database Pod"
+          - "-listen=:8080"
+        ports:
+        - containerPort: 8080
+EOF`
+
+3. Watch pods start in order (0, then 1, then 2):
+   `kubectl get pods -n k8squest -l app=database -w`
+
+4. Verify stable names:
+   `kubectl get pods -n k8squest -l app=database`
+
+Should see: database-0, database-1, database-2 (not random hashes)!

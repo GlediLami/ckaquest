@@ -1,0 +1,21 @@
+level: 35
+title: "StorageClass Not Found"
+objective: "Fix the broken resources and make the validation pass"
+name: "StorageClass Not Found"
+world: "Storage & Stateful Apps"
+difficulty: "intermediate"
+xp: 200
+concepts:
+  - storageclass
+  - dynamic-provisioning
+  - storage-provisioner
+  - pvc-pending
+description: |
+  A PVC has been sitting in Pending state for hours. The pod can't start because
+  it's waiting for storage. The PVC references a StorageClass that doesn't exist!
+  
+learning_objectives:
+  - Understand StorageClass role in dynamic provisioning
+  - Learn to diagnose PVC Pending issues
+  - Configure proper storage class references
+  - Understand available storage classes

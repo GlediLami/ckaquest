@@ -1,0 +1,13 @@
+name: "Blue-Green Gone Wrong"
+description: "Service is pointing to the old version, users don't see the new deployment"
+objective: "Update the service selector to route traffic to the new blue-green deployment"
+xp: 200
+difficulty: intermediate
+expected_time: 12m
+concepts:
+  - blue-green deployments
+  - service selectors
+  - labels
+  - traffic switching
+  - deployment strategies
+  - zero-downtime switchover

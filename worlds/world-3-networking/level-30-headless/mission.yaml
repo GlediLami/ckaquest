@@ -1,0 +1,35 @@
+id: 30
+title: "StatefulSet DNS Not Working"
+objective: "Fix the broken resources and make the validation pass"
+name: "StatefulSet DNS Not Working"
+difficulty: intermediate
+xp: 250
+xp_reward: 250
+estimated_time: "20 minutes"
+
+description: |
+  Your StatefulSet pods can't communicate with each other using predictable DNS names. 
+  The application expects to reach individual pods at pod-0.service-name, pod-1.service-name, 
+  but DNS resolution isn't working. The service is configured with a ClusterIP, but 
+  StatefulSets require a special type of service called a "headless service" for direct 
+  pod-to-pod DNS resolution.
+
+learning_objectives:
+  - Understand headless services (clusterIP: None)
+  - Learn StatefulSet DNS naming conventions
+  - Configure services for StatefulSet communication
+  - Understand when to use headless vs ClusterIP services
+
+concepts:
+  - headless-service
+  - statefulset-dns
+  - pod-identity
+  - stable-network-identity
+  - clusterip-none
+
+success_criteria:
+  - Each StatefulSet pod accessible via predictable DNS name
+  - DNS format: <pod-name>.<service-name>.<namespace>.svc.cluster.local
+  - Service configured as headless (clusterIP: None)
+
+hints_available: 3

@@ -1,0 +1,9 @@
+🧭 Direction Hint:
+
+The container is listening on port 80, but the service is trying to forward traffic to port 8080.
+
+The service has two port configurations:
+- `port`: What clients connect to (external)
+- `targetPort`: What port on the pod/container to forward to (internal)
+
+The targetPort must match the containerPort!

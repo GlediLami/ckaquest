@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-with-init
+  namespace: k8squest
+spec:
+  initContainers:
+  - name: wait-for-service
+    image: busybox:latest
+    # ❌ Waits for a service that doesn't exist - will never complete!
+    command: ['sh', '-c', 'until nslookup backend-service.k8squest.svc.cluster.local; do echo waiting; sleep 2; done']
+  containers:
+  - name: web
+    image: nginx:latest
+    ports:
+    - containerPort: 80

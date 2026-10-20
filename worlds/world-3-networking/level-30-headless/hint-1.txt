@@ -1,0 +1,50 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate why StatefulSet pods can't reach each other by name:
+
+1️⃣ Check the StatefulSet pods:
+   kubectl get pods -n k8squest -l app=web-cluster
+   
+   Notice the predictable names:
+   • web-0
+   • web-1
+   • web-2
+
+2️⃣ Check the service:
+   kubectl get service web-cluster -n k8squest
+   
+   Look at the CLUSTER-IP column - what do you see?
+
+3️⃣ Examine the service details:
+   kubectl get service web-cluster -n k8squest -o yaml
+   
+   Look at spec.clusterIP field - what value does it have?
+
+4️⃣ Try DNS resolution from a pod:
+   kubectl run -it --rm debug --image=busybox:1.28 -n k8squest -- sh
+   
+   Inside the pod, try:
+   nslookup web-0.web-cluster.k8squest.svc.cluster.local
+   
+   Does it work?
+
+5️⃣ Compare with service DNS:
+   nslookup web-cluster.k8squest.svc.cluster.local
+   
+   This probably works, but goes to a random pod!
+
+📝 Key Observation:
+   StatefulSets need each pod to have a stable DNS name like:
+   • web-0.web-cluster.k8squest.svc.cluster.local
+   • web-1.web-cluster.k8squest.svc.cluster.local
+   • web-2.web-cluster.k8squest.svc.cluster.local
+   
+   But regular ClusterIP services only provide:
+   • web-cluster.k8squest.svc.cluster.local → random pod
+
+🤔 Questions to Consider:
+   • What type of service provides per-pod DNS?
+   • What does "headless service" mean?
+   • What's the value of spec.clusterIP for a headless service?
+
+The service configuration is the key to solving this!

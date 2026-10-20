@@ -1,0 +1,69 @@
+🔍 OBSERVATION HINT
+
+What to Look For:
+==================
+
+Your frontend pod is trying to connect to the backend, but it's failing with 
+connection timeout errors. The backend pod is healthy and the service exists, 
+so why can't the frontend reach it?
+
+Check These Areas:
+------------------
+
+1. **Frontend Pod Logs**
+   Check what errors the frontend is seeing:
+   ```bash
+   kubectl logs frontend -n k8squest
+   ```
+
+   Look for:
+   • "Connection refused"
+   • "Connection timed out"
+   • "Network is unreachable"
+
+2. **NetworkPolicy Configuration**
+   View the NetworkPolicy:
+   ```bash
+   kubectl describe networkpolicy backend-network-policy -n k8squest
+   ```
+
+   Look at:
+   • Which pods does it apply to? (PodSelector)
+   • What traffic does it allow? (Ingress rules)
+   • What labels are required for access?
+
+3. **Frontend Pod Labels**
+   Check the frontend pod's labels:
+   ```bash
+   kubectl get pod frontend -n k8squest --show-labels
+   ```
+
+   What labels does the frontend have?
+
+4. **Label Matching**
+   Compare:
+   • NetworkPolicy allows traffic from pods with label: `app: ???`
+   • Frontend pod has label: `app: ???`
+   • Do they match?
+
+🎯 Key Questions:
+-----------------
+
+• What label selector does the NetworkPolicy use to allow traffic?
+• What labels does the frontend pod actually have?
+• Is there a mismatch?
+
+💭 Think About:
+---------------
+
+NetworkPolicies are like bouncers at a club - they check your "label badge" 
+before letting you in. If your badge (label) doesn't match what the bouncer 
+(NetworkPolicy) is looking for, you don't get in!
+
+In this case:
+- The NetworkPolicy bouncer is looking for a specific label
+- The frontend pod has a different label
+- Result: Connection denied!
+
+---
+Read hint-2.txt when you need more specific direction.

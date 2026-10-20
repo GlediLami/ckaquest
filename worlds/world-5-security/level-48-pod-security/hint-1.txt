@@ -1,0 +1,39 @@
+# 💡 HINT 1-3: Pod Security Standards
+
+## HINT 1: The Problem
+```bash
+kubectl apply -f broken.yaml
+# Error: pods restricted: allowPrivilegeEscalation != false
+```
+
+Namespace enforces "restricted" standard. Your pod violates it.
+
+## HINT 2: Restricted Requirements
+
+All of these MUST be set:
+1. `runAsNonRoot: true`
+2. `runAsUser: <non-zero>`
+3. `allowPrivilegeEscalation: false`
+4. `capabilities.drop: [ALL]`
+5. `seccompProfile.type: RuntimeDefault`
+
+## HINT 3: Solution
+
+```yaml
+spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+  - name: app
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ALL]
+```
+
+Apply and run `./validate.sh`

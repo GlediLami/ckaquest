@@ -1,0 +1,47 @@
+💡 Near-Solution Hint:
+
+Convert the ReplicaSet to a Deployment.
+
+Steps:
+1. Delete the standalone ReplicaSet:
+   `kubectl delete replicaset web-app-rs -n k8squest`
+
+2. Create a Deployment instead:
+   `kubectl create deployment web-app --image=hashicorp/http-echo:latest -n k8squest --replicas=3 -- -text="Version 2.0" -listen=:8080`
+
+3. OR use a YAML file:
+   ```bash
+   kubectl apply -f - <<EOF
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: web-app
+     namespace: k8squest
+   spec:
+     replicas: 3
+     selector:
+       matchLabels:
+         app: webapp
+     template:
+       metadata:
+         labels:
+           app: webapp
+       spec:
+         containers:
+         - name: web
+           image: hashicorp/http-echo:latest
+           args: ["-text=Version 2.0", "-listen=:8080"]
+           ports:
+           - containerPort: 8080
+   EOF
+   ```
+
+4. Verify:
+   `kubectl get deployments,replicasets,pods -n k8squest`
+
+You should see:
+- 1 Deployment
+- 1 ReplicaSet (created BY the deployment)
+- 3 Pods
+
+The Deployment automatically created and manages the ReplicaSet!

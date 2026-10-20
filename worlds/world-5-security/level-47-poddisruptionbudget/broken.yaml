@@ -1,0 +1,41 @@
+# BROKEN: PDB too restrictive for deployment size
+# Problem: minAvailable exceeds replica count
+# Result: Can't drain nodes - would violate PDB
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: k8squest
+spec:
+  replicas: 2  # Only 2 replicas
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+  namespace: k8squest
+spec:
+  minAvailable: 3  # ❌ Requires 3 pods, but only 2 replicas exist!
+  selector:
+    matchLabels:
+      app: web
+
+# Problem: minAvailable (3) > replicas (2)
+# PDB can never be satisfied
+# Node drain blocked: "Cannot evict pod as it would violate the pod's disruption budget"
+#
+# Try: kubectl drain kind-control-plane --ignore-daemonsets --delete-emptydir-data
+# Result: FAILS due to PDB violation

@@ -1,0 +1,113 @@
+# SOLUTION: NetworkPolicy with proper ingress/egress rules
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8squest
+
+---
+# Database pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database
+  namespace: k8squest
+  labels:
+    app: database
+    tier: data
+spec:
+  containers:
+  - name: postgres
+    image: postgres:13
+    env:
+    - name: POSTGRES_PASSWORD
+      value: example
+    ports:
+    - containerPort: 5432
+
+---
+# Service for database (so "database" resolves inside the cluster)
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  selector:
+    app: database
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP
+
+---
+# Backend pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: k8squest
+  labels:
+    app: backend
+    tier: api
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ['sh', '-c', 'echo "Testing database connection..."; while true; do nc -vz database 5432 2>&1 && echo "✅ Connected to database"; sleep 10; done']
+
+---
+# NetworkPolicy for database - allow ingress from backend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-database-ingress
+  namespace: k8squest
+spec:
+  podSelector:
+    matchLabels:
+      app: database  # ✅ Apply to database pod
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend  # ✅ Allow from backend pods
+    ports:
+    - protocol: TCP
+      port: 5432  # ✅ Only PostgreSQL port
+
+---
+# NetworkPolicy for backend - allow egress to database
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-egress
+  namespace: k8squest
+spec:
+  podSelector:
+    matchLabels:
+      app: backend  # ✅ Apply to backend pod
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database  # ✅ Allow to database pods
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:  # ✅ Allow DNS
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+
+# Now backend can connect to database on port 5432
+# Database only accepts connections from backend
+# DNS resolution works

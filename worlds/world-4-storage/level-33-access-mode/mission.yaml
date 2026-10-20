@@ -1,0 +1,29 @@
+level: 33
+title: "Access Mode Mismatch"
+objective: "Fix the broken resources and make the validation pass"
+name: "Access Mode Mismatch"
+world: "Storage & Stateful Apps"
+difficulty: "intermediate"
+xp: 250
+concepts:
+  - access-modes
+  - readwriteonce
+  - readwritemany
+  - pvc-sharing
+  - multi-pod-access
+description: |
+  Multiple pods need to share the same storage volume across nodes, but the storage
+  is configured with ReadWriteOnce instead of ReadWriteMany.
+  
+  SCENARIO: This level runs on Kind (single-node), so all 3 pods will appear to work.
+  However, the configuration is WRONG for production multi-node clusters. The validation
+  will detect this, and you'll also learn that PVC specs are immutable when you try to fix it!
+  
+  This teaches TWO lessons: (1) correct access mode selection, (2) PVC immutability.
+  
+learning_objectives:
+  - Understand PV/PVC access modes (RWO, RWX, ROX)
+  - Learn when to use ReadWriteOnce vs ReadWriteMany
+  - Configure storage for multi-pod shared access
+  - Experience PVC spec immutability (accessModes cannot be edited)
+  - Learn delete/recreate workflow for fixing immutable fields

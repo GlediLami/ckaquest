@@ -1,0 +1,21 @@
+level: 36
+title: "ConfigMap Missing Key"
+objective: "Fix the broken resources and make the validation pass"
+name: "ConfigMap Missing Key"
+world: "Storage & Stateful Apps"
+difficulty: "beginner"
+xp: 200
+concepts:
+  - configmap
+  - environment-variables
+  - env-from
+  - config-management
+description: |
+  A pod is failing to start because it's trying to load an environment variable
+  from a ConfigMap key that doesn't exist. The application needs this config to run!
+  
+learning_objectives:
+  - Understand ConfigMap structure and keys
+  - Learn to reference ConfigMap data in pods
+  - Debug missing configuration issues
+  - Properly manage application configuration

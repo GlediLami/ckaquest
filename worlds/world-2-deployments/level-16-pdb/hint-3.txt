@@ -1,0 +1,27 @@
+💡 Near-Solution Hint:
+
+Fix the PDB to allow evictions while maintaining availability.
+
+Steps:
+1. Edit the PDB:
+   `kubectl edit pdb db-proxy-pdb -n k8squest`
+
+2. Change minAvailable from 3 to 2:
+
+```yaml
+spec:
+  minAvailable: 2  # Keep 2 pods, allow 1 to be evicted
+```
+
+3. Save and verify:
+   `kubectl get pdb db-proxy-pdb -n k8squest`
+
+Now "ALLOWED" should be 1 instead of 0!
+
+Alternative: Use maxUnavailable instead:
+```yaml
+spec:
+  maxUnavailable: 1  # Allow 1 pod to be unavailable
+```
+
+Both achieve the same goal: allow 1 eviction, keep 2 running.

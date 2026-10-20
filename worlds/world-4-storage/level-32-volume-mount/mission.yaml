@@ -1,0 +1,34 @@
+id: 32
+title: "Volume Mount Path Error"
+objective: "Fix the broken resources and make the validation pass"
+name: "Volume Mount Path Error"
+difficulty: intermediate
+xp: 200
+xp_reward: 200
+estimated_time: "10 minutes"
+
+description: |
+  Your application pod is crashing with errors about missing files. The pod expects to read 
+  configuration from /app/config, but the volume is mounted at the wrong path. You need to 
+  fix the volumeMount configuration to mount the storage at the correct location so the 
+  application can find its config files.
+
+learning_objectives:
+  - Understand volume and volumeMount relationship
+  - Configure correct mountPath in pod specification
+  - Debug volume mounting issues
+  - Understand the difference between volume definition and mount point
+
+concepts:
+  - volumemounts
+  - mount-path
+  - volume-configuration
+  - pod-volumes
+  - container-filesystem
+
+success_criteria:
+  - Volume mounted at correct path /app/config
+  - Pod starts successfully
+  - Application can access config files
+
+hints_available: 3

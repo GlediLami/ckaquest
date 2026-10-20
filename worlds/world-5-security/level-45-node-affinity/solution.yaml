@@ -1,0 +1,46 @@
+# SOLUTION: NodeAffinity with correct labels
+
+# First, label a node for GPU workloads
+# kubectl label nodes kind-control-plane accelerator=gpu
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-workload
+  namespace: k8squest
+spec:
+  containers:
+  - name: ml-training
+    image: nginx:latest
+    command: ['sh', '-c', 'echo "✅ GPU workload scheduled successfully on node: $MY_NODE_NAME"; sleep 3600']
+    env:
+    - name: MY_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  affinity:
+    nodeAffinity:
+      # ✅ REQUIRED: Must match or pod won't schedule
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: accelerator  # ✅ Correct key
+            operator: In
+            values:
+            - gpu  # ✅ Correct value
+      # ✅ PREFERRED: Nice to have, but not required  
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - kind-control-plane
+
+# This configuration:
+# 1. REQUIRES node with label accelerator=gpu
+# 2. PREFERS kind-control-plane node (weight 100)
+# 3. Will schedule to any node with accelerator=gpu if control-plane unavailable
+#
+# The pod now schedules successfully!

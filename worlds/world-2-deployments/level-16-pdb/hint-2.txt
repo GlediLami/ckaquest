@@ -1,0 +1,16 @@
+🧭 Direction Hint:
+
+The PDB has `minAvailable: 3` but the deployment also has 3 replicas.
+
+This means:
+- minAvailable: 3 = "Must keep 3 pods available at all times"
+- Replicas: 3 = "Only have 3 pods total"
+- Result: Cannot evict ANY pod (3 - 0 < 3) ❌
+
+This blocks:
+- Node drains (kubectl drain)
+- Cluster upgrades
+- Autoscaler node removals
+- Any voluntary disruptions
+
+The PDB should allow at least 1 eviction!

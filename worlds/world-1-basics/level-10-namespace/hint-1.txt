@@ -1,0 +1,9 @@
+🔍 Observation Hint:
+
+Check what resources exist in the k8squest namespace:
+`kubectl get all -n k8squest`
+
+Now check the default namespace:
+`kubectl get all -n default`
+
+Where are the client-app pod and backend-service located?

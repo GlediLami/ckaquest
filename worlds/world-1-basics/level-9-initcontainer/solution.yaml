@@ -1,0 +1,33 @@
+---
+# Service that the init container is waiting for
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: k8squest
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
+---
+# Pod with init container that waits for the service
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-with-init
+  namespace: k8squest
+spec:
+  initContainers:
+  - name: wait-for-service
+    image: busybox:latest
+    # ✅ This now succeeds because the service exists!
+    command: ['sh', '-c', 'until nslookup backend-service.k8squest.svc.cluster.local; do echo waiting; sleep 2; done']
+  containers:
+  - name: web
+    image: nginx:latest
+    ports:
+    - containerPort: 80

@@ -1,0 +1,13 @@
+name: "Canary Weight Imbalance"
+description: "Canary deployment has wrong replica ratios, making testing inaccurate"
+objective: "Fix the replica counts to achieve proper 90/10 traffic split for canary testing"
+xp: 200
+difficulty: intermediate
+expected_time: 12m
+concepts:
+  - canary deployments
+  - traffic splitting
+  - replica ratios
+  - gradual rollouts
+  - A/B testing
+  - deployment patterns

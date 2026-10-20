@@ -1,0 +1,35 @@
+id: 29
+title: "LoadBalancer Stuck Pending"
+objective: "Fix the broken resources and make the validation pass"
+name: "LoadBalancer Stuck Pending"
+difficulty: intermediate
+xp: 250
+xp_reward: 250
+estimated_time: "15 minutes"
+
+description: |
+  Your team deployed a service with type LoadBalancer, but it's been stuck in "Pending" 
+  state for 10 minutes. External clients can't access the application. The service works 
+  fine in the cloud environment, but your local development cluster can't provision the 
+  LoadBalancer. You need to understand the difference between service types and choose 
+  the right one for local development.
+
+learning_objectives:
+  - Understand Kubernetes service types (ClusterIP, NodePort, LoadBalancer)
+  - Learn why LoadBalancer services need cloud provider integration
+  - Configure NodePort services for local cluster access
+  - Understand the limitations of different service types
+
+concepts:
+  - service-types
+  - loadbalancer
+  - nodeport
+  - cloud-provider-integration
+  - local-cluster-limitations
+
+success_criteria:
+  - Service is accessible from outside the cluster
+  - Service no longer stuck in Pending state
+  - Correct service type for local development
+
+hints_available: 3

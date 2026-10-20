@@ -1,0 +1,13 @@
+name: "The Restart Loop"
+description: "Pods keep restarting because the liveness probe is checking the wrong endpoint"
+objective: "Fix the liveness probe configuration so pods stay running"
+xp: 200
+difficulty: intermediate
+expected_time: 12m
+concepts:
+  - liveness probes
+  - health checks
+  - pod restarts
+  - HTTP probes
+  - probe configuration
+  - restart policies

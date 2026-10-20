@@ -1,0 +1,27 @@
+level: 47
+title: "PodDisruptionBudget: Blocking Drain"
+objective: "Fix the broken resources and make the validation pass"
+name: "PodDisruptionBudget: Blocking Drain"
+difficulty: advanced
+xp: 300
+xp_reward: 300
+world: 5
+concepts:
+  - poddisruptionbudget
+  - minavailable
+  - maxunavailable
+  - voluntary-disruption
+description: |
+  Node maintenance is blocked! You need to drain a node for upgrades,
+  but the PodDisruptionBudget is too restrictive.
+  
+  PDB requires minAvailable: 3, but deployment only has 2 replicas.
+  Node drain fails: "Cannot evict pod: would violate PDB"
+  
+  Your mission: Adjust PDB or scale deployment to allow maintenance.
+
+learning_objectives:
+  - Understand PodDisruptionBudget purpose
+  - Configure minAvailable vs maxUnavailable
+  - Balance availability with maintenance needs
+  - Debug PDB-related eviction failures

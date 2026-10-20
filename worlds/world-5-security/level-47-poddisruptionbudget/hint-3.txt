@@ -1,0 +1,29 @@
+# 💡 HINT 3: Solution
+
+## Fix: Scale Deployment + Adjust PDB
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  replicas: 3  # ✅ Increased from 2
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+spec:
+  minAvailable: 2  # ✅ Reduced from 3
+  selector:
+    matchLabels:
+      app: web
+```
+
+Now: 3 replicas, need 2 minimum = ✅ Can lose 1 during drain
+
+## Apply
+```bash
+kubectl apply -f solution.yaml
+./validate.sh
+```
+
+**Success!** Node drain now allowed.

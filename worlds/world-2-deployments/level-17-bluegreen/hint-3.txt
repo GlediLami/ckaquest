@@ -1,0 +1,28 @@
+💡 Near-Solution Hint:
+
+In blue-green deployments, you switch traffic by updating the service selector.
+
+Steps:
+1. Edit the service:
+   `kubectl edit service app-service -n k8squest`
+
+2. Change the selector from blue to green:
+
+```yaml
+spec:
+  selector:
+    app: myapp
+    version: green  # Changed from blue to green
+```
+
+3. Save and exit.
+
+4. Verify traffic is now going to green:
+   `kubectl get endpoints app-service -n k8squest`
+   
+You should see 3 IPs from the green deployment now!
+
+5. Test:
+   `kubectl run -it --rm test --image=busybox --restart=Never -n k8squest -- wget -q -O- app-service`
+   
+Should show "Version GREEN (NEW)"!

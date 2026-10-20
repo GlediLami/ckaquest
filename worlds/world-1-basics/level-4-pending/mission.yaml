@@ -1,0 +1,13 @@
+name: "Pending Pod Problem"
+description: "A pod is stuck in Pending status because it's asking for more resources than available"
+objective: "Adjust the resource requests so the pod can be scheduled"
+xp: 150
+difficulty: beginner
+expected_time: 12m
+concepts:
+  - Pod scheduling
+  - Resource requests
+  - Resource limits
+  - kubectl describe
+  - Pending status
+  - Node capacity

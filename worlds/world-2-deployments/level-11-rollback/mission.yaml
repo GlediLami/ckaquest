@@ -1,0 +1,13 @@
+name: "Deployment Update Stuck"
+description: "A rolling update has failed because the new container image doesn't exist"
+objective: "Rollback the deployment to the previous working version"
+xp: 200
+difficulty: intermediate
+expected_time: 15m
+concepts:
+  - deployments
+  - rolling updates
+  - rollback
+  - kubectl rollout
+  - deployment history
+  - image versioning

@@ -1,0 +1,30 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate why the pod is failing:
+
+1️⃣ Check pod status:
+   kubectl get pod web-app -n k8squest
+   
+   What's the STATUS? Is it Running or CrashLoopBackOff?
+
+2️⃣ Check pod logs:
+   kubectl logs web-app -n k8squest
+   
+   What error message do you see?
+
+3️⃣ Check the pod specification:
+   kubectl get pod web-app -n k8squest -o yaml | grep -A 5 volumeMounts
+   
+   Where is the volume mounted?
+
+4️⃣ Look at the application's expectations:
+   The app tries to read: /app/config/app.conf
+   Where is the volume currently mounted?
+
+📝 Key Observation:
+The application expects files at one path, but the volume is mounted at a different path!
+
+🤔 Questions:
+• What does mountPath specify?
+• Can you change where a volume is mounted?
+• Do init containers and main containers need the same mount path?

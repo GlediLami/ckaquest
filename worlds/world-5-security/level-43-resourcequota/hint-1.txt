@@ -1,0 +1,78 @@
+# 💡 HINT 1: Observation and Analysis
+
+Start by understanding the quota situation:
+
+## Step 1: Check Pod Status
+
+```bash
+kubectl get pod resource-hungry-app -n k8squest
+```
+
+You'll likely see status **Pending** instead of Running.
+
+## Step 2: Examine Pod Events
+
+```bash
+kubectl describe pod resource-hungry-app -n k8squest
+```
+
+Look at the **Events** section. You should see:
+```
+Warning  FailedScheduling  ... exceeded quota: compute-quota, requested: requests.cpu=2500m
+```
+
+This tells you the pod is trying to request more resources than the quota allows!
+
+## Step 3: Check the ResourceQuota
+
+```bash
+kubectl describe resourcequota compute-quota -n k8squest
+```
+
+You'll see something like:
+```
+Resource         Used  Hard
+--------         ----  ----
+limits.cpu       0     4
+limits.memory    0     4Gi
+pods             0     10
+requests.cpu     0     2        ← Only 2 CPUs available!
+requests.memory  0     2Gi
+```
+
+## Step 4: Check Pod's Resource Requests
+
+```bash
+kubectl get pod resource-hungry-app -n k8squest -o yaml | grep -A 4 requests
+```
+
+You'll see:
+```yaml
+requests:
+  cpu: "2500m"  # ← Requesting 2.5 CPUs!
+  memory: "1Gi"
+```
+
+## Understanding the Problem
+
+**The Math:**
+- Namespace quota allows: **2 CPUs total**
+- Pod is requesting: **2.5 CPUs** (2500 millicores)
+- 2.5 > 2 → **Quota exceeded!**
+
+**Why quotas exist:**
+- Prevent resource hogging
+- Fair share across teams
+- Protect cluster stability
+- Cost control
+
+## What You Need to Fix
+
+Option 1: **Reduce pod's resource requests** to fit within quota
+Option 2: **Increase quota** if justified (usually not your call)
+
+For this challenge: **Reduce the pod's resource requests**
+
+---
+
+**Next hint** explains ResourceQuota and resource management in detail.

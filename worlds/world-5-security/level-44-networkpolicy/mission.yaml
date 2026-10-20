@@ -1,0 +1,29 @@
+level: 44
+title: "NetworkPolicy: Traffic Blocked"
+objective: "Fix the broken resources and make the validation pass"
+name: "NetworkPolicy: Traffic Blocked"
+difficulty: advanced
+xp: 350
+xp_reward: 350
+world: 5
+concepts:
+  - networkpolicy
+  - ingress
+  - egress
+  - pod-selector
+description: |
+  Your security team implemented a NetworkPolicy that's TOO restrictive!
+  
+  The backend pod can't communicate with the database, and the frontend
+  can't reach the backend. All traffic is blocked by network policies.
+  
+  Error: Connection refused, timeout errors between services.
+  
+  Your mission: Fix the NetworkPolicy to allow necessary traffic while
+  maintaining security.
+
+learning_objectives:
+  - Understand NetworkPolicy ingress/egress rules
+  - Configure pod selectors and namespace selectors
+  - Allow specific ports while blocking others
+  - Debug network connectivity issues

@@ -1,0 +1,41 @@
+# SOLUTION: Properly configured SecurityContext
+# Added: runAsUser to specify non-root user ID
+# Added: allowPrivilegeEscalation: false for security
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  namespace: k8squest
+  labels:
+    app: web
+spec:
+  containers:
+  - name: nginx
+    image: nginxinc/nginx-unprivileged:latest
+    ports:
+    - containerPort: 8080  # Non-privileged port
+    securityContext:
+      runAsNonRoot: true  # ✅ Enforce non-root
+      runAsUser: 1000  # ✅ Run as user ID 1000 (non-root)
+      allowPrivilegeEscalation: false  # ✅ Prevent privilege escalation
+      capabilities:
+        drop:
+        - ALL  # Drop all capabilities for maximum security
+    command: ["/bin/sh"]
+    args:
+    - -c
+    - |
+      # Nginx can't bind to port 80 as non-root, so we use a simple HTTP server
+      echo "Running as user: $(id -u)"
+      echo "Security: privilege escalation disabled"
+      # Simple web server on port 8080
+      while true; do
+        echo -e "HTTP/1.1 200 OK\n\nSecure Container - User $(id -u)" | nc -l -p 8080 || true
+      done
+
+# Pod now runs securely:
+# - As non-root user (UID 1000)
+# - Cannot escalate privileges
+# - Uses non-privileged port
+# - All capabilities dropped

@@ -1,0 +1,43 @@
+✅ HINT 3: Complete Solution
+
+Fix: Add fsGroup to pod securityContext
+
+📝 In Pod spec:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: writer-app
+spec:
+  securityContext:  # ✅ Add at pod level!
+    fsGroup: 1000
+  containers:
+  - name: app
+    securityContext:  # Container level
+      runAsUser: 1000
+      runAsGroup: 1000
+    volumeMounts:
+    - name: data
+      mountPath: /data
+```
+
+🔑 Key Points:
+- fsGroup goes in **spec.securityContext** (pod level)
+- runAsUser goes in **containers.securityContext** (container level)
+- fsGroup should match runAsGroup for proper permissions
+
+🚀 Apply:
+```bash
+kubectl delete -f broken.yaml
+kubectl apply -f solution.yaml
+kubectl logs writer-app -n k8squest
+# Should show "Write successful!"
+```
+
+🔍 Verify permissions:
+```bash
+kubectl exec writer-app -n k8squest -- ls -la /data
+# Should show group ownership as 1000
+```
+
+💡 Remember: fsGroup changes volume group ownership so the container user can write!

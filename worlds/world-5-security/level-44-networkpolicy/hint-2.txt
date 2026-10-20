@@ -1,0 +1,199 @@
+# 💡 HINT 2: Understanding NetworkPolicy
+
+## What is NetworkPolicy?
+
+NetworkPolicy defines how pods can communicate with each other and external endpoints.
+
+**Think of it as:**
+- Firewall rules for pods
+- Controls ingress (incoming) and egress (outgoing)
+- Uses pod labels for selection
+
+## NetworkPolicy Structure
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: my-policy
+  namespace: k8squest
+spec:
+  podSelector:           # Which pods this applies to
+    matchLabels:
+      app: myapp
+  policyTypes:           # Ingress, Egress, or both
+  - Ingress
+  - Egress
+  ingress:               # Incoming traffic rules
+  - from:
+    - podSelector:
+        matchLabels:
+          app: allowed-app
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:                # Outgoing traffic rules
+  - to:
+    - podSelector:
+        matchLabels:
+          app: backend
+    ports:
+    - protocol: TCP
+      port: 5432
+```
+
+## Key Concepts
+
+### 1. podSelector (Which pods?)
+
+```yaml
+spec:
+  podSelector:
+    matchLabels:
+      app: database  # Apply to pods with app=database
+```
+
+Empty selector applies to ALL pods:
+```yaml
+  podSelector: {}  # All pods in namespace
+```
+
+### 2. policyTypes (Direction)
+
+```yaml
+policyTypes:
+- Ingress  # Control incoming traffic
+- Egress   # Control outgoing traffic
+```
+
+### 3. Ingress Rules (Incoming)
+
+```yaml
+ingress:
+- from:
+  - podSelector:      # From pods with these labels
+      matchLabels:
+        app: frontend
+  ports:
+  - protocol: TCP
+    port: 8080        # On this port
+```
+
+**Means:** Allow pods with `app=frontend` to connect to this pod on port 8080.
+
+### 4. Egress Rules (Outgoing)
+
+```yaml
+egress:
+- to:
+  - podSelector:      # To pods with these labels
+      matchLabels:
+        app: database
+  ports:
+  - protocol: TCP
+    port: 5432
+```
+
+**Means:** Allow this pod to connect to pods with `app=database` on port 5432.
+
+## Your Current Problem
+
+**Current policy blocks everything:**
+```yaml
+spec:
+  podSelector: {}  # All pods
+  policyTypes:
+  - Ingress
+  - Egress
+  # No ingress rules = block all incoming
+  # No egress rules = block all outgoing
+```
+
+## What You Need
+
+### For Database Pod (Ingress)
+
+Allow backend to connect:
+```yaml
+spec:
+  podSelector:
+    matchLabels:
+      app: database  # This applies to database
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend  # From backend pods
+    ports:
+    - protocol: TCP
+      port: 5432  # PostgreSQL port
+```
+
+### For Backend Pod (Egress)
+
+Allow connecting to database AND DNS:
+```yaml
+spec:
+  podSelector:
+    matchLabels:
+      app: backend  # This applies to backend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database  # To database pods
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:  # IMPORTANT: Allow DNS!
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+```
+
+**Why DNS?** Backend needs to resolve "database" hostname!
+
+## Common Selectors
+
+### podSelector
+```yaml
+- podSelector:
+    matchLabels:
+      app: myapp
+```
+
+### namespaceSelector
+```yaml
+- namespaceSelector:
+    matchLabels:
+      env: production
+```
+
+### Both (AND)
+```yaml
+- podSelector:
+    matchLabels:
+      app: db
+  namespaceSelector:
+    matchLabels:
+      env: prod
+```
+
+### IP Block
+```yaml
+- ipBlock:
+    cidr: 10.0.0.0/24
+    except:
+    - 10.0.0.1/32
+```
+
+---
+
+**Next hint** provides the complete solution.

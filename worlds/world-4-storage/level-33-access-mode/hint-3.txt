@@ -1,0 +1,44 @@
+✅ HINT 3: Complete Solution
+
+Fix: Change accessModes from ReadWriteOnce to ReadWriteMany
+
+📝 In PersistentVolume:
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-storage
+spec:
+  accessModes:
+    - ReadWriteMany  # ✅ Changed from ReadWriteOnce
+```
+
+📝 In PersistentVolumeClaim:
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # ✅ Changed from ReadWriteOnce
+```
+
+🚀 Apply:
+```bash
+# IMPORTANT: PVC spec is immutable - must delete and recreate!
+kubectl delete deployment web-servers -n k8squest
+kubectl delete pvc shared-pvc -n k8squest
+kubectl delete pv shared-storage
+
+# Apply the corrected configuration
+kubectl apply -f solution.yaml
+
+# Watch all 3 pods start successfully
+kubectl get pods -n k8squest -l app=web -w
+```
+
+⚠️  **Why delete first?** PVC's accessModes cannot be changed after creation.
+You must delete the PVC and PV, then recreate them with the correct access mode.
+
+💡 Remember: Both PV and PVC must have matching access modes!

@@ -1,0 +1,13 @@
+name: "PDB Blocks All Evictions"
+description: "PodDisruptionBudget is too restrictive, preventing node drains and updates"
+objective: "Fix the PDB to allow safe pod evictions while maintaining availability"
+xp: 250
+difficulty: advanced
+expected_time: 15m
+concepts:
+  - PodDisruptionBudget
+  - minAvailable
+  - maxUnavailable
+  - node maintenance
+  - pod eviction
+  - cluster upgrades
