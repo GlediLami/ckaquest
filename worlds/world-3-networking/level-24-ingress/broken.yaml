@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: ingress
   labels:
     app: web
 spec:
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-service
-  namespace: ckaquest
+  namespace: ingress
 spec:
   selector:
     app: web
@@ -29,7 +29,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: web-ingress
-  namespace: ckaquest
+  namespace: ingress
 spec:
   rules:
   - host: myapp.local

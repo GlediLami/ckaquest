@@ -7,6 +7,6 @@ Without a readiness probe, Kubernetes assumes "Running = Ready" and immediately 
 This means users hit pods that are still starting up → 502 Bad Gateway errors!
 
 Check the deployment:
-`kubectl get deployment slow-startup-app -n ckaquest -o yaml | grep -A 10 readinessProbe`
+`kubectl get deployment slow-startup-app -n readiness -o yaml | grep -A 10 readinessProbe`
 
 You'll likely see nothing (or just livenessProbe). That's the problem!

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: headless
 ---
 # ✅ FIXED: Headless service (clusterIP: None) provides per-pod DNS
 # Now each pod gets: <pod-name>.<service-name>.<namespace>.svc.cluster.local
@@ -10,7 +10,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-cluster
-  namespace: ckaquest
+  namespace: headless
 spec:
   clusterIP: None  # ✅ Headless service - no virtual IP!
   selector:
@@ -23,7 +23,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: web
-  namespace: ckaquest
+  namespace: headless
 spec:
   serviceName: web-cluster  # Must match headless service name
   replicas: 3
@@ -43,6 +43,6 @@ spec:
           name: web
 
 # ✅ Now DNS works:
-# web-0.web-cluster.ckaquest.svc.cluster.local → web-0 pod
-# web-1.web-cluster.ckaquest.svc.cluster.local → web-1 pod
-# web-2.web-cluster.ckaquest.svc.cluster.local → web-2 pod
+# web-0.web-cluster.headless.svc.cluster.local → web-0 pod
+# web-1.web-cluster.headless.svc.cluster.local → web-1 pod
+# web-2.web-cluster.headless.svc.cluster.local → web-2 pod

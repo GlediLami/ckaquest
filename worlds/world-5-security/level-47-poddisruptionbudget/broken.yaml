@@ -6,7 +6,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: poddisruptionbudget
 spec:
   replicas: 2  # Only 2 replicas
   selector:
@@ -26,7 +26,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: web-pdb
-  namespace: ckaquest
+  namespace: poddisruptionbudget
 spec:
   minAvailable: 3  # ❌ Requires 3 pods, but only 2 replicas exist!
   selector:

@@ -1,5 +1,5 @@
 Utilization = current usage / CPU request. With no request there is nothing to divide by.
 
-  k set resources deploy web-backend -n ckaquest --requests=cpu=100m
+  k set resources deploy web-backend -n hpa --requests=cpu=100m
 
 Wait about a minute and check the TARGETS column again.

@@ -34,5 +34,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **web-app** in namespace **ckaquest** runs nginx as root.
+  Pod **web-app** in namespace **securitycontext** runs nginx as root.
   Recreate it so the container runs as a non-root user (UID 1000), with `runAsNonRoot: true` and `allowPrivilegeEscalation: false`. The pod must still be Running. An unprivileged nginx image that listens on 8080 is allowed.
+namespace: securitycontext

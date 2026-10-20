@@ -40,5 +40,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **frontend** in namespace **ckaquest** cannot reach Service **backend-service** on port 8080. NetworkPolicy **backend-network-policy** protects the backend.
+  Pod **frontend** in namespace **networkpolicy** cannot reach Service **backend-service** on port 8080. NetworkPolicy **backend-network-policy** protects the backend.
   Change the policy so frontend can reach the backend. Other pods must stay blocked.
+namespace: networkpolicy

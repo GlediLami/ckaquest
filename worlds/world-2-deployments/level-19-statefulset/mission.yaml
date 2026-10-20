@@ -19,5 +19,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  The database in namespace **ckaquest** runs as Deployment **database**. Its pods need stable names.
+  The database in namespace **statefulset** runs as Deployment **database**. Its pods need stable names.
   Replace it with a StatefulSet **database**, 3 replicas, same image and labels, using the existing Service **database-service** as its serviceName. Delete the Deployment.
+namespace: statefulset

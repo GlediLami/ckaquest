@@ -30,13 +30,13 @@ spec:
 ```bash
 kubectl delete -f broken.yaml
 kubectl apply -f solution.yaml
-kubectl logs writer-app -n ckaquest
+kubectl logs writer-app -n volume-permissions
 # Should show "Write successful!"
 ```
 
 🔍 Verify permissions:
 ```bash
-kubectl exec writer-app -n ckaquest -- ls -la /data
+kubectl exec writer-app -n volume-permissions -- ls -la /data
 # Should show group ownership as 1000
 ```
 

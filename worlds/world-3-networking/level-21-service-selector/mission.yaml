@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Service **backend-service** in namespace **ckaquest** gets no traffic to pod **backend-pod**. Pod **test-client** cannot reach it.
+  Service **backend-service** in namespace **service-selector** gets no traffic to pod **backend-pod**. Pod **test-client** cannot reach it.
   Fix the Service so it routes to backend-pod. Do not change the pod.
+namespace: service-selector

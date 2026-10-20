@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **web-with-init** in namespace **ckaquest** is stuck in `Init`.
+  Pod **web-with-init** in namespace **initcontainer** is stuck in `Init`.
   Find what the init container waits for and fix it, so the nginx container starts.
+namespace: initcontainer

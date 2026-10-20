@@ -1,1 +1,1 @@
-Use `kubectl get deployment web -n ckaquest` - notice the READY column. How many replicas are configured vs how many should be running?
+Use `kubectl get deployment web -n deploy-lab` - notice the READY column. How many replicas are configured vs how many should be running?

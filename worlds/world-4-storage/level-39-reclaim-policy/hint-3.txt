@@ -30,10 +30,10 @@ kubectl get pv important-data
 🧪 Test data safety:
 ```bash
 # Write some data
-kubectl exec data-writer -n ckaquest -- cat /data/important.txt
+kubectl exec data-writer -n reclaim-policy -- cat /data/important.txt
 
 # Delete PVC (simulate accident)
-kubectl delete pvc data-claim -n ckaquest
+kubectl delete pvc data-claim -n reclaim-policy
 
 # Check PV
 kubectl get pv important-data

@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: chaos-finale
   labels:
     pod-security.kubernetes.io/enforce: restricted
 
@@ -14,7 +14,7 @@ apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: chaos-quota
-  namespace: ckaquest
+  namespace: chaos-finale
 spec:
   hard:
     requests.cpu: "2"  # ✅ Increased
@@ -27,7 +27,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: app-sa
-  namespace: ckaquest
+  namespace: chaos-finale
 
 ---
 # ✅ 3. RBAC - Role
@@ -35,7 +35,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: app-role
-  namespace: ckaquest
+  namespace: chaos-finale
 rules:
 - apiGroups: [""]
   resources: ["pods"]
@@ -47,7 +47,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: app-binding
-  namespace: ckaquest
+  namespace: chaos-finale
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -62,7 +62,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-app
-  namespace: ckaquest
+  namespace: chaos-finale
 spec:
   podSelector:
     matchLabels:
@@ -98,7 +98,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chaos-app
-  namespace: ckaquest
+  namespace: chaos-finale
 spec:
   replicas: 2  # ✅ Reduced to fit quota
   selector:
@@ -154,7 +154,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: chaos-pdb
-  namespace: ckaquest
+  namespace: chaos-finale
 spec:
   minAvailable: 1  # ✅ Realistic for 2 replicas
   selector:

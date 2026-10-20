@@ -32,5 +32,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Deployment **web-app** in namespace **ckaquest** has PodDisruptionBudget **web-pdb**, and no pod can ever be evicted.
+  Deployment **web-app** in namespace **poddisruptionbudget** has PodDisruptionBudget **web-pdb**, and no pod can ever be evicted.
   Scale the Deployment to 3 replicas and set the PDB so 2 pods must stay available.
+namespace: poddisruptionbudget

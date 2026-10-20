@@ -33,5 +33,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **gpu-workload** in namespace **ckaquest** must run only on nodes labelled `accelerator=gpu`.
+  Pod **gpu-workload** in namespace **node-affinity** must run only on nodes labelled `accelerator=gpu`.
   Add a required node affinity for that label. The pod must be Running on such a node.
+namespace: node-affinity

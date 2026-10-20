@@ -1,9 +1,9 @@
 🔍 Observation Hint:
 
 Check what port the container is listening on:
-`kubectl get pod web-server -n ckaquest -o yaml | grep containerPort`
+`kubectl get pod web-server -n ports -o yaml | grep containerPort`
 
 Then check what port the service is forwarding to:
-`kubectl get service web-service -n ckaquest -o yaml | grep targetPort`
+`kubectl get service web-service -n ports -o yaml | grep targetPort`
 
 Do they match?

@@ -5,7 +5,7 @@ xp: 250
 difficulty: intermediate
 expected_time: 10m
 domain: workloads
-namespace: ckaquest
+namespace: hpa
 exam: true
 concepts:
   - HorizontalPodAutoscaler
@@ -15,7 +15,7 @@ concepts:
 task: |
   Context: `kind-ckaquest`
 
-  Deployment **web-backend** in namespace **ckaquest** has an HPA called **web-backend-hpa**.
+  Deployment **web-backend** in namespace **hpa** has an HPA called **web-backend-hpa**.
   It should keep average CPU at 50%, with 1 to 5 replicas.
   The TARGETS column shows `<unknown>/50%` and the HPA never scales.
 

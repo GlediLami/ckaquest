@@ -1,17 +1,17 @@
 🔍 Observation Hint:
 
 Check the deployments:
-`kubectl get deployments -n ckaquest`
+`kubectl get deployments -n bluegreen`
 
 You should see app-blue and app-green, both with 3/3 replicas.
 
 Check the service:
-`kubectl get service app-service -n ckaquest -o yaml | grep -A 5 selector`
+`kubectl get service app-service -n bluegreen -o yaml | grep -A 5 selector`
 
 Which version is it pointing to?
 
 Check the endpoints:
-`kubectl get endpoints app-service -n ckaquest`
+`kubectl get endpoints app-service -n bluegreen`
 
 Try to access the service and see which version responds:
-`kubectl run -it --rm test --image=busybox --restart=Never -n ckaquest -- wget -q -O- app-service`
+`kubectl run -it --rm test --image=busybox --restart=Never -n bluegreen -- wget -q -O- app-service`

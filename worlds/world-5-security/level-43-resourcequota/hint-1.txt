@@ -5,7 +5,7 @@ Start by understanding the quota situation:
 ## Step 1: Check Pod Status
 
 ```bash
-kubectl get pod resource-hungry-app -n ckaquest
+kubectl get pod resource-hungry-app -n resourcequota
 ```
 
 You'll likely see status **Pending** instead of Running.
@@ -13,7 +13,7 @@ You'll likely see status **Pending** instead of Running.
 ## Step 2: Examine Pod Events
 
 ```bash
-kubectl describe pod resource-hungry-app -n ckaquest
+kubectl describe pod resource-hungry-app -n resourcequota
 ```
 
 Look at the **Events** section. You should see:
@@ -26,7 +26,7 @@ This tells you the pod is trying to request more resources than the quota allows
 ## Step 3: Check the ResourceQuota
 
 ```bash
-kubectl describe resourcequota compute-quota -n ckaquest
+kubectl describe resourcequota compute-quota -n resourcequota
 ```
 
 You'll see something like:
@@ -43,7 +43,7 @@ requests.memory  0     2Gi
 ## Step 4: Check Pod's Resource Requests
 
 ```bash
-kubectl get pod resource-hungry-app -n ckaquest -o yaml | grep -A 4 requests
+kubectl get pod resource-hungry-app -n resourcequota -o yaml | grep -A 4 requests
 ```
 
 You'll see:

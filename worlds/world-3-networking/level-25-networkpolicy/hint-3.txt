@@ -11,7 +11,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: backend-network-policy
-  namespace: ckaquest
+  namespace: networkpolicy
 spec:
   podSelector:
     matchLabels:
@@ -34,7 +34,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: backend-network-policy
-  namespace: ckaquest
+  namespace: networkpolicy
 spec:
   podSelector:
     matchLabels:
@@ -75,7 +75,7 @@ Step-by-Step:
 
 3. **Verify the NetworkPolicy:**
    ```bash
-   kubectl describe networkpolicy backend-network-policy -n ckaquest
+   kubectl describe networkpolicy backend-network-policy -n networkpolicy
    ```
 
    Look for:
@@ -88,7 +88,7 @@ Step-by-Step:
 
 4. **Check frontend logs:**
    ```bash
-   kubectl logs frontend -n ckaquest --tail=10
+   kubectl logs frontend -n networkpolicy --tail=10
    ```
 
    You should now see:
@@ -102,7 +102,7 @@ Step-by-Step:
 
 5. **Watch it work in real-time:**
    ```bash
-   kubectl logs frontend -n ckaquest -f
+   kubectl logs frontend -n networkpolicy -f
    ```
 
    Press Ctrl+C to stop watching.
@@ -156,10 +156,10 @@ Testing Other Scenarios:
 Try creating a pod with a DIFFERENT label to verify security:
 
 ```bash
-kubectl run test-pod -n ckaquest --image=busybox:1.36 --labels="app=unauthorized" -- sleep 3600
+kubectl run test-pod -n networkpolicy --image=busybox:1.36 --labels="app=unauthorized" -- sleep 3600
 
 # Try to connect from this pod
-kubectl exec test-pod -n ckaquest -- wget -q -O- http://backend-service:8080 --timeout=3
+kubectl exec test-pod -n networkpolicy -- wget -q -O- http://backend-service:8080 --timeout=3
 ```
 
 This should TIMEOUT because `app: unauthorized` doesn't match `app: frontend`.

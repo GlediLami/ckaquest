@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-app
-  namespace: ckaquest
+  namespace: logs
 spec:
   containers:
   - name: postgres

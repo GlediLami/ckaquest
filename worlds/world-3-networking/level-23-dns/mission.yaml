@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **app-client** in namespace **ckaquest** cannot connect to the database. The database runs in pod **database** behind Service **database-service** on port 5432.
+  Pod **app-client** in namespace **dns** cannot connect to the database. The database runs in pod **database** behind Service **database-service** on port 5432.
   Find out which name the client uses and fix it so the client reaches the database through the Service.
+namespace: dns

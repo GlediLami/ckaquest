@@ -427,10 +427,10 @@ Does NOT match:
 
 ```bash
 # View Ingress details
-kubectl describe ingress web-ingress -n ckaquest
+kubectl describe ingress web-ingress -n ingress
 
 # Check path configuration
-kubectl get ingress web-ingress -n ckaquest -o yaml
+kubectl get ingress web-ingress -n ingress -o yaml
 ```
 
 Look for:
@@ -484,13 +484,13 @@ Look for:
 
 ```bash
 # Check service exists
-kubectl get service web-service -n ckaquest
+kubectl get service web-service -n ingress
 
 # Check service has endpoints
-kubectl get endpoints web-service -n ckaquest
+kubectl get endpoints web-service -n ingress
 
 # Describe service
-kubectl describe service web-service -n ckaquest
+kubectl describe service web-service -n ingress
 ```
 
 If endpoints are empty, the service selector might not match any pods.
@@ -499,7 +499,7 @@ If endpoints are empty, the service selector might not match any pods.
 
 ```bash
 # Port-forward to service
-kubectl port-forward -n ckaquest service/web-service 8080:80
+kubectl port-forward -n ingress service/web-service 8080:80
 
 # Test in another terminal
 curl http://localhost:8080/
@@ -623,7 +623,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: test-ingress
-  namespace: ckaquest
+  namespace: ingress
 spec:
   rules:
   - host: test.myapp.local

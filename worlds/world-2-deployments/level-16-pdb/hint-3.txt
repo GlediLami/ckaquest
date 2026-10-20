@@ -4,7 +4,7 @@ Fix the PDB to allow evictions while maintaining availability.
 
 Steps:
 1. Edit the PDB:
-   `kubectl edit pdb db-proxy-pdb -n ckaquest`
+   `kubectl edit pdb db-proxy-pdb -n pdb`
 
 2. Change minAvailable from 3 to 2:
 
@@ -14,7 +14,7 @@ spec:
 ```
 
 3. Save and verify:
-   `kubectl get pdb db-proxy-pdb -n ckaquest`
+   `kubectl get pdb db-proxy-pdb -n pdb`
 
 Now "ALLOWED" should be 1 instead of 0!
 

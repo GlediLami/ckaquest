@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Service **web-service** in namespace **ckaquest** should forward to pod **web-server** (nginx), but requests to it fail.
+  Service **web-service** in namespace **ports** should forward to pod **web-server** (nginx), but requests to it fail.
   Fix the port configuration so the service reaches nginx.
+namespace: ports

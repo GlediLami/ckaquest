@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: loadbalancer
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: loadbalancer
   labels:
     app: web
 spec:
@@ -25,7 +25,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-service
-  namespace: ckaquest
+  namespace: loadbalancer
 spec:
   type: LoadBalancer  # ❌ Won't work in local clusters!
   selector:

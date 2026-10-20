@@ -1,4 +1,4 @@
 Decode the value stored in the Secret:
-  k get secret db-credentials -n ckaquest -o jsonpath='{.data.username}' | base64 -d
+  k get secret db-credentials -n secret-encoding -o jsonpath='{.data.username}' | base64 -d
 
 Does it look like "admin"? Try decoding the result once more.

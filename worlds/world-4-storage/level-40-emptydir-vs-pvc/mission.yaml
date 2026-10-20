@@ -27,5 +27,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **data-app** in namespace **ckaquest** stores data in an `emptyDir`. The data is lost every time the pod is recreated.
+  Pod **data-app** in namespace **emptydir-vs-pvc** stores data in an `emptyDir`. The data is lost every time the pod is recreated.
   Create PVC **app-data** (1Gi, ReadWriteOnce) and change the pod to use it in place of the emptyDir.
+namespace: emptydir-vs-pvc

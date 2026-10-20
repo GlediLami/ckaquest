@@ -26,5 +26,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **web-app** in namespace **ckaquest** does not start. It reads its settings from ConfigMap **app-config**.
-  Find which key is missing and add it with value `postgres.ckaquest.svc.cluster.local`. The pod must be Running.
+  Pod **web-app** in namespace **configmap-key** does not start. It reads its settings from ConfigMap **app-config**.
+  Find which key is missing and add it with value `postgres.configmap-key.svc.cluster.local`. The pod must be Running.
+namespace: configmap-key

@@ -6,7 +6,7 @@ xp: 250
 difficulty: intermediate
 
 description: |
-  A frontend application in the 'ckaquest' namespace needs to call an API in the 
+  A frontend application in the 'crossnamespace' namespace needs to call an API in the 
   'backend-ns' namespace, but it can't connect. The issue is using a short service 
   name instead of the fully-qualified domain name (FQDN). You need to fix the DNS 
   name to enable cross-namespace communication.
@@ -40,5 +40,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **frontend-app** in namespace **ckaquest** must call Service **api-service** in namespace **backend-ns**. Its requests fail.
+  Pod **frontend-app** in namespace **crossnamespace** must call Service **api-service** in namespace **backend-ns**. Its requests fail.
   Fix the frontend so it reaches api-service. Do not move the Service.
+namespace: crossnamespace

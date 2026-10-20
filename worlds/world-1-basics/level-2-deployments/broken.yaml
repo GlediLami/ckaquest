@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
-  namespace: ckaquest
+  namespace: deploy-lab
 spec:
   replicas: 0
   selector:

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: rollback
   annotations:
     kubernetes.io/change-cause: "Initial deployment v1.0 (working)"
 spec:

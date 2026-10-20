@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: hungry-app
-  namespace: ckaquest
+  namespace: pending
 spec:
   containers:
   - name: app

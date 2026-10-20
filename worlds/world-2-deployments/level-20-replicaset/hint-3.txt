@@ -4,10 +4,10 @@ Convert the ReplicaSet to a Deployment.
 
 Steps:
 1. Delete the standalone ReplicaSet:
-   `kubectl delete replicaset web-app-rs -n ckaquest`
+   `kubectl delete replicaset web-app-rs -n replicaset`
 
 2. Create a Deployment instead:
-   `kubectl create deployment web-app --image=hashicorp/http-echo:latest -n ckaquest --replicas=3 -- -text="Version 2.0" -listen=:8080`
+   `kubectl create deployment web-app --image=hashicorp/http-echo:latest -n replicaset --replicas=3 -- -text="Version 2.0" -listen=:8080`
 
 3. OR use a YAML file:
    ```bash
@@ -16,7 +16,7 @@ Steps:
    kind: Deployment
    metadata:
      name: web-app
-     namespace: ckaquest
+     namespace: replicaset
    spec:
      replicas: 3
      selector:
@@ -37,7 +37,7 @@ Steps:
    ```
 
 4. Verify:
-   `kubectl get deployments,replicasets,pods -n ckaquest`
+   `kubectl get deployments,replicasets,pods -n replicaset`
 
 You should see:
 - 1 Deployment

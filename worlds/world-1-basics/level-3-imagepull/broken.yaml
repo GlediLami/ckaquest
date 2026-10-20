@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: imagepull
 spec:
   containers:
   - name: web

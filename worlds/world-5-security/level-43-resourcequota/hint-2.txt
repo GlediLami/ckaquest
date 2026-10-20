@@ -113,7 +113,7 @@ memory: "512M"   # 512 Megabytes (1000^2 bytes)
 ## Checking Quota Status
 
 ```bash
-kubectl describe resourcequota compute-quota -n ckaquest
+kubectl describe resourcequota compute-quota -n resourcequota
 ```
 
 Output shows:

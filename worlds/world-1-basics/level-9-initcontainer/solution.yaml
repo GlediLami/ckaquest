@@ -4,7 +4,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: ckaquest
+  namespace: initcontainer
 spec:
   selector:
     app: backend
@@ -19,13 +19,13 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-with-init
-  namespace: ckaquest
+  namespace: initcontainer
 spec:
   initContainers:
   - name: wait-for-service
     image: busybox:latest
     # ✅ This now succeeds because the service exists!
-    command: ['sh', '-c', 'until nslookup backend-service.ckaquest.svc.cluster.local; do echo waiting; sleep 2; done']
+    command: ['sh', '-c', 'until nslookup backend-service.initcontainer.svc.cluster.local; do echo waiting; sleep 2; done']
   containers:
   - name: web
     image: nginx:latest

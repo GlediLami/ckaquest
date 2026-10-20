@@ -16,7 +16,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: my-policy
-  namespace: ckaquest
+  namespace: netpol-db
 spec:
   podSelector:           # Which pods this applies to
     matchLabels:

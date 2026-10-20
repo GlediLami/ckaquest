@@ -3,23 +3,23 @@
 Let's investigate the StatefulSet storage issue:
 
 1️⃣ Check the StatefulSet:
-   kubectl get statefulset postgres-cluster -n ckaquest
-   kubectl describe statefulset postgres-cluster -n ckaquest
+   kubectl get statefulset postgres-cluster -n statefulset-volumes
+   kubectl describe statefulset postgres-cluster -n statefulset-volumes
    
    How many replicas are there?
 
 2️⃣ Check the pods:
-   kubectl get pods -n ckaquest -l app=postgres
+   kubectl get pods -n statefulset-volumes -l app=postgres
    
    Are all pods running?
 
 3️⃣ Check PVCs:
-   kubectl get pvc -n ckaquest
+   kubectl get pvc -n statefulset-volumes
    
    How many PVCs exist? One or multiple?
 
 4️⃣ Look at the StatefulSet spec:
-   kubectl get statefulset postgres-cluster -n ckaquest -o yaml | grep -A 10 volumes
+   kubectl get statefulset postgres-cluster -n statefulset-volumes -o yaml | grep -A 10 volumes
    
    Is volumeClaimTemplates defined?
 

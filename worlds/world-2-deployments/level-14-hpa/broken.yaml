@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-backend
-  namespace: ckaquest
+  namespace: hpa
 spec:
   replicas: 1
   selector:
@@ -23,7 +23,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: web-backend-hpa
-  namespace: ckaquest
+  namespace: hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

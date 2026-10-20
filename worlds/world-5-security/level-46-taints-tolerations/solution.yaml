@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: regular-app
-  namespace: ckaquest
+  namespace: taints-tolerations
 spec:
   containers:
   - name: app

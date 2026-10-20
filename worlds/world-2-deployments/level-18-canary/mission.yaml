@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Deployments **app-stable** and **app-canary** in namespace **ckaquest** sit behind the same Service **app-service**. The canary should get about 10% of the pods.
+  Deployments **app-stable** and **app-canary** in namespace **canary** sit behind the same Service **app-service**. The canary should get about 10% of the pods.
   Scale them so there are 10 pods in total: 9 stable and 1 canary.
+namespace: canary

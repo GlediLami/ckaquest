@@ -12,7 +12,7 @@ Check These Areas:
 1. **Ingress Configuration**
    View your Ingress:
    ```bash
-   kubectl describe ingress web-ingress -n ckaquest
+   kubectl describe ingress web-ingress -n ingress
    ```
 
    Look at the "Rules" section. What path is configured?
@@ -28,7 +28,7 @@ Check These Areas:
 3. **Service Endpoints**
    Check if the Service has endpoints:
    ```bash
-   kubectl get endpoints web-service -n ckaquest
+   kubectl get endpoints web-service -n ingress
    ```
 
 🎯 Key Questions:

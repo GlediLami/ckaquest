@@ -12,19 +12,19 @@
 
 ## What You Encountered
 
-You deployed a frontend application in the `ckaquest` namespace that needed to call a backend API in the `backend-ns` namespace. Both services were running perfectly, endpoints existed, and network connectivity was fine. Yet every API call from the frontend failed with DNS resolution errors.
+You deployed a frontend application in the `crossnamespace` namespace that needed to call a backend API in the `backend-ns` namespace. Both services were running perfectly, endpoints existed, and network connectivity was fine. Yet every API call from the frontend failed with DNS resolution errors.
 
 The culprit? The frontend was using a short service name (`api-service`) that only resolves within the same namespace.
 
 **The Broken Configuration:**
 ```yaml
-# Frontend pod in ckaquest namespace
+# Frontend pod in crossnamespace namespace
 command: ['sh', '-c', 'wget -q -O- http://api-service']
 ```
 
 **The Problem:**
 - Frontend tries to resolve: `api-service`
-- Kubernetes DNS searches: `api-service.ckaquest.svc.cluster.local`
+- Kubernetes DNS searches: `api-service.crossnamespace.svc.cluster.local`
 - But service is actually in: `backend-ns` namespace
 - Result: DNS resolution failed - "could not resolve host"
 
@@ -46,17 +46,17 @@ Kubernetes runs an internal DNS server (CoreDNS) that provides service discovery
 │  DNS Records:                                    │
 │  • api-service.backend-ns.svc.cluster.local     │
 │    → 10.96.15.23                                │
-│  • frontend-service.ckaquest.svc.cluster.local  │
+│  • frontend-service.crossnamespace.svc.cluster.local  │
 │    → 10.96.20.45                                │
 └─────────────────────────────────────────────────┘
                       ▲
                       │ DNS Query
                       │
 ┌─────────────────────┴─────────────────────┐
-│  Pod (in ckaquest namespace)              │
+│  Pod (in crossnamespace namespace)              │
 │  /etc/resolv.conf:                        │
 │    nameserver 10.96.0.10                  │
-│    search ckaquest.svc.cluster.local      │
+│    search crossnamespace.svc.cluster.local      │
 │           svc.cluster.local               │
 │           cluster.local                   │
 └───────────────────────────────────────────┘
@@ -69,14 +69,14 @@ When a pod tries to resolve a short name like `api-service`, Kubernetes uses **D
 **Pod's /etc/resolv.conf:**
 ```
 nameserver 10.96.0.10
-search ckaquest.svc.cluster.local svc.cluster.local cluster.local
+search crossnamespace.svc.cluster.local svc.cluster.local cluster.local
 options ndots:5
 ```
 
 **DNS Resolution Process for "api-service":**
 
-1. **First attempt:** `api-service.ckaquest.svc.cluster.local`
-   - Looks for service in ckaquest namespace
+1. **First attempt:** `api-service.crossnamespace.svc.cluster.local`
+   - Looks for service in crossnamespace namespace
    - Service doesn't exist there → NXDOMAIN
 
 2. **Second attempt:** `api-service.svc.cluster.local`
@@ -97,15 +97,15 @@ options ndots:5
 
 **Same Namespace (works with short name):**
 ```
-Frontend in ckaquest → api-service → Resolves to: api-service.ckaquest.svc.cluster.local ✅
+Frontend in crossnamespace → api-service → Resolves to: api-service.crossnamespace.svc.cluster.local ✅
 ```
 
 **Different Namespace (needs FQDN):**
 ```
-Frontend in ckaquest → api-service → Resolves to: api-service.ckaquest.svc.cluster.local ❌
+Frontend in crossnamespace → api-service → Resolves to: api-service.crossnamespace.svc.cluster.local ❌
                                       (Service is actually in backend-ns!)
 
-Frontend in ckaquest → api-service.backend-ns → Resolves correctly ✅
+Frontend in crossnamespace → api-service.backend-ns → Resolves correctly ✅
 ```
 
 ---
@@ -477,20 +477,20 @@ api-service.backend-ns.svc.cluster.local
 
 ### DNS Resolution Examples
 
-**Within Same Namespace (ckaquest):**
+**Within Same Namespace (crossnamespace):**
 
 ```bash
 # All of these work:
 curl http://api-service
 curl http://api-service.ckaquest
-curl http://api-service.ckaquest.svc
-curl http://api-service.ckaquest.svc.cluster.local
+curl http://api-service.crossnamespace.svc
+curl http://api-service.crossnamespace.svc.cluster.local
 
 # DNS resolution:
-api-service → api-service.ckaquest.svc.cluster.local (search domain appended)
+api-service → api-service.crossnamespace.svc.cluster.local (search domain appended)
 ```
 
-**Cross-Namespace (ckaquest → backend-ns):**
+**Cross-Namespace (crossnamespace → backend-ns):**
 
 ```bash
 # These work:
@@ -500,7 +500,7 @@ curl http://api-service.backend-ns.svc.cluster.local
 
 # This FAILS:
 curl http://api-service
-# DNS tries: api-service.ckaquest.svc.cluster.local (wrong namespace!)
+# DNS tries: api-service.crossnamespace.svc.cluster.local (wrong namespace!)
 ```
 
 **To External Service:**
@@ -515,13 +515,13 @@ curl http://api.example.com    # Uses external DNS, not CoreDNS
 Every pod gets DNS configured via `/etc/resolv.conf`:
 
 ```bash
-kubectl exec frontend-app -n ckaquest -- cat /etc/resolv.conf
+kubectl exec frontend-app -n crossnamespace -- cat /etc/resolv.conf
 ```
 
 Output:
 ```
 nameserver 10.96.0.10
-search ckaquest.svc.cluster.local svc.cluster.local cluster.local
+search crossnamespace.svc.cluster.local svc.cluster.local cluster.local
 options ndots:5
 ```
 
@@ -535,7 +535,7 @@ options ndots:5
 ```bash
 # "api-service" has 0 dots (< 5)
 # Try search domains:
-#   1. api-service.ckaquest.svc.cluster.local
+#   1. api-service.crossnamespace.svc.cluster.local
 #   2. api-service.svc.cluster.local
 #   3. api-service.cluster.local
 # Then try as-is: api-service
@@ -752,10 +752,10 @@ subjects:
 
 ```bash
 # From frontend pod
-kubectl exec frontend-app -n ckaquest -- nslookup api-service
+kubectl exec frontend-app -n crossnamespace -- nslookup api-service
 # Should fail: NXDOMAIN
 
-kubectl exec frontend-app -n ckaquest -- nslookup api-service.backend-ns.svc.cluster.local
+kubectl exec frontend-app -n crossnamespace -- nslookup api-service.backend-ns.svc.cluster.local
 # Should succeed: Returns ClusterIP
 ```
 
@@ -763,7 +763,7 @@ kubectl exec frontend-app -n ckaquest -- nslookup api-service.backend-ns.svc.clu
 
 ```bash
 # View pod's DNS config
-kubectl exec frontend-app -n ckaquest -- cat /etc/resolv.conf
+kubectl exec frontend-app -n crossnamespace -- cat /etc/resolv.conf
 
 # Check CoreDNS is running
 kubectl get pods -n kube-system -l k8s-app=kube-dns
@@ -786,7 +786,7 @@ kubectl get endpoints api-service -n backend-ns
 SERVICE_IP=$(kubectl get service api-service -n backend-ns -o jsonpath='{.spec.clusterIP}')
 
 # Test direct IP connection
-kubectl exec frontend-app -n ckaquest -- wget -q -O- http://$SERVICE_IP
+kubectl exec frontend-app -n crossnamespace -- wget -q -O- http://$SERVICE_IP
 ```
 
 ### 5. Check CoreDNS Logs
@@ -806,7 +806,7 @@ kubectl logs -n kube-system -l k8s-app=kube-dns | grep NXDOMAIN
 kubectl get service kube-dns -n kube-system
 
 # Query from pod
-kubectl exec frontend-app -n ckaquest -- nslookup api-service.backend-ns.svc.cluster.local 10.96.0.10
+kubectl exec frontend-app -n crossnamespace -- nslookup api-service.backend-ns.svc.cluster.local 10.96.0.10
 ```
 
 ---

@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: session-service
-  namespace: ckaquest
+  namespace: sessionaffinity
 spec:
   selector:
     app: session-app
@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: session-service
-  namespace: ckaquest
+  namespace: sessionaffinity
 spec:
   selector:
     app: session-app
@@ -64,7 +64,7 @@ Step-by-Step:
 
 3. **Verify the configuration:**
    ```bash
-   kubectl get service session-service -n ckaquest -o yaml
+   kubectl get service session-service -n sessionaffinity -o yaml
    ```
 
    Look for:
@@ -78,7 +78,7 @@ Step-by-Step:
 
 4. **Watch the client logs:**
    ```bash
-   kubectl logs client -n ckaquest --tail=20
+   kubectl logs client -n sessionaffinity --tail=20
    ```
 
    Before the fix (random pods):
@@ -107,7 +107,7 @@ Step-by-Step:
 
 5. **Follow logs in real-time:**
    ```bash
-   kubectl logs client -n ckaquest -f
+   kubectl logs client -n sessionaffinity -f
    ```
 
    You should see all responses from the SAME pod. Press Ctrl+C to stop.
@@ -162,7 +162,7 @@ Testing Session Affinity:
 **Test 1: Verify same-pod routing**
 ```bash
 # Make multiple requests from the same source
-kubectl exec client -n ckaquest -- sh -c 'for i in 1 2 3 4 5; do wget -q -O- http://session-service; echo; done'
+kubectl exec client -n sessionaffinity -- sh -c 'for i in 1 2 3 4 5; do wget -q -O- http://session-service; echo; done'
 ```
 
 All 5 responses should be from the same pod.
@@ -170,17 +170,17 @@ All 5 responses should be from the same pod.
 **Test 2: Verify different clients get different pods**
 ```bash
 # Create another client pod
-kubectl run client2 -n ckaquest --image=busybox:1.36 -- sleep 3600
+kubectl run client2 -n sessionaffinity --image=busybox:1.36 -- sleep 3600
 
 # Make request from client2 (different IP)
-kubectl exec client2 -n ckaquest -- wget -q -O- http://session-service
+kubectl exec client2 -n sessionaffinity -- wget -q -O- http://session-service
 ```
 
 client2 might get a different pod than client (good for load distribution).
 
 **Test 3: Check service endpoints**
 ```bash
-kubectl get endpoints session-service -n ckaquest
+kubectl get endpoints session-service -n sessionaffinity
 ```
 
 Should show 3 pod IPs (all 3 backend pods registered).
@@ -195,14 +195,14 @@ Common Issues and Fixes:
 **Issue 2: Client pod not using affinity**
 ```bash
 # Delete and recreate client pod
-kubectl delete pod client -n ckaquest
+kubectl delete pod client -n sessionaffinity
 kubectl apply -f broken.yaml
 ```
 
 **Issue 3: Want to reset affinity**
 ```bash
 # Update the Service (triggers kube-proxy refresh)
-kubectl annotate service session-service -n ckaquest timestamp="$(date)"
+kubectl annotate service session-service -n sessionaffinity timestamp="$(date)"
 ```
 
 When NOT to Use Session Affinity:

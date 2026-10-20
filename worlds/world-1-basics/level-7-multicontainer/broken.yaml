@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: app-with-logging
-  namespace: ckaquest
+  namespace: multicontainer
 spec:
   containers:
   - name: main-app

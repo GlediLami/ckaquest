@@ -20,7 +20,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: shared-pvc
-  namespace: ckaquest
+  namespace: access-mode
 spec:
   accessModes:
     - ReadWriteMany  # ✅ Request multi-node access
@@ -33,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-servers
-  namespace: ckaquest
+  namespace: access-mode
 spec:
   replicas: 3
   selector:

@@ -1,14 +1,14 @@
 🔍 Observation Hint:
 
 Check the deployment's rollout strategy:
-`kubectl get deployment critical-api -n ckaquest -o yaml | grep -A 5 strategy`
+`kubectl get deployment critical-api -n rollout -o yaml | grep -A 5 strategy`
 
 Look at `maxUnavailable` and `maxSurge`. What do you notice?
 
 Try triggering a rollout (change image tag):
-`kubectl set image deployment/critical-api api=hashicorp/http-echo:latest -n ckaquest`
+`kubectl set image deployment/critical-api api=hashicorp/http-echo:latest -n rollout`
 
 Watch what happens to pods:
-`kubectl get pods -n ckaquest -l app=api -w`
+`kubectl get pods -n rollout -l app=api -w`
 
 Do ALL pods terminate at once? That would cause downtime!

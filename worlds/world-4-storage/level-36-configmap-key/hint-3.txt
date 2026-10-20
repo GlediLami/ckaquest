@@ -8,25 +8,25 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: ckaquest
+  namespace: configmap-key
 data:
   app_name: "MyApp"
   app_version: "1.0.0"
-  database_host: "postgres.ckaquest.svc.cluster.local"  # ✅ Added!
+  database_host: "postgres.configmap-key.svc.cluster.local"  # ✅ Added!
 ```
 
 🚀 Apply:
 ```bash
-kubectl delete pod web-app -n ckaquest
+kubectl delete pod web-app -n configmap-key
 kubectl apply -f solution.yaml
-kubectl logs web-app -n ckaquest -f
+kubectl logs web-app -n configmap-key -f
 # Should show all three variables including DATABASE_HOST
 ```
 
 🔍 Verify:
 ```bash
-kubectl exec web-app -n ckaquest -- env | grep DATABASE_HOST
-# Should output: DATABASE_HOST=postgres.ckaquest.svc.cluster.local
+kubectl exec web-app -n configmap-key -- env | grep DATABASE_HOST
+# Should output: DATABASE_HOST=postgres.configmap-key.svc.cluster.local
 ```
 
 💡 Remember: Every configMapKeyRef must point to a key that exists in the ConfigMap data!

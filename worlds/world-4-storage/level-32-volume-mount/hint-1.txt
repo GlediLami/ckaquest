@@ -3,17 +3,17 @@
 Let's investigate why the pod is failing:
 
 1️⃣ Check pod status:
-   kubectl get pod web-app -n ckaquest
+   kubectl get pod web-app -n volume-mount
    
    What's the STATUS? Is it Running or CrashLoopBackOff?
 
 2️⃣ Check pod logs:
-   kubectl logs web-app -n ckaquest
+   kubectl logs web-app -n volume-mount
    
    What error message do you see?
 
 3️⃣ Check the pod specification:
-   kubectl get pod web-app -n ckaquest -o yaml | grep -A 5 volumeMounts
+   kubectl get pod web-app -n volume-mount -o yaml | grep -A 5 volumeMounts
    
    Where is the volume mounted?
 

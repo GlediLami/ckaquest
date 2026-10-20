@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Ingress **web-ingress** in namespace **ckaquest** should send all requests for host `myapp.local` to Service **web-service** on port 80. Requests to `/` return 404.
+  Ingress **web-ingress** in namespace **ingress** should send all requests for host `myapp.local` to Service **web-service** on port 80. Requests to `/` return 404.
   Fix the Ingress.
+namespace: ingress

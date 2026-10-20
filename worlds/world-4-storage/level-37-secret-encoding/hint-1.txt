@@ -1,4 +1,4 @@
 Read the logs, including the previous crash:
-  k logs database-client -n ckaquest --previous
+  k logs database-client -n secret-encoding --previous
 
 What username does the pod print?

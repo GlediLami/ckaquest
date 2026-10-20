@@ -4,7 +4,7 @@ Fix the rollout strategy to ensure zero downtime.
 
 Steps:
 1. Edit the deployment:
-   `kubectl edit deployment critical-api -n ckaquest`
+   `kubectl edit deployment critical-api -n rollout`
 
 2. Find the `strategy` section and change:
 
@@ -22,6 +22,6 @@ This ensures:
 - Zero downtime guaranteed!
 
 3. Save and verify:
-   `kubectl get deployment critical-api -n ckaquest -o yaml | grep -A 5 strategy`
+   `kubectl get deployment critical-api -n rollout -o yaml | grep -A 5 strategy`
 
 Try a rollout now - it should be smooth with no downtime!

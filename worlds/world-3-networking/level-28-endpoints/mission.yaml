@@ -41,5 +41,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Service **web-service** in namespace **ckaquest** sends traffic to pods **web-app-1** and **web-app-2** even while they cannot serve it.
+  Service **web-service** in namespace **endpoints** sends traffic to pods **web-app-1** and **web-app-2** even while they cannot serve it.
   Add a readiness probe to both pods: HTTP GET on `/`, port 8080. Both pods must become Ready.
+namespace: endpoints

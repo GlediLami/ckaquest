@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pods of Deployment **api-server** in namespace **ckaquest** keep restarting.
+  Pods of Deployment **api-server** in namespace **liveness** keep restarting.
   Fix the liveness probe so it checks a path nginx actually serves. Keep the liveness probe.
+namespace: liveness

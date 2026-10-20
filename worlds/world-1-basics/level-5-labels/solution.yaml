@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: backend-app
-  namespace: ckaquest
+  namespace: labels
   labels:
     app: backend
     tier: api
@@ -19,7 +19,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: ckaquest
+  namespace: labels
 spec:
   selector:
     app: backend

@@ -1,11 +1,11 @@
 🔍 Observation Hint:
 
 Check the pods:
-`kubectl get pods -n ckaquest -l app=api`
+`kubectl get pods -n liveness -l app=api`
 
 Look at the RESTARTS column. Are the pods constantly restarting?
 
 Describe one of the pods:
-`kubectl describe pod <pod-name> -n ckaquest`
+`kubectl describe pod <pod-name> -n liveness`
 
 Look at the Events section at the bottom. What do you see?

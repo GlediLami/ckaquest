@@ -28,9 +28,9 @@ initContainers:
 
 🚀 Apply:
 ```bash
-kubectl delete pod web-app -n ckaquest
+kubectl delete pod web-app -n volume-mount
 kubectl apply -f solution.yaml
-kubectl logs web-app -n ckaquest
+kubectl logs web-app -n volume-mount
 # Should show: "Config loaded successfully"
 ```
 

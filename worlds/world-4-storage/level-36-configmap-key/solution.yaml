@@ -3,17 +3,17 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: ckaquest
+  namespace: configmap-key
 data:
   app_name: "MyApp"
   app_version: "1.0.0"
-  database_host: "postgres.ckaquest.svc.cluster.local"  # ✅ Added missing key!
+  database_host: "postgres.configmap-key.svc.cluster.local"  # ✅ Added missing key!
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: configmap-key
 spec:
   containers:
   - name: app

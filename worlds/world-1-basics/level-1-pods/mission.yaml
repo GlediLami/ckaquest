@@ -16,5 +16,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **nginx-broken** in namespace **ckaquest** does not start.
+  Pod **nginx-broken** in namespace **pods-lab** does not start.
   Find the cause and fix it. The pod must be Running with the nginx image.
+namespace: pods-lab

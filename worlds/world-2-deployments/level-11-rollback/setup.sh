@@ -11,7 +11,7 @@ kubectl apply -f setup.yaml
 
 # Wait for deployment to be ready (increased timeout)
 echo "⏳ Waiting for initial deployment to stabilize..."
-kubectl rollout status deployment/web-app -n ckaquest --timeout=120s
+kubectl rollout status deployment/web-app -n rollback --timeout=120s
 
 if [ $? -ne 0 ]; then
     echo "⚠️  Initial deployment taking longer than expected, but continuing..."
@@ -31,7 +31,7 @@ echo ""
 echo "✅ Level 11 setup complete!"
 echo ""
 echo "📊 Rollback history:"
-kubectl rollout history deployment/web-app -n ckaquest
+kubectl rollout history deployment/web-app -n rollback
 echo ""
 echo "🎯 Your mission: The deployment is stuck on a bad update."
 echo "   Use 'kubectl rollout undo' to rollback to the working version!"

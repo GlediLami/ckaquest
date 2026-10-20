@@ -17,7 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-claim
-  namespace: ckaquest
+  namespace: reclaim-policy
 spec:
   accessModes:
     - ReadWriteOnce
@@ -30,7 +30,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: data-writer
-  namespace: ckaquest
+  namespace: reclaim-policy
 spec:
   containers:
   - name: writer

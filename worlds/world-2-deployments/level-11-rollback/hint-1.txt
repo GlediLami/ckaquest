@@ -1,9 +1,9 @@
 🔍 Observation Hint:
 
 Check the deployment status:
-`kubectl get deployment web-app -n ckaquest`
+`kubectl get deployment web-app -n rollback`
 
 Look at the rollout status:
-`kubectl rollout status deployment/web-app -n ckaquest`
+`kubectl rollout status deployment/web-app -n rollback`
 
 What do you notice about the READY column and the rollout status?

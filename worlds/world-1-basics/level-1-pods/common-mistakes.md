@@ -4,7 +4,7 @@
 
 **What players try:**
 ```bash
-kubectl logs nginx-broken -n ckaquest
+kubectl logs nginx-broken -n pods-lab
 ```
 
 **Why it fails:**
@@ -12,7 +12,7 @@ The container is crashing so fast that by the time you run this command, the new
 
 **Correct approach:**
 ```bash
-kubectl logs nginx-broken --previous -n ckaquest
+kubectl logs nginx-broken --previous -n pods-lab
 ```
 
 **Key Learning:**
@@ -24,7 +24,7 @@ The `--previous` flag shows logs from the last terminated container, which is ex
 
 **What players try:**
 ```bash
-kubectl edit pod nginx-broken -n ckaquest
+kubectl edit pod nginx-broken -n pods-lab
 # Try to change the command field
 ```
 
@@ -34,10 +34,10 @@ Most pod spec fields (including `command`) are **immutable** after creation. Kub
 **Correct approach:**
 ```bash
 # Delete the broken pod
-kubectl delete pod nginx-broken -n ckaquest
+kubectl delete pod nginx-broken -n pods-lab
 
 # Apply the fixed YAML
-kubectl apply -f solution.yaml -n ckaquest
+kubectl apply -f solution.yaml -n pods-lab
 ```
 
 **Key Learning:**
@@ -56,10 +56,10 @@ Events and status will show "Container 'app' is crashing" but you fixed containe
 **Correct approach:**
 ```bash
 # Check which container is failing
-kubectl describe pod nginx-broken -n ckaquest | grep -A 5 "State:"
+kubectl describe pod nginx-broken -n pods-lab | grep -A 5 "State:"
 
 # Or look at container status
-kubectl get pod nginx-broken -n ckaquest -o jsonpath='{.status.containerStatuses[*].name}'
+kubectl get pod nginx-broken -n pods-lab -o jsonpath='{.status.containerStatuses[*].name}'
 ```
 
 **Key Learning:**
@@ -82,7 +82,7 @@ Exit codes tell you WHY the container crashed:
 
 **Correct approach:**
 ```bash
-kubectl describe pod nginx-broken -n ckaquest | grep "Exit Code"
+kubectl describe pod nginx-broken -n pods-lab | grep "Exit Code"
 ```
 
 If you see **Exit Code: 127**, the command doesn't exist or isn't in PATH.
@@ -98,7 +98,7 @@ If you see **Exit Code: 127**, the command doesn't exist or isn't in PATH.
 
 **What players try:**
 ```bash
-kubectl apply -f broken.yaml -n ckaquest
+kubectl apply -f broken.yaml -n pods-lab
 # Hope it works this time?
 ```
 
@@ -113,7 +113,7 @@ Applying the same broken config won't fix the issue! You need to modify the YAML
 ```bash
 cp broken.yaml my-fix.yaml
 # Edit my-fix.yaml
-kubectl apply -f my-fix.yaml -n ckaquest
+kubectl apply -f my-fix.yaml -n pods-lab
 ```
 
 **Key Learning:**
@@ -136,10 +136,10 @@ Events contain crucial debugging info like:
 **Correct approach:**
 ```bash
 # Always check events as part of debugging
-kubectl get events -n ckaquest --sort-by='.lastTimestamp'
+kubectl get events -n pods-lab --sort-by='.lastTimestamp'
 
 # Or check events for specific pod
-kubectl describe pod nginx-broken -n ckaquest | grep -A 20 Events
+kubectl describe pod nginx-broken -n pods-lab | grep -A 20 Events
 ```
 
 **Key Learning:**
@@ -158,16 +158,16 @@ You need to actually apply the changes and verify the pod is running before vali
 **Correct approach:**
 ```bash
 # 1. Delete old pod
-kubectl delete pod nginx-broken -n ckaquest
+kubectl delete pod nginx-broken -n pods-lab
 
 # 2. Apply fix
-kubectl apply -f solution.yaml -n ckaquest
+kubectl apply -f solution.yaml -n pods-lab
 
 # 3. Verify it's running
-kubectl get pod nginx-broken -n ckaquest
+kubectl get pod nginx-broken -n pods-lab
 
 # 4. Wait for Running status
-kubectl wait --for=condition=ready pod/nginx-broken -n ckaquest --timeout=60s
+kubectl wait --for=condition=ready pod/nginx-broken -n pods-lab --timeout=60s
 
 # 5. NOW validate
 ./validate.sh
@@ -187,19 +187,19 @@ kubectl get pods
 ```
 
 **Why it fails:**
-By default, kubectl looks in the `default` namespace. CKAQuest uses the `ckaquest` namespace.
+By default, kubectl looks in the `default` namespace. CKAQuest uses the `pods-lab` namespace.
 
 **Correct approach:**
 ```bash
 # Always specify namespace
-kubectl get pods -n ckaquest
+kubectl get pods -n pods-lab
 
 # Or set default namespace for session
-kubectl config set-context --current --namespace=ckaquest
+kubectl config set-context --current --namespace=pods-lab
 ```
 
 **Key Learning:**
-Namespaces isolate resources. Always use `-n ckaquest` or set it as default.
+Namespaces isolate resources. Always use `-n pods-lab` or set it as default.
 
 ---
 
@@ -209,27 +209,27 @@ Here's the systematic approach that works:
 
 ```bash
 # 1. Check current status
-kubectl get pods -n ckaquest
+kubectl get pods -n pods-lab
 
 # 2. Get detailed info
-kubectl describe pod nginx-broken -n ckaquest
+kubectl describe pod nginx-broken -n pods-lab
 
 # 3. Check PREVIOUS logs (for crashes)
-kubectl logs nginx-broken --previous -n ckaquest
+kubectl logs nginx-broken --previous -n pods-lab
 
 # 4. Check events
-kubectl get events -n ckaquest --sort-by='.lastTimestamp' | tail -20
+kubectl get events -n pods-lab --sort-by='.lastTimestamp' | tail -20
 
 # 5. Identify the issue from above info
 
 # 6. Fix the YAML
 
 # 7. Delete and recreate
-kubectl delete pod nginx-broken -n ckaquest
-kubectl apply -f solution.yaml -n ckaquest
+kubectl delete pod nginx-broken -n pods-lab
+kubectl apply -f solution.yaml -n pods-lab
 
 # 8. Verify fix
-kubectl get pod nginx-broken -n ckaquest -w
+kubectl get pod nginx-broken -n pods-lab -w
 # Wait for Running status (Ctrl+C to stop)
 
 # 9. Validate
@@ -244,7 +244,7 @@ kubectl get pod nginx-broken -n ckaquest -w
 2. **Pod specs are mostly immutable** - delete and recreate to change them
 3. **Events are your friend** - they show the timeline of what went wrong
 4. **Exit codes matter** - 127 = command not found, 137 = OOMKilled
-5. **Specify namespace** - use `-n ckaquest` or set default context
+5. **Specify namespace** - use `-n pods-lab` or set default context
 6. **Test before validate** - verify with kubectl before running validation
 7. **Fix the config, not just the symptom** - understand WHY it crashed
 

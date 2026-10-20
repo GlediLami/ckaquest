@@ -28,5 +28,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **writer-app** in namespace **ckaquest** runs as user 1000 and fails to write to its volume from PVC **app-data**.
+  Pod **writer-app** in namespace **volume-permissions** runs as user 1000 and fails to write to its volume from PVC **app-data**.
   Fix the pod with a securityContext so the volume is writable by the pod's group. Do not run the container as root.
+namespace: volume-permissions

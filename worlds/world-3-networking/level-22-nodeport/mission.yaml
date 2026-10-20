@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **web-app** in namespace **ckaquest** must be reachable from outside the cluster on every node at port **30080**.
+  Pod **web-app** in namespace **nodeport** must be reachable from outside the cluster on every node at port **30080**.
   Fix Service **web-nodeport** so it does that.
+namespace: nodeport

@@ -34,5 +34,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Deployment **web-servers** in namespace **ckaquest** runs several replicas that must share PVC **shared-pvc**. Only some pods start.
+  Deployment **web-servers** in namespace **access-mode** runs several replicas that must share PVC **shared-pvc**. Only some pods start.
   Fix the storage so all replicas can mount the volume at the same time. PV **shared-storage** must back the claim.
+namespace: access-mode

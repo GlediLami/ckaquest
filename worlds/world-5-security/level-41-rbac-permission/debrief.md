@@ -544,8 +544,8 @@ Two commands, then prove it with auth can-i:
 
 ```bash
 k create role pod-reader-role --verb=get,list,watch --resource=pods
-k create rolebinding pod-reader-rb --role=pod-reader-role --serviceaccount=ckaquest:pod-reader
-k auth can-i list pods --as=system:serviceaccount:ckaquest:pod-reader
+k create rolebinding pod-reader-rb --role=pod-reader-role --serviceaccount=rbac-permission:pod-reader
+k auth can-i list pods --as=system:serviceaccount:rbac-permission:pod-reader
 ```
 
 Bookmark: https://kubernetes.io/docs/reference/access-authn-authz/rbac/

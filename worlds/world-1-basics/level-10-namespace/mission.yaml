@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **client-app** and Service **backend-service** belong in namespace **ckaquest**, but they were created somewhere else.
-  Move both into **ckaquest**. Nothing of them may remain in the wrong namespace.
+  Pod **client-app** and Service **backend-service** belong in namespace **team-a**, but they were created somewhere else.
+  Move both into **team-a**. Nothing of them may remain in the wrong namespace.
+namespace: team-a

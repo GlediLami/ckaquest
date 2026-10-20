@@ -40,7 +40,7 @@ spec:
 ```bash
 kubectl delete -f broken.yaml
 kubectl apply -f solution.yaml
-kubectl get pvc -n ckaquest
+kubectl get pvc -n statefulset-volumes
 # Should see 3 PVCs: one per pod
 ```
 

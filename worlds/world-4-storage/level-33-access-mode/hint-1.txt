@@ -3,13 +3,13 @@
 Let's check the current configuration:
 
 1️⃣ Check pod status:
-   kubectl get pods -n ckaquest -l app=web
+   kubectl get pods -n access-mode -l app=web
    
    You'll likely see all 3 pods Running (because Kind is single-node).
    But is this the RIGHT configuration for production?
 
 2️⃣ Check the PVC access mode:
-   kubectl get pvc shared-pvc -n ckaquest -o yaml | grep -A2 accessModes
+   kubectl get pvc shared-pvc -n access-mode -o yaml | grep -A2 accessModes
    
    What's the access mode? ReadWriteOnce or ReadWriteMany?
 

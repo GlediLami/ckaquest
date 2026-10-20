@@ -1,15 +1,15 @@
 🔍 Observation Hint:
 
 Check what resources exist:
-`kubectl get deployments,replicasets -n ckaquest`
+`kubectl get deployments,replicasets -n replicaset`
 
 Do you see a standalone ReplicaSet (web-app-rs) without a Deployment?
 
 Try to update the image:
-`kubectl set image replicaset/web-app-rs web=hashicorp/http-echo:latest -n ckaquest`
+`kubectl set image replicaset/web-app-rs web=hashicorp/http-echo:latest -n replicaset`
 
 Check the pods:
-`kubectl get pods -n ckaquest -l app=webapp`
+`kubectl get pods -n replicaset -l app=webapp`
 
 Did the update work? Spoiler: It updated the ReplicaSet spec, but the EXISTING pods didn't change!
 

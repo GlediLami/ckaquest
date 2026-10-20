@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **hungry-app** in namespace **ckaquest** stays Pending.
+  Pod **hungry-app** in namespace **pending** stays Pending.
   Find out why the scheduler cannot place it. Change the pod so it is scheduled and Running. Do not remove the resource requests.
+namespace: pending

@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: frontend-app
-  namespace: ckaquest
+  namespace: crossnamespace
 spec:
   containers:
   - name: frontend
@@ -29,7 +29,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: frontend-app
-  namespace: ckaquest
+  namespace: crossnamespace
 spec:
   containers:
   - name: frontend
@@ -57,7 +57,7 @@ Step-by-Step:
 
 2. **Delete the old pod:**
    ```bash
-   kubectl delete pod frontend-app -n ckaquest
+   kubectl delete pod frontend-app -n crossnamespace
    ```
 
 3. **Apply the fixed configuration:**
@@ -75,7 +75,7 @@ Step-by-Step:
 
 4. **Watch the logs:**
    ```bash
-   kubectl logs frontend-app -n ckaquest -f
+   kubectl logs frontend-app -n crossnamespace -f
    ```
 
    Before the fix (DNS failure):
@@ -96,7 +96,7 @@ Step-by-Step:
 
 5. **Verify DNS resolution:**
    ```bash
-   kubectl exec frontend-app -n ckaquest -- nslookup api-service.backend-ns.svc.cluster.local
+   kubectl exec frontend-app -n crossnamespace -- nslookup api-service.backend-ns.svc.cluster.local
    ```
 
    Should return:
@@ -115,11 +115,11 @@ Why This Works:
 
 1. **Short Name (api-service):**
    ```
-   frontend-app is in namespace: ckaquest
-   DNS search domains: ckaquest.svc.cluster.local, svc.cluster.local, cluster.local
+   frontend-app is in namespace: crossnamespace
+   DNS search domains: crossnamespace.svc.cluster.local, svc.cluster.local, cluster.local
    
    Tries to resolve:
-   - api-service.ckaquest.svc.cluster.local    ❌ (service not in ckaquest)
+   - api-service.crossnamespace.svc.cluster.local    ❌ (service not in crossnamespace)
    - api-service.svc.cluster.local             ❌ (ambiguous)
    - api-service.cluster.local                 ❌ (doesn't exist)
    - api-service                               ❌ (not a valid host)
@@ -166,7 +166,7 @@ http://api-service.backend-ns.svc
 http://api-service.backend-ns
 
 # SHORT NAME (only works within SAME namespace)
-http://api-service    # Only works if service is in ckaquest!
+http://api-service    # Only works if service is in crossnamespace!
 ```
 
 Testing Different Formats:
@@ -174,13 +174,13 @@ Testing Different Formats:
 
 ```bash
 # Test minimal format (namespace-qualified)
-kubectl exec frontend-app -n ckaquest -- wget -q -O- http://api-service.backend-ns
+kubectl exec frontend-app -n crossnamespace -- wget -q -O- http://api-service.backend-ns
 
 # Test short FQDN
-kubectl exec frontend-app -n ckaquest -- wget -q -O- http://api-service.backend-ns.svc
+kubectl exec frontend-app -n crossnamespace -- wget -q -O- http://api-service.backend-ns.svc
 
 # Test full FQDN (recommended)
-kubectl exec frontend-app -n ckaquest -- wget -q -O- http://api-service.backend-ns.svc.cluster.local
+kubectl exec frontend-app -n crossnamespace -- wget -q -O- http://api-service.backend-ns.svc.cluster.local
 ```
 
 All three should work! The full FQDN is most explicit and works even if cluster 
@@ -192,7 +192,7 @@ Common Mistakes:
 **Mistake 1: Wrong namespace**
 ```yaml
 # ❌ Using wrong namespace
-http://api-service.ckaquest.svc.cluster.local
+http://api-service.crossnamespace.svc.cluster.local
 
 # ✅ Correct namespace
 http://api-service.backend-ns.svc.cluster.local

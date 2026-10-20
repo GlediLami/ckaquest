@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Namespace **ckaquest** runs two versions of an app: Deployments **app-blue** (old) and **app-green** (new).
+  Namespace **bluegreen** runs two versions of an app: Deployments **app-blue** (old) and **app-green** (new).
   Switch Service **app-service** so it sends all traffic to the green pods and none to blue.
+namespace: bluegreen

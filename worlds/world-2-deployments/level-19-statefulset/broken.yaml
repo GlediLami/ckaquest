@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment  # PROBLEM! Should be StatefulSet for stateful apps!
 metadata:
   name: database
-  namespace: ckaquest
+  namespace: statefulset
 spec:
   replicas: 3
   selector:
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: database-service
-  namespace: ckaquest
+  namespace: statefulset
 spec:
   selector:
     app: database

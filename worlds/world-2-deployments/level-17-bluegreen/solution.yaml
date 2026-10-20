@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-service
-  namespace: ckaquest
+  namespace: bluegreen
 spec:
   selector:
     app: myapp

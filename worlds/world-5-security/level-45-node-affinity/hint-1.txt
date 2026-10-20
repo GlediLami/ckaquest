@@ -3,7 +3,7 @@
 ## Check Pod Status
 
 ```bash
-kubectl get pod gpu-workload -n ckaquest
+kubectl get pod gpu-workload -n node-affinity
 ```
 
 You'll see it's **Pending**.
@@ -11,7 +11,7 @@ You'll see it's **Pending**.
 ## Check Pod Events
 
 ```bash
-kubectl describe pod gpu-workload -n ckaquest
+kubectl describe pod gpu-workload -n node-affinity
 ```
 
 Look for the error:
@@ -32,7 +32,7 @@ Look at what labels your nodes actually have.
 ## Check Pod's NodeAffinity
 
 ```bash
-kubectl get pod gpu-workload -n ckaquest -o yaml | grep -A 10 nodeAffinity
+kubectl get pod gpu-workload -n node-affinity -o yaml | grep -A 10 nodeAffinity
 ```
 
 Compare the affinity requirements with actual node labels.

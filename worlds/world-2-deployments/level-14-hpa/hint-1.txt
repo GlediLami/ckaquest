@@ -1,6 +1,6 @@
 Look at the HPA first:
-  k get hpa -n ckaquest
-  k describe hpa web-backend-hpa -n ckaquest
+  k get hpa -n hpa
+  k describe hpa web-backend-hpa -n hpa
 
 Read the Conditions and Events. Then check that metrics exist at all:
-  k top pods -n ckaquest
+  k top pods -n hpa

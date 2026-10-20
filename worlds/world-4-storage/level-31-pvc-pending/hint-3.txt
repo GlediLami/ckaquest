@@ -16,7 +16,7 @@ Update the PV to match all PVC requirements.
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: pvc-pending
 ---
 # ✅ FIXED PersistentVolume
 apiVersion: v1
@@ -38,7 +38,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-storage-claim
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   accessModes:
     - ReadWriteOnce
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-pod
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   containers:
   - name: db
@@ -75,7 +75,7 @@ spec:
    kubectl apply -f solution.yaml
 
 3️⃣ Watch the PVC bind:
-   kubectl get pvc -n ckaquest -w
+   kubectl get pvc -n pvc-pending -w
    
    You should see:
    NAME                 STATUS    VOLUME        CAPACITY   ACCESS MODES
@@ -83,14 +83,14 @@ spec:
    app-storage-claim    Bound     app-storage   5Gi        RWO
 
 4️⃣ Verify the pod starts:
-   kubectl get pod database-pod -n ckaquest
+   kubectl get pod database-pod -n pvc-pending
    
    Should show: STATUS = Running
 
 5️⃣ Test the volume mount:
-   kubectl exec database-pod -n ckaquest -- ls -la /data
-   kubectl exec database-pod -n ckaquest -- touch /data/test.txt
-   kubectl exec database-pod -n ckaquest -- ls /data
+   kubectl exec database-pod -n pvc-pending -- ls -la /data
+   kubectl exec database-pod -n pvc-pending -- touch /data/test.txt
+   kubectl exec database-pod -n pvc-pending -- ls /data
 
 📚 Understanding the Fix:
 
@@ -191,7 +191,7 @@ spec:
 
 **Check PVC status:**
 ```bash
-kubectl describe pvc app-storage-claim -n ckaquest
+kubectl describe pvc app-storage-claim -n pvc-pending
 ```
 
 **Look for events:**
@@ -210,7 +210,7 @@ kubectl get pv
 **Check PV and PVC specs match:**
 ```bash
 # Compare side by side
-kubectl get pvc app-storage-claim -n ckaquest -o yaml | grep -A 5 "spec:"
+kubectl get pvc app-storage-claim -n pvc-pending -o yaml | grep -A 5 "spec:"
 kubectl get pv app-storage -o yaml | grep -A 10 "spec:"
 ```
 
@@ -224,10 +224,10 @@ kubectl get pv app-storage -o yaml | grep -A 10 "spec:"
 ✅ Apply this solution and your PVC will bind immediately!
 
 After applying, watch the magic happen:
-   kubectl get pvc -n ckaquest -w
+   kubectl get pvc -n pvc-pending -w
    # STATUS changes: Pending → Bound
    
-   kubectl get pod database-pod -n ckaquest -w
+   kubectl get pod database-pod -n pvc-pending -w
    # STATUS changes: ContainerCreating → Running
 
 The key changes are just two lines in the PV:

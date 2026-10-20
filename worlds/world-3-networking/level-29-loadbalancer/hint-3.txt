@@ -16,13 +16,13 @@ Here's the exact fix you need:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: loadbalancer
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: web-app
-  namespace: ckaquest
+  namespace: loadbalancer
   labels:
     app: web
 spec:
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-service
-  namespace: ckaquest
+  namespace: loadbalancer
 spec:
   type: NodePort  # ✅ Changed from LoadBalancer to NodePort
   selector:
@@ -50,13 +50,13 @@ spec:
 🚀 How to Apply:
 
 1️⃣ Delete the broken service:
-   kubectl delete service web-service -n ckaquest
+   kubectl delete service web-service -n loadbalancer
 
 2️⃣ Apply the fixed configuration:
    kubectl apply -f solution.yaml
 
 3️⃣ Verify the service:
-   kubectl get service web-service -n ckaquest
+   kubectl get service web-service -n loadbalancer
    
    You should see:
    NAME          TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
@@ -66,7 +66,7 @@ spec:
 
 4️⃣ Access the service:
    # Via port-forward (easiest for local testing)
-   kubectl port-forward -n ckaquest service/web-service 8080:80
+   kubectl port-forward -n loadbalancer service/web-service 8080:80
    # Then open: http://localhost:8080
    
    # Or via NodePort (if you can reach node IP)
@@ -150,7 +150,7 @@ ClusterIP:
 ✅ Apply this solution and your service will be accessible immediately!
 
 After applying, verify with:
-   kubectl get service web-service -n ckaquest
-   kubectl get endpoints web-service -n ckaquest
+   kubectl get service web-service -n loadbalancer
+   kubectl get endpoints web-service -n loadbalancer
 
 The service should show NodePort type with a port in range 30000-32767.

@@ -47,6 +47,7 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Namespace **ckaquest** has many failures at the same time: the app does not start, cannot be reached and cannot be maintained.
+  Namespace **chaos-finale** has many failures at the same time: the app does not start, cannot be reached and cannot be maintained.
   Inspect Deployment **chaos-app** and everything around it: ResourceQuota **chaos-quota**, ServiceAccount **app-sa** and its RBAC, NetworkPolicies, PDB **chaos-pdb**, securityContext and PriorityClass **production-priority**.
   Fix every problem until all replicas of chaos-app are ready. Run `validate` often. It tells you how many checks pass.
+namespace: chaos-finale

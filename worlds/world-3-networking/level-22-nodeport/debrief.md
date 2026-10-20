@@ -226,7 +226,7 @@ data:
 
 ### Check NodePort Assignment:
 ```bash
-kubectl get svc -n ckaquest
+kubectl get svc -n nodeport
 # Shows PORT(S) column: 80:30080/TCP
 #                          ↑    ↑
 #                      ClusterIP:NodePort

@@ -33,5 +33,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Both worker nodes carry the taint `dedicated=gpu:NoSchedule`. Pod **regular-app** in namespace **ckaquest** stays Pending.
+  Both worker nodes carry the taint `dedicated=gpu:NoSchedule`. Pod **regular-app** in namespace **taints-tolerations** stays Pending.
   Add a toleration so the pod can run on a worker. Do not remove the taints.
+namespace: taints-tolerations

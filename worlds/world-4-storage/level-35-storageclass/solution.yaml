@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-storage
-  namespace: ckaquest
+  namespace: storageclass
 spec:
   accessModes:
     - ReadWriteOnce
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: data-processor
-  namespace: ckaquest
+  namespace: storageclass
 spec:
   containers:
   - name: processor

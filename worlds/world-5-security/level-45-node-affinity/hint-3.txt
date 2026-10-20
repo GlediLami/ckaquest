@@ -17,7 +17,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: gpu-workload
-  namespace: ckaquest
+  namespace: node-affinity
 spec:
   containers:
   - name: ml-training
@@ -51,12 +51,12 @@ spec:
 kubectl apply -f solution.yaml
 
 # Watch pod status
-kubectl get pod gpu-workload -n ckaquest --watch
+kubectl get pod gpu-workload -n node-affinity --watch
 
 # Should transition: Pending → Running
 
 # Verify it's on the right node
-kubectl get pod gpu-workload -n ckaquest -o wide
+kubectl get pod gpu-workload -n node-affinity -o wide
 ```
 
 ## Complete Commands
@@ -69,8 +69,8 @@ kubectl label nodes kind-control-plane accelerator=gpu
 kubectl apply -f solution.yaml
 
 # 3. Verify
-kubectl get pod gpu-workload -n ckaquest
-kubectl describe pod gpu-workload -n ckaquest | grep "Node:"
+kubectl get pod gpu-workload -n node-affinity
+kubectl describe pod gpu-workload -n node-affinity | grep "Node:"
 
 # 4. Run validation
 ./validate.sh

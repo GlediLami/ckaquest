@@ -3,26 +3,26 @@
 Let's understand why data disappears on restart:
 
 1️⃣ Check the pod:
-   kubectl get pod data-app -n ckaquest
-   kubectl describe pod data-app -n ckaquest
+   kubectl get pod data-app -n emptydir-vs-pvc
+   kubectl describe pod data-app -n emptydir-vs-pvc
    
    What type of volume is it using?
 
 2️⃣ Check the pod spec:
-   kubectl get pod data-app -n ckaquest -o yaml | grep -A 5 volumes:
+   kubectl get pod data-app -n emptydir-vs-pvc -o yaml | grep -A 5 volumes:
    
    Do you see "emptyDir" or "persistentVolumeClaim"?
 
 3️⃣ Write some data and restart:
-   kubectl exec data-app -n ckaquest -- cat /data/persistent.txt
-   kubectl delete pod data-app -n ckaquest
+   kubectl exec data-app -n emptydir-vs-pvc -- cat /data/persistent.txt
+   kubectl delete pod data-app -n emptydir-vs-pvc
    kubectl apply -f broken.yaml
-   kubectl exec data-app -n ckaquest -- cat /data/persistent.txt
+   kubectl exec data-app -n emptydir-vs-pvc -- cat /data/persistent.txt
    
    Is the old data still there?
 
 4️⃣ Check for PVCs:
-   kubectl get pvc -n ckaquest
+   kubectl get pvc -n emptydir-vs-pvc
    
    Is there a PVC for this pod?
 

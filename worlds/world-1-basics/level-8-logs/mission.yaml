@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **database-app** in namespace **ckaquest** keeps restarting.
+  Pod **database-app** in namespace **logs** keeps restarting.
   Use its logs to find the missing configuration and fix the pod so the database runs.
+namespace: logs

@@ -25,7 +25,7 @@ env:
 data:
   app_name: "MyApp"
   app_version: "1.0.0"
-  database_host: "postgres.ckaquest.svc.cluster.local"  # ✅ Added!
+  database_host: "postgres.configmap-key.svc.cluster.local"  # ✅ Added!
 ```
 
 ---

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-server
-  namespace: ckaquest
+  namespace: ports
   labels:
     app: web
 spec:
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-service
-  namespace: ckaquest
+  namespace: ports
 spec:
   selector:
     app: web

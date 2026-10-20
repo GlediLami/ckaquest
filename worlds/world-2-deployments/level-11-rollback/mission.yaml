@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Deployment **web-app** in namespace **ckaquest** was just updated and the new pods do not start.
+  Deployment **web-app** in namespace **rollback** was just updated and the new pods do not start.
   Roll the Deployment back to the previous revision. All replicas must be ready again.
+namespace: rollback

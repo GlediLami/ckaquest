@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: pvc-pending
 ---
 # ❌ BROKEN: PVC requests 5Gi but PV only provides 1Gi
 # Also, PVC requests storage class "fast" but PV has "standard"
@@ -25,7 +25,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-storage-claim
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   accessModes:
     - ReadWriteOnce
@@ -38,7 +38,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-pod
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   containers:
   - name: db

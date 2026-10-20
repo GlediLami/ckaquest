@@ -377,16 +377,16 @@ resources.requests and volumeAttributesClassName for bound claims
 
 ```bash
 # Step 1: Delete resources (order matters!)
-kubectl delete deployment web-servers -n ckaquest
-kubectl delete pvc shared-pvc -n ckaquest
+kubectl delete deployment web-servers -n access-mode
+kubectl delete pvc shared-pvc -n access-mode
 kubectl delete pv shared-storage
 
 # Step 2: Apply corrected configuration
 kubectl apply -f solution.yaml
 
 # Step 3: Verify
-kubectl get pvc -n ckaquest
-kubectl get pods -n ckaquest
+kubectl get pvc -n access-mode
+kubectl get pods -n access-mode
 ```
 
 ### ⚠️ Production Warning

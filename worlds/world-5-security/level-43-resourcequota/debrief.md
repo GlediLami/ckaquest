@@ -422,13 +422,13 @@ spec:
 ### Check Quota Status
 
 ```bash
-kubectl describe resourcequota compute-quota -n ckaquest
+kubectl describe resourcequota compute-quota -n resourcequota
 ```
 
 Output:
 ```
 Name:            compute-quota
-Namespace:       ckaquest
+Namespace:       resourcequota
 Resource         Used  Hard
 --------         ----  ----
 limits.cpu       1     4
@@ -441,7 +441,7 @@ requests.memory  512Mi 2Gi
 ### Check Pod Events
 
 ```bash
-kubectl describe pod my-pod -n ckaquest
+kubectl describe pod my-pod -n resourcequota
 ```
 
 Look for:
@@ -453,7 +453,7 @@ Warning  FailedScheduling  ... exceeded quota: compute-quota, requested: request
 
 ```bash
 # See what's using quota
-kubectl get pods -n ckaquest -o custom-columns=\
+kubectl get pods -n resourcequota -o custom-columns=\
 NAME:.metadata.name,\
 CPU_REQ:.spec.containers[*].resources.requests.cpu,\
 MEM_REQ:.spec.containers[*].resources.requests.memory
@@ -463,7 +463,7 @@ MEM_REQ:.spec.containers[*].resources.requests.memory
 
 ```bash
 # Sum all CPU requests
-kubectl get pods -n ckaquest -o jsonpath='{range .items[*]}{.spec.containers[*].resources.requests.cpu}{"\n"}{end}' | \
+kubectl get pods -n resourcequota -o jsonpath='{range .items[*]}{.spec.containers[*].resources.requests.cpu}{"\n"}{end}' | \
   sed 's/m$//' | awk '{s+=$1} END {print s "m"}'
 ```
 

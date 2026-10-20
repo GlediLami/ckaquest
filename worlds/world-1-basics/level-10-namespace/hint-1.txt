@@ -1,7 +1,7 @@
 🔍 Observation Hint:
 
-Check what resources exist in the ckaquest namespace:
-`kubectl get all -n ckaquest`
+Check what resources exist in the team-a namespace:
+`kubectl get all -n team-a`
 
 Now check the default namespace:
 `kubectl get all -n default`

@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: db-credentials
-  namespace: ckaquest
+  namespace: secret-encoding
 type: Opaque
 data:
   username: WVdSdGFXND0=
@@ -13,7 +13,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-client
-  namespace: ckaquest
+  namespace: secret-encoding
 spec:
   containers:
   - name: client

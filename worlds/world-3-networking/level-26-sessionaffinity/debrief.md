@@ -675,7 +675,7 @@ Result: Pod 1 overloaded, others idle
 
 ```bash
 # Check if sessionAffinity is configured
-kubectl get service session-service -n ckaquest -o yaml | grep -A3 sessionAffinity
+kubectl get service session-service -n sessionaffinity -o yaml | grep -A3 sessionAffinity
 ```
 
 Expected output:
@@ -690,7 +690,7 @@ sessionAffinityConfig:
 
 ```bash
 # Make multiple requests from same pod (same IP)
-kubectl exec client -n ckaquest -- sh -c 'for i in 1 2 3 4 5; do wget -q -O- http://session-service; echo; done'
+kubectl exec client -n sessionaffinity -- sh -c 'for i in 1 2 3 4 5; do wget -q -O- http://session-service; echo; done'
 ```
 
 All responses should be from the **same pod**.
@@ -699,10 +699,10 @@ All responses should be from the **same pod**.
 
 ```bash
 # Create second client pod
-kubectl run client2 -n ckaquest --image=busybox:1.36 -- sleep 3600
+kubectl run client2 -n sessionaffinity --image=busybox:1.36 -- sleep 3600
 
 # Request from client2 (different source IP)
-kubectl exec client2 -n ckaquest -- wget -q -O- http://session-service
+kubectl exec client2 -n sessionaffinity -- wget -q -O- http://session-service
 ```
 
 client2 **may** get a different pod than client (good for load distribution).
@@ -723,7 +723,7 @@ Session affinity works with both iptables and IPVS modes.
 
 ```bash
 # Watch logs to see session distribution
-kubectl logs -f client -n ckaquest
+kubectl logs -f client -n sessionaffinity
 ```
 
 After timeout expires, requests MAY go to different pod.
@@ -732,8 +732,8 @@ After timeout expires, requests MAY go to different pod.
 
 ```bash
 # Delete and recreate client pod (new IP = new mapping)
-kubectl delete pod client -n ckaquest
-kubectl run client -n ckaquest --image=busybox:1.36 --command -- sh -c 'while true; do wget -q -O- http://session-service 2>&1; sleep 2; done'
+kubectl delete pod client -n sessionaffinity
+kubectl run client -n sessionaffinity --image=busybox:1.36 --command -- sh -c 'while true; do wget -q -O- http://session-service 2>&1; sleep 2; done'
 ```
 
 New client IP will get new pod assignment.
@@ -769,7 +769,7 @@ Don't use 24-hour timeout unless absolutely necessary (poor load distribution).
 
 ```bash
 # Check CPU/memory per pod
-kubectl top pods -n ckaquest -l app=session-app
+kubectl top pods -n sessionaffinity -l app=session-app
 ```
 
 If one pod uses 90% CPU and others use 10%, session affinity may be causing uneven load.

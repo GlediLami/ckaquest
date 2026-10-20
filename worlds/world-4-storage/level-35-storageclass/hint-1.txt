@@ -3,13 +3,13 @@
 Let's investigate why the PVC is stuck in Pending:
 
 1️⃣ Check PVC status:
-   kubectl get pvc app-storage -n ckaquest
-   kubectl describe pvc app-storage -n ckaquest
+   kubectl get pvc app-storage -n storageclass
+   kubectl describe pvc app-storage -n storageclass
    
    What's the STATUS? Look at Events section!
 
 2️⃣ Check what StorageClass the PVC wants:
-   kubectl get pvc app-storage -n ckaquest -o yaml | grep storageClassName
+   kubectl get pvc app-storage -n storageclass -o yaml | grep storageClassName
    
    What storage class is it requesting?
 
@@ -20,8 +20,8 @@ Let's investigate why the PVC is stuck in Pending:
    Does the requested StorageClass exist?
 
 4️⃣ Check pod status:
-   kubectl get pod data-processor -n ckaquest
-   kubectl describe pod data-processor -n ckaquest
+   kubectl get pod data-processor -n storageclass
+   kubectl describe pod data-processor -n storageclass
    
    Can the pod start without its PVC?
 

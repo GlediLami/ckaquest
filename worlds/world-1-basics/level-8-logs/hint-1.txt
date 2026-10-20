@@ -1,13 +1,13 @@
 🔍 Observation Hint:
 
-Check the pod status: `kubectl get pod database-app -n ckaquest`
+Check the pod status: `kubectl get pod database-app -n logs`
 
 The container may be in `Error` or restarting. Check its current logs:
 
-`kubectl logs database-app -n ckaquest`
+`kubectl logs database-app -n logs`
 
 If it has already restarted, inspect the previous container instance:
 
-`kubectl logs database-app --previous -n ckaquest`
+`kubectl logs database-app --previous -n logs`
 
 What PostgreSQL configuration error do you see?

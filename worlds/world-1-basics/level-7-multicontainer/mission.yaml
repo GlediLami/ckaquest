@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **app-with-logging** in namespace **ckaquest** has a main container and a logging sidecar. The pod never becomes fully ready.
+  Pod **app-with-logging** in namespace **multicontainer** has a main container and a logging sidecar. The pod never becomes fully ready.
   Find the failing container and fix it. Both containers must be running.
+namespace: multicontainer

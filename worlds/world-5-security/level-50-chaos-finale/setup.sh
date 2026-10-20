@@ -4,7 +4,7 @@
 
 set -e
 
-NAMESPACE=${1:-ckaquest}
+NAMESPACE=${1:-chaos-finale}
 echo "🔧 Setting up Chaos Finale level..."
 
 # Get the first node (works for both kind and k3s)

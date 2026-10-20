@@ -4,7 +4,7 @@ Convert the Deployment to a StatefulSet.
 
 Steps:
 1. Delete the existing Deployment:
-   `kubectl delete deployment database -n ckaquest`
+   `kubectl delete deployment database -n statefulset`
 
 2. Create a StatefulSet instead:
    `kubectl apply -f - <<EOF
@@ -12,7 +12,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: database
-  namespace: ckaquest
+  namespace: statefulset
 spec:
   serviceName: "database-service"  # Important!
   replicas: 3
@@ -35,9 +35,9 @@ spec:
 EOF`
 
 3. Watch pods start in order (0, then 1, then 2):
-   `kubectl get pods -n ckaquest -l app=database -w`
+   `kubectl get pods -n statefulset -l app=database -w`
 
 4. Verify stable names:
-   `kubectl get pods -n ckaquest -l app=database`
+   `kubectl get pods -n statefulset -l app=database`
 
 Should see: database-0, database-1, database-2 (not random hashes)!

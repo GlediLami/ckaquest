@@ -17,5 +17,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **web-app** in namespace **ckaquest** never starts.
+  Pod **web-app** in namespace **imagepull** never starts.
   Fix the pod so it runs nginx and becomes Ready. Keep the pod name.
+namespace: imagepull

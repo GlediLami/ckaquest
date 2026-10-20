@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: data-app
-  namespace: ckaquest
+  namespace: emptydir-vs-pvc
 spec:
   containers:
   - name: app

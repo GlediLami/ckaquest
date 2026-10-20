@@ -718,7 +718,7 @@ cilium monitor --type policy-verdict
 kubectl get networkpolicy --all-namespaces
 
 # Describe specific policy
-kubectl describe networkpolicy allow-backend -n ckaquest
+kubectl describe networkpolicy allow-backend -n netpol-db
 ```
 
 ### Test Connectivity

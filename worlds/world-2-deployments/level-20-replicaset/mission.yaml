@@ -18,5 +18,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Namespace **ckaquest** runs a bare ReplicaSet **web-app-rs** with 3 pods.
+  Namespace **replicaset** runs a bare ReplicaSet **web-app-rs** with 3 pods.
   Replace it with a Deployment **web-app**, 3 replicas, same image and labels. Delete the ReplicaSet so only the Deployment manages the pods.
+namespace: replicaset

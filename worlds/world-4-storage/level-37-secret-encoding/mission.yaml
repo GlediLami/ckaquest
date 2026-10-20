@@ -5,7 +5,7 @@ xp: 250
 difficulty: intermediate
 expected_time: 8m
 domain: storage
-namespace: ckaquest
+namespace: secret-encoding
 exam: true
 concepts:
   - secrets
@@ -14,7 +14,7 @@ concepts:
 task: |
   Context: `kind-ckaquest`
 
-  Pod **database-client** in namespace **ckaquest** reads its credentials from Secret **db-credentials**.
+  Pod **database-client** in namespace **secret-encoding** reads its credentials from Secret **db-credentials**.
   The pod keeps crashing with `Invalid username format`.
 
   The real credentials are username `admin` and password `secretpass123`.

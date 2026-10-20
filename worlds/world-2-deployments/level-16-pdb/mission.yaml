@@ -19,5 +19,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Node drains hang because of PodDisruptionBudget **db-proxy-pdb** in namespace **ckaquest**. It covers the 3 pods of Deployment **database-proxy**.
+  Node drains hang because of PodDisruptionBudget **db-proxy-pdb** in namespace **pdb**. It covers the 3 pods of Deployment **database-proxy**.
   Change the PDB so that 2 pods must stay available and 1 pod may be evicted at a time.
+namespace: pdb

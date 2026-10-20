@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app-1
-  namespace: ckaquest
+  namespace: endpoints
   labels:
     app: web
 spec:
@@ -26,7 +26,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: web-app-2
-  namespace: ckaquest
+  namespace: endpoints
   labels:
     app: web
 spec:
@@ -50,7 +50,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-service
-  namespace: ckaquest
+  namespace: endpoints
 spec:
   selector:
     app: web
@@ -63,7 +63,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: client
-  namespace: ckaquest
+  namespace: endpoints
 spec:
   containers:
   - name: client

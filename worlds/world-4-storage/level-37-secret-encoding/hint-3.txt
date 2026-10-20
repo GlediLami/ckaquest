@@ -1,5 +1,5 @@
 The username was base64-encoded twice. Let kubectl do the encoding:
-  k create secret generic db-credentials -n ckaquest \
+  k create secret generic db-credentials -n secret-encoding \
     --from-literal=username=admin --from-literal=password=secretpass123 \
     $do | k apply -f -
 

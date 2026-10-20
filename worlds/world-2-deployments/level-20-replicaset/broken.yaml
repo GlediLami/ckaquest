@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: ReplicaSet  # PROBLEM! Should use Deployment instead
 metadata:
   name: web-app-rs
-  namespace: ckaquest
+  namespace: replicaset
 spec:
   replicas: 3
   selector:

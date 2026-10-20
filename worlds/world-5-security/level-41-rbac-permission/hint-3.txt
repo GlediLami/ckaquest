@@ -8,7 +8,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: pod-reader-role
-  namespace: ckaquest
+  namespace: rbac-permission
 rules:
 - apiGroups: [""]  # "" = core API group
   resources: ["pods"]
@@ -21,7 +21,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: pod-reader-binding
-  namespace: ckaquest
+  namespace: rbac-permission
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -29,22 +29,22 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: pod-reader  # Grant to this ServiceAccount
-  namespace: ckaquest
+  namespace: rbac-permission
 ```
 
 🚀 Apply:
 ```bash
 kubectl delete -f broken.yaml
 kubectl apply -f solution.yaml
-kubectl logs pod-lister -n ckaquest
+kubectl logs pod-lister -n rbac-permission
 # Should show: "✅ Success! Can list pods"
 ```
 
 🔍 Verify permissions:
 ```bash
 kubectl auth can-i list pods \
-  --as=system:serviceaccount:ckaquest:pod-reader \
-  -n ckaquest
+  --as=system:serviceaccount:rbac-permission:pod-reader \
+  -n rbac-permission
 # Should output: yes
 ```
 

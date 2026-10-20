@@ -4,7 +4,7 @@
 
 **What players try:**
 ```bash
-kubectl rollout undo deployment/payment-api -n ckaquest
+kubectl rollout undo deployment/payment-api -n rollback
 # Hope it fixes everything!
 ```
 
@@ -17,14 +17,14 @@ By default, `undo` goes back ONE revision. But what if:
 **Correct approach:**
 ```bash
 # FIRST: Check the history
-kubectl rollout history deployment/payment-api -n ckaquest
+kubectl rollout history deployment/payment-api -n rollback
 
 # See what changed in each revision
-kubectl rollout history deployment/payment-api --revision=2 -n ckaquest
-kubectl rollout history deployment/payment-api --revision=3 -n ckaquest
+kubectl rollout history deployment/payment-api --revision=2 -n rollback
+kubectl rollout history deployment/payment-api --revision=3 -n rollback
 
 # THEN: Rollback to known good revision
-kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
+kubectl rollout undo deployment/payment-api --to-revision=2 -n rollback
 ```
 
 **Key Learning:**
@@ -36,7 +36,7 @@ Always review rollout history before blindly running `undo`. You need to know wh
 
 **What players try:**
 ```bash
-kubectl rollout undo deployment/payment-api -n ckaquest
+kubectl rollout undo deployment/payment-api -n rollback
 ./validate.sh  # Immediate validation!
 ```
 
@@ -46,13 +46,13 @@ Rollouts are **asynchronous**. The undo command returns immediately, but the act
 **Correct approach:**
 ```bash
 # Start the rollback
-kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
+kubectl rollout undo deployment/payment-api --to-revision=2 -n rollback
 
 # WAIT for it to complete
-kubectl rollout status deployment/payment-api -n ckaquest
+kubectl rollout status deployment/payment-api -n rollback
 
 # Or watch pods change
-kubectl get pods -n ckaquest -w
+kubectl get pods -n rollback -w
 # Press Ctrl+C when all pods are Running
 
 # NOW validate
@@ -68,10 +68,10 @@ Use `kubectl rollout status` to wait for rollout completion. Don't validate whil
 
 **What players try:**
 ```bash
-kubectl get rs -n ckaquest
+kubectl get rs -n rollback
 # See multiple ReplicaSets
 # Delete the old ones thinking it will help
-kubectl delete rs payment-api-abc123 -n ckaquest
+kubectl delete rs payment-api-abc123 -n rollback
 ```
 
 **Why it fails:**
@@ -83,10 +83,10 @@ Each deployment revision creates a ReplicaSet. Old ReplicaSets are kept for roll
 **Correct approach:**
 ```bash
 # View ReplicaSets (but don't delete them)
-kubectl get rs -n ckaquest -l app=payment-api
+kubectl get rs -n rollback -l app=payment-api
 
 # See which ReplicaSet is active (has pods)
-kubectl describe deployment payment-api -n ckaquest | grep -A 5 "NewReplicaSet"
+kubectl describe deployment payment-api -n rollback | grep -A 5 "NewReplicaSet"
 
 # Let Deployment manage ReplicaSets - never delete manually
 ```
@@ -110,16 +110,16 @@ You might roll back successfully but not learn:
 **Correct approach:**
 ```bash
 # BEFORE rollback: Understand the failure
-kubectl describe deployment payment-api -n ckaquest
-kubectl get pods -n ckaquest
-kubectl logs deployment/payment-api -n ckaquest
+kubectl describe deployment payment-api -n rollback
+kubectl get pods -n rollback
+kubectl logs deployment/payment-api -n rollback
 
 # THEN rollback
-kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
+kubectl rollout undo deployment/payment-api --to-revision=2 -n rollback
 
 # AFTER rollback: Verify the difference
-kubectl rollout history deployment/payment-api --revision=2 -n ckaquest
-kubectl rollout history deployment/payment-api --revision=3 -n ckaquest
+kubectl rollout history deployment/payment-api --revision=2 -n rollback
+kubectl rollout history deployment/payment-api --revision=3 -n rollback
 ```
 
 **Key Learning:**
@@ -145,10 +145,10 @@ spec:
 
 ```bash
 # Check how many revisions are kept
-kubectl get deployment payment-api -n ckaquest -o jsonpath='{.spec.revisionHistoryLimit}'
+kubectl get deployment payment-api -n rollback -o jsonpath='{.spec.revisionHistoryLimit}'
 
 # See available history
-kubectl rollout history deployment/payment-api -n ckaquest
+kubectl rollout history deployment/payment-api -n rollback
 ```
 
 **Key Learning:**
@@ -160,7 +160,7 @@ You can only roll back as far as `revisionHistoryLimit` allows. Default is 10 re
 
 **What players try:**
 ```bash
-kubectl edit deployment payment-api -n ckaquest
+kubectl edit deployment payment-api -n rollback
 # Manually change image tag back to old version
 ```
 
@@ -173,7 +173,7 @@ This creates a NEW revision, not a rollback. You:
 **Correct approach:**
 ```bash
 # Use the proper rollback command
-kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
+kubectl rollout undo deployment/payment-api --to-revision=2 -n rollback
 
 # NOT kubectl edit!
 ```
@@ -188,7 +188,7 @@ kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
 **What players try:**
 ```bash
 # Check pods directly
-kubectl get pods -n ckaquest
+kubectl get pods -n rollback
 
 # Don't check deployment status
 ```
@@ -202,7 +202,7 @@ Pods come and go during rollouts. The Deployment is the source of truth for:
 **Correct approach:**
 ```bash
 # Check Deployment first
-kubectl get deployment payment-api -n ckaquest
+kubectl get deployment payment-api -n rollback
 
 # Output shows:
 # NAME          READY   UP-TO-DATE   AVAILABLE
@@ -222,7 +222,7 @@ Deployments manage pods. Check the Deployment status, not just individual pods.
 
 **What players try:**
 ```bash
-kubectl rollout status deployment/payment-api -n ckaquest
+kubectl rollout status deployment/payment-api -n rollback
 # See "Waiting for deployment spec update to be observed..."
 # Think it's broken
 ```
@@ -235,11 +235,11 @@ This message is normal! It means Kubernetes is processing your rollback. Other n
 
 **Correct approach:**
 ```bash
-kubectl rollout status deployment/payment-api -n ckaquest
+kubectl rollout status deployment/payment-api -n rollback
 # WAIT for: "deployment successfully rolled out"
 # If it hangs, Ctrl+C and check:
-kubectl describe deployment payment-api -n ckaquest
-kubectl get events -n ckaquest --sort-by='.lastTimestamp'
+kubectl describe deployment payment-api -n rollback
+kubectl get events -n rollback --sort-by='.lastTimestamp'
 ```
 
 **Key Learning:**
@@ -253,28 +253,28 @@ Here's the systematic rollback approach:
 
 ```bash
 # 1. Identify the problem
-kubectl get deployment payment-api -n ckaquest
-kubectl get pods -n ckaquest
-kubectl logs deployment/payment-api -n ckaquest
+kubectl get deployment payment-api -n rollback
+kubectl get pods -n rollback
+kubectl logs deployment/payment-api -n rollback
 
 # 2. Check rollout history
-kubectl rollout history deployment/payment-api -n ckaquest
+kubectl rollout history deployment/payment-api -n rollback
 
 # 3. Identify last known good revision
-kubectl rollout history deployment/payment-api --revision=2 -n ckaquest
+kubectl rollout history deployment/payment-api --revision=2 -n rollback
 
 # 4. Initiate rollback to specific revision
-kubectl rollout undo deployment/payment-api --to-revision=2 -n ckaquest
+kubectl rollout undo deployment/payment-api --to-revision=2 -n rollback
 
 # 5. Wait for completion
-kubectl rollout status deployment/payment-api -n ckaquest
+kubectl rollout status deployment/payment-api -n rollback
 
 # 6. Verify success
-kubectl get deployment payment-api -n ckaquest
-kubectl get pods -n ckaquest
+kubectl get deployment payment-api -n rollback
+kubectl get pods -n rollback
 
 # 7. Test functionality (if applicable)
-kubectl logs deployment/payment-api -n ckaquest
+kubectl logs deployment/payment-api -n rollback
 
 # 8. Validate
 ./validate.sh
@@ -298,7 +298,7 @@ kubectl logs deployment/payment-api -n ckaquest
 ## 📊 Rollout History Explained
 
 ```bash
-$ kubectl rollout history deployment/payment-api -n ckaquest
+$ kubectl rollout history deployment/payment-api -n rollback
 REVISION  CHANGE-CAUSE
 1         Initial deployment
 2         Updated to v1.2.0

@@ -19,5 +19,6 @@ docs:
 task: |
   Context: `kind-ckaquest`
 
-  Service **backend-service** in namespace **ckaquest** has no endpoints, so it sends traffic nowhere.
+  Service **backend-service** in namespace **labels** has no endpoints, so it sends traffic nowhere.
   Fix it so the service routes to pod **backend-app**.
+namespace: labels

@@ -22,7 +22,7 @@ Every service gets automatic DNS records:
 
 **Examples:**
 ```
-database-service.ckaquest.svc.cluster.local  # Full FQDN
+database-service.dns.svc.cluster.local  # Full FQDN
 database-service.ckaquest                    # Shortened
 database-service                             # Same namespace only
 ```
@@ -49,12 +49,12 @@ database-service                             # Same namespace only
 
 ### Pattern 1: Same Namespace (Short Name)
 ```yaml
-# Service in namespace: ckaquest
+# Service in namespace: dns
 apiVersion: v1
 kind: Service
 metadata:
   name: database-service
-  namespace: ckaquest
+  namespace: dns
 
 # Pod in same namespace can use:
 - h database-service  # ✅ Works!
@@ -125,26 +125,26 @@ metadata:
 
 ### Test 1: Check Service Exists
 ```bash
-kubectl get svc -n ckaquest
+kubectl get svc -n dns
 # Verify service name exactly
 ```
 
 ### Test 2: DNS Resolution from Pod
 ```bash
-kubectl exec -it app-client -n ckaquest -- nslookup database-service
+kubectl exec -it app-client -n dns -- nslookup database-service
 
 # Expected output:
 # Server: 10.96.0.10
 # Address: 10.96.0.10:53
 # 
-# Name: database-service.ckaquest.svc.cluster.local
+# Name: database-service.dns.svc.cluster.local
 # Address: 10.100.200.50
 ```
 
 ### Test 3: Full FQDN
 ```bash
-kubectl exec -it app-client -n ckaquest -- \
-  nslookup database-service.ckaquest.svc.cluster.local
+kubectl exec -it app-client -n dns -- \
+  nslookup database-service.dns.svc.cluster.local
 ```
 
 ### Test 4: Check CoreDNS
@@ -155,7 +155,7 @@ kubectl get pods -n kube-system | grep coredns
 
 ### Test 5: Connectivity Test
 ```bash
-kubectl exec -it app-client -n ckaquest -- \
+kubectl exec -it app-client -n dns -- \
   curl http://database-service:5432
 ```
 
@@ -229,20 +229,20 @@ kubectl exec debug -- nslookup my-service
 
 ### Service ClusterIP Record:
 ```
-database-service.ckaquest.svc.cluster.local → 10.100.200.50 (ClusterIP)
+database-service.dns.svc.cluster.local → 10.100.200.50 (ClusterIP)
 ```
 
 ### Headless Service Records (clusterIP: None):
 ```
-database-service.ckaquest.svc.cluster.local → 10.244.1.5 (Pod 1)
+database-service.dns.svc.cluster.local → 10.244.1.5 (Pod 1)
                                             → 10.244.2.8 (Pod 2)
                                             → 10.244.3.2 (Pod 3)
 ```
 
 ### Pod Records (StatefulSet):
 ```
-pod-0.database-service.ckaquest.svc.cluster.local → 10.244.1.5
-pod-1.database-service.ckaquest.svc.cluster.local → 10.244.2.8
+pod-0.database-service.dns.svc.cluster.local → 10.244.1.5
+pod-1.database-service.dns.svc.cluster.local → 10.244.2.8
 ```
 
 ---

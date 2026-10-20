@@ -16,6 +16,10 @@ PASS_TIMEOUT="${PASS_TIMEOUT:-180}"
 RESULTS="$CQ_HOME/test-results.txt"
 : > "$RESULTS"
 
+level_requires() {
+  awk '/^requires:/ {r=1; next} r && /^  - / {print $2; next} r {exit}' "$1/mission.yaml"
+}
+
 level_ns() {
   local ns
   ns="$(awk -F': *' '/^namespace:/ {print $2; exit}' "$1/mission.yaml" | tr -d '"')"
@@ -49,9 +53,18 @@ test_level() {
   ns="$(level_ns "$dir")"
   printf '%-45s ' "$name"
 
+  local addon
+  for addon in $(level_requires "$dir"); do
+    "$CQ_ROOT/bin/cq-cluster" addon "$addon" >/dev/null 2>&1 || { echo "ADDON-FAIL $addon"; echo "$name ADDON-FAIL" >> "$RESULTS"; return; }
+  done
   [ -f "$dir/cleanup.sh" ] && run_in "$dir" "$ns" cleanup.sh >/dev/null 2>&1
-  kubectl create namespace "$ns" >/dev/null 2>&1
-  [ "$ns" = "ckaquest" ] && reset_default_ns
+  if [ "$ns" = "ckaquest" ]; then
+    kubectl create namespace "$ns" >/dev/null 2>&1
+    reset_default_ns
+  else
+    kubectl delete namespace "$ns" --ignore-not-found --timeout=120s >/dev/null 2>&1
+    kubectl create namespace "$ns" >/dev/null 2>&1
+  fi
 
   if [ -f "$dir/setup.sh" ]; then
     out="$(run_in "$dir" "$ns" setup.sh 2>&1)" || { echo "SETUP-FAIL"; echo "$name SETUP-FAIL" >> "$RESULTS"; echo "$out" | tail -5 | sed 's/^/    /'; return; }

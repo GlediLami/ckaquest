@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ckaquest
+  name: pvc-pending
 ---
 # ✅ FIXED: PV now provides 5Gi with "fast" storage class
 apiVersion: v1
@@ -24,7 +24,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: app-storage-claim
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   accessModes:
     - ReadWriteOnce
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: database-pod
-  namespace: ckaquest
+  namespace: pvc-pending
 spec:
   containers:
   - name: db
