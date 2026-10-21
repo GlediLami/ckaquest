@@ -1,25 +1,12 @@
-# BROKEN: Pod can't tolerate node taints
-# Problem: Nodes are tainted but pod has no matching toleration
-# Result: Pod stuck Pending - can't schedule on any node
-
-# Setup: Taint the node (simulating dedicated GPU nodes)
-# kubectl taint nodes kind-control-plane dedicated=gpu:NoSchedule
-
+# The pod must run on node01, the GPU node. node01 is tainted and the pod has no toleration.
 apiVersion: v1
 kind: Pod
 metadata:
   name: regular-app
   namespace: taints-tolerations
 spec:
+  nodeSelector:
+    kubernetes.io/hostname: ckaquest-worker
   containers:
   - name: app
     image: nginx:1.27
-    command: ['sh', '-c', 'echo "Application running"; nginx -g "daemon off;"']
-  # ❌ No tolerations!
-  # Pod can't schedule on tainted nodes
-  
-# Node has taint: dedicated=gpu:NoSchedule
-# Pod needs toleration to match, but doesn't have it
-#
-# Result: Scheduler can't place pod anywhere
-# Error: "node(s) had untolerated taint {dedicated: gpu}"

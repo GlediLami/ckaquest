@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# Level 46: both workers are dedicated GPU nodes. The control plane already has its own taint.
+# Level 46: node01 is a dedicated GPU node. node02 stays free, so other tasks keep a place to run.
 set -euo pipefail
-for n in ckaquest-worker ckaquest-worker2; do
-  kubectl taint node "$n" dedicated=gpu:NoSchedule --overwrite >/dev/null
-done
-echo "node01 and node02 are tainted dedicated=gpu:NoSchedule"
+source "$CQ_ROOT/lib/common.sh"
+kubectl taint node "$(cq_node_name node01)" dedicated=gpu:NoSchedule --overwrite >/dev/null
+echo "node01 is tainted dedicated=gpu:NoSchedule"

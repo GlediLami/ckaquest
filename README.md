@@ -1,25 +1,96 @@
-# CKAQuest
+# ⚔️ CKAQuest
 
-A game for preparing for the CKA exam (Certified Kubernetes Administrator, curriculum v1.37).
+```
+   ██████╗██╗  ██╗ █████╗  ██████╗ ██╗   ██╗███████╗███████╗████████╗
+  ██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝
+  ██║     █████╔╝ ███████║██║   ██║██║   ██║█████╗  ███████╗   ██║
+  ██║     ██╔═██╗ ██╔══██║██║▄▄ ██║██║   ██║██╔══╝  ╚════██║   ██║
+  ╚██████╗██║  ██╗██║  ██║╚██████╔╝╚██████╔╝███████╗███████║   ██║
+   ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝
+```
 
-Every level breaks something on a real Kubernetes cluster, or asks you to build something the way an exam task would. You fix it in a terminal with `kubectl`, `ssh` and `vim`. Then the game checks your work and gives you points.
+**A game that gets you through the CKA exam.** 116 levels, 13 worlds, 6 mock exams, one real Kubernetes v1.37 cluster.
 
-The goal is to be ready for the exam. You play the levels while you work through a CKA course and the Kubernetes docs. When the exam simulator is done, you also test yourself under exam conditions: a 2-hour timer, weighted tasks, and no hints.
+Every level breaks something on the cluster, or hands you a task the way the exam would. You fix it in a real terminal with `kubectl`, `ssh` and `vim`. The game checks your work, gives you XP, and tells you what the exam likes to ask about it.
+
+No multiple choice. No fake shell. If you can clear the game, you can do the exam.
+
+## 🎮 How a level plays
+
+```
+╭──────────────── 🎯 MISSION BRIEFING ────────────────╮
+│ Level 54: The API Server Is Gone                     │
+│ 350 XP · advanced · par 15m · Troubleshooting (30%)  │
+│                                                      │
+│ After a change on the control plane, kubectl fails   │
+│ with connection refused. Find the problem on node    │
+│ controlplane and fix it.                             │
+│ You cannot use kubectl to debug this one.            │
+╰──────────────────────────────────────────────────────╯
+> validate
+  ✅ API server answers
+  ❌ apiserver talks to etcd on the client port 2379
+  ✅ kube-apiserver pod is Ready
+  ✅ all nodes Ready
+  SCORE 4/5
+```
+
+1. Read the mission. It names the CKA domain and the doc pages you may open in the exam.
+2. Fix it in your second terminal, the "exam terminal".
+3. `validate` until every line is green.
+4. Read the debrief: what broke, why, and the exam angle.
+
+## 🏆 XP, stars and readiness
+
+| | |
+|---|---|
+| ⭐ **Star** | Clear a level within par time without the guide or the solution: +20% XP |
+| 💡 **Hints** | 3 per level. Each costs 15% of the level XP. The guide costs 25%, the solution 50%. |
+| 🔥 **Streak** | Play on consecutive days to keep it going |
+| 📊 **Mastery** | One bar per CKA domain, weighted like the exam |
+| 🎯 **Readiness** | Half campaign mastery, half your last 3 mock exams. Book the exam when it stays above 80%. |
+
+## 🗺️ The worlds
+
+| World | Levels | You fight | CKA domain |
+|---|---|---|---|
+| 🌱 1 Basics | 1–10 | CrashLoopBackOff, image pulls, Pending pods, labels, ports, init containers, logs | Workloads, Troubleshooting |
+| 🚀 2 Deployments | 11–20 | Rollback, probes, HPA, rollouts, PDB, blue/green, canary, StatefulSet | Workloads |
+| 🌐 3 Networking | 21–30 | Selectors, NodePort, DNS, Ingress, NetworkPolicy, endpoints, headless services | Services and Networking |
+| 💾 4 Storage | 31–40 | PVC Pending, mounts, access modes, StorageClass, ConfigMaps, Secrets, reclaim policy | Storage |
+| 🛡️ 5 Security | 41–50 | RBAC, securityContext, ResourceQuota, affinity, taints, Pod Security, PriorityClass. Ends with the chaos finale. | Workloads, Architecture |
+| 🔥 6 Cluster on fire | 51–60 | kubelet down, scheduler, API server, controller manager, CoreDNS, kube-proxy, `kubectl top`, drain with a PDB, hidden static pods | Troubleshooting (30%) |
+| 🔐 7 Admin and security | 61–70 | CSR for a new user, ClusterRole, ServiceAccount 403, cert renewal, etcd backup and restore, kubeconfig repair, admission plugins, join tokens | Architecture |
+| 🚪 8 Networking 2 | 71–78 | Gateway API: HTTPRoute, broken routes, 80/20 split, HTTPS listener, Ingress migration. IngressClass, cross-namespace NetworkPolicy, CoreDNS hosts | Services and Networking |
+| 📦 9 Packaging | 79–86 | Helm install, rollback, find a release, helm template. Kustomize overlays and patches. CRDs and operator RBAC | Architecture |
+| ⚙️ 10 Workloads 2 | 87–96 | Native sidecars, multi-container pods, HPA behavior, VPA, DaemonSets, CronJobs, Secret volumes, default StorageClass, LimitRange, parallel Jobs | Workloads, Storage |
+| 🏗️ 11 Cluster lifecycle | 97–102 | Node prep, `kubeadm init`, Calico with a custom CIDR, `kubeadm join`, control plane and worker upgrade to v1.37.1 | Architecture |
+| ⏱️ 12 Speed drills | 103–110 | JSONPath, custom-columns, sort-by, imperative commands, `$do`, field selectors, api-resources | All |
+| 🧩 13 Loose ends | 111–116 | HA control plane join, cri-dockerd from a .deb, pod anti-affinity, topology spread, PVC expansion, CRI/CNI/CSI inspection | Architecture, Workloads, Storage |
+
+Worlds 6 and 11 break or build real control planes. The game repairs the cluster when you finish, skip or reset the level.
+
+## 👹 Boss fight: the mock exam
+
+17 tasks. 2 hours. Two clusters. No hints. Pass mark 66%, like the real thing.
+
+```bash
+./exam.sh start A         # sets A to F, or "random"
+```
+
+Commands are below in [Mock exams](#mock-exams).
 
 ## Status
 
-Work in progress.
-
 | Part | State |
 |---|---|
-| Worlds 1 to 6: basics, deployments, networking, storage, security, cluster troubleshooting (60 levels) | Playable, tested |
-| Worlds 7 to 13: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills, curriculum gaps (56 levels) | Playable, tested |
-| Mock exams: 6 fixed sets (A to F) plus random sets | Playable |
-| Offline pack | Works. `tests/offline-check.sh` passes 5 sample levels with the internet cut |
+| Worlds 1 to 13 (116 levels) | ✅ Playable. Every level passes the test harness. |
+| Mock exams: 6 fixed sets (A to F) plus random sets | ✅ Playable |
+| Offline pack | ✅ Works. `tests/offline-check.sh` passes sample levels with the internet cut |
 
 The full plan is in [docs/PLAN.md](docs/PLAN.md).
 
-## What you need
+## 🧰 What you need
 
 Linux, WSL2 or macOS. Windows only through WSL2.
 
@@ -29,7 +100,7 @@ Linux, WSL2 or macOS. Windows only through WSL2.
 - Python 3.9 or newer
 - About 3 GB of free RAM for the cluster
 
-## Install
+## 📥 Install
 
 ```bash
 git clone https://github.com/GlediLami/ckaquest.git
@@ -41,7 +112,7 @@ This creates a Python venv and a kind cluster called `ckaquest`: one control pla
 
 The cluster has its own kubeconfig in `~/.ckaquest/kubeconfig`. Your `~/.kube/config` and your other clusters are not touched.
 
-## Play
+## ▶️ Play
 
 You need two terminals.
 
@@ -81,7 +152,7 @@ After you clear a level you get a debrief: what went wrong, why, and what the ex
 
 Some levels break the cluster itself, for example the kubelet or the API server. The game repairs this when you finish, skip or reset the level. If you quit in the middle, it repairs it before the next level starts.
 
-## Cluster commands
+## 🖥️ Cluster commands
 
 ```bash
 bin/cq-cluster status     # nodes and add-ons
@@ -93,31 +164,6 @@ bin/cq-cluster addon gateway   # NGINX Gateway Fabric (installed automatically b
 docker stop ckaquest-control-plane ckaquest-worker ckaquest-worker2   # pause it and free RAM
 docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 ```
-
-## Worlds
-
-| World | Topics | CKA domain |
-|---|---|---|
-| 1 Basics | CrashLoopBackOff, image pulls, Pending pods, labels, ports, init containers, logs | Workloads, Troubleshooting |
-| 2 Deployments | Rollback, probes, HPA, rollouts, PDB, blue/green, canary, StatefulSet | Workloads |
-| 3 Networking | Selectors, NodePort, DNS, Ingress, NetworkPolicy, endpoints, headless services | Services and Networking |
-| 4 Storage | PVC Pending, mounts, access modes, StorageClass, ConfigMaps, Secrets, reclaim policy | Storage |
-| 5 Security | RBAC, securityContext, ResourceQuota, affinity, taints, Pod Security, PriorityClass | Workloads, Architecture |
-| 6 Cluster troubleshooting | kubelet down or misconfigured, scheduler, API server, controller manager, CoreDNS, kube-proxy, `kubectl top` and in-place resize, drain with a PDB, static pods | Troubleshooting (30% of the exam) |
-| 7 Cluster admin and security | CSR for a new user, ClusterRole, ServiceAccount 403, certificate renewal, etcd backup and restore, kubeconfig repair, static pods, admission plugins, join tokens | Architecture |
-| 8 Networking 2 | Gateway API: HTTPRoute, broken routes, 80/20 split, HTTPS listener, migrating from Ingress. IngressClass, cross-namespace NetworkPolicy, CoreDNS hosts | Services and Networking |
-| 9 Packaging | Helm install, rollback, finding releases, helm template. Kustomize overlays and patches. CRDs and operator RBAC | Architecture |
-| 10 Workloads 2 | Native sidecars, multi-container pods, HPA behavior, VPA, DaemonSets, CronJobs, Secret volumes, default StorageClass, LimitRange, parallel Jobs | Workloads, Storage |
-| 11 Cluster lifecycle | Node prep, `kubeadm init`, Calico with a custom CIDR, `kubeadm join`, control plane and worker upgrade to v1.37.1 | Architecture |
-| 12 Speed drills | JSONPath, custom-columns, sort-by, imperative commands, `$do`, field selectors, api-resources | All |
-| 13 Loose ends | HA control plane endpoint and control plane join, cri-dockerd from a .deb with sysctls, pod anti-affinity, topology spread across zones, PVC expansion, CRI/CNI/CSI inspection | Architecture, Workloads, Storage |
-
-## Score, par time and readiness
-
-- Every level has a par time. Clear it in time without the guide or the solution and you get a star and 20% more XP.
-- Hints cost XP: 15% each, the guide 25%, the solution 50%.
-- The welcome screen shows a mastery bar for each CKA domain and a **readiness** score. Readiness is half campaign mastery (weighted like the exam) and half your last three mock exams. Book the exam when it stays above 80%.
-- "Play by course section" in the menu plays the levels that match a section of the course you are watching.
 
 ## Mock exams
 
@@ -137,7 +183,7 @@ Like the real exam there are two clusters. `cluster1` is the game cluster and `c
 
 Upgrade tasks use cluster2. It is created when a set needs it (about 1 GB more RAM).
 
-## Offline
+## ✈️ Offline
 
 Run this once while online:
 
@@ -147,7 +193,7 @@ bin/cq-offline prepare    # images, add-on manifests, Calico, the v1.37.1 .debs
 
 After that, new clusters load the images from the pack and add-ons come from local files. Upgrade levels install from a local apt repo with the same commands. The docs stay online, as in the real exam. `tests/offline-check.sh` builds a separate cluster, cuts the internet inside every node, loads the pack and runs a few levels to prove it.
 
-## Tests
+## 🧪 Tests
 
 Every level has a reference fix. The harness deploys each level, checks that the broken state fails, applies the fix, and checks that it passes:
 
@@ -158,7 +204,7 @@ tests/run-levels.sh level-53     # one level
 
 A full run takes a while. Run it in the background.
 
-## Writing a level
+## ✍️ Writing a level
 
 A level is a folder in `worlds/world-N-name/level-NN-name/`:
 

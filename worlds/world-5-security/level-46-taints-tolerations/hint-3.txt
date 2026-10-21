@@ -9,6 +9,8 @@ metadata:
   name: regular-app
   namespace: taints-tolerations
 spec:
+  nodeSelector:
+    kubernetes.io/hostname: ckaquest-worker   # keep this
   containers:
   - name: app
     image: nginx:1.27
@@ -31,18 +33,16 @@ tolerations:
 ## Apply and Verify
 
 ```bash
-# Ensure node is tainted
-kubectl taint nodes kind-control-plane dedicated=gpu:NoSchedule --overwrite
-
-# Apply solution
-kubectl apply -f solution.yaml
+# Tolerations cannot be added to a running pod. Recreate it:
+kubectl get pod regular-app -n taints-tolerations -o yaml > pod.yaml   # add the tolerations block
+kubectl replace --force -f pod.yaml
 
 # Verify
 kubectl get pod regular-app -n taints-tolerations
 # Should be Running
 
 # Run validation
-./validate.sh
+# then press check in the game
 ```
 
 ## Key Points
@@ -53,4 +53,4 @@ kubectl get pod regular-app -n taints-tolerations
 4. operator: "Equal" (exact) or "Exists" (any value)
 
 ---
-Run `./validate.sh` to verify!
+Then run the check in the game.

@@ -14,7 +14,7 @@ Error: `node(s) had untolerated taint {dedicated: gpu}`
 
 ## Check Node Taints
 ```bash
-kubectl describe node kind-control-plane | grep Taints
+kubectl describe node node01 | grep Taints     # use the real node name from kubectl get nodes
 ```
 You'll see: `Taints: dedicated=gpu:NoSchedule`
 

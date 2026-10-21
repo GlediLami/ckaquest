@@ -54,7 +54,7 @@ TOUCHES = {
     53: "control-plane", 54: "control-plane", 55: "control-plane", 64: "control-plane",
     66: "control-plane", 69: "control-plane", 67: "cp-kubeconfig",
     56: "coredns", 78: "coredns", 57: "kube-proxy",
-    45: "node-labels", 46: "node-taints", 50: "node-taints", 94: "default-sc",
+    45: "node-labels", 46: ("node-taints", "kubelet-node01"), 50: "node-taints", 94: "default-sc",
     101: "lab", 102: "lab",
     # These need both workers free to schedule on
     113: ("node-taints", "node02", "kubelet-node01"),

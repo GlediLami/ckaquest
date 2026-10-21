@@ -140,9 +140,9 @@ def show_retro_welcome():
     
     # Main title with animation
     title_art = r"""
-    ╦╔═╔═╗╔═╗╔═╗ ╦ ╦╔═╗╔═╗╔╦╗
-    ╠╩╗╠═╣╚═╗║═╬╗║ ║║╣ ╚═╗ ║
-    ╩ ╩╚═╝╚═╝╚═╝╚╚═╝╚═╝╚═╝ ╩
+    ╔═╗╦╔═╔═╗╔═╗ ╦ ╦╔═╗╔═╗╔╦╗
+    ║  ╠╩╗╠═╣║═╬╗║ ║║╣ ╚═╗ ║
+    ╚═╝╩ ╩╩ ╩╚═╝╚╚═╝╚═╝╚═╝ ╩
     """
     
     console.print(title_art, style="bold cyan")
