@@ -173,4 +173,4 @@ A level is a folder in `worlds/world-N-name/level-NN-name/`:
 
 ## License
 
-Apache-2.0, see [License](License). Based on K8sQuest by Manoj ([Manoj-engineer/k8squest](https://github.com/Manoj-engineer/k8squest)).
+Apache-2.0, see [License](License).
