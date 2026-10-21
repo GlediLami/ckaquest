@@ -15,7 +15,7 @@ Work in progress.
 | Worlds 1 to 6: basics, deployments, networking, storage, security, cluster troubleshooting (60 levels) | Playable, tested |
 | Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills (50 levels) | Playable, tested |
 | Mock exams: 6 fixed sets (A to F) plus random sets | Playable |
-| Offline pack | Written. The full offline proof run is still to do. |
+| Offline pack | Works. `tests/offline-check.sh` passes 5 sample levels with the internet cut |
 
 The full plan is in [docs/PLAN.md](docs/PLAN.md).
 
@@ -144,7 +144,7 @@ Run this once while online:
 bin/cq-offline prepare    # images, add-on manifests, Calico, the v1.37.1 .debs
 ```
 
-After that, new clusters load the images from the pack and add-ons come from local files. Upgrade levels install from a local apt repo with the same commands. The docs stay online, as in the real exam. `tests/offline-check.sh` builds a cluster on a Docker network with no internet and runs a few levels to prove it.
+After that, new clusters load the images from the pack and add-ons come from local files. Upgrade levels install from a local apt repo with the same commands. The docs stay online, as in the real exam. `tests/offline-check.sh` builds a separate cluster, cuts the internet inside every node, loads the pack and runs a few levels to prove it.
 
 ## Tests
 

@@ -68,7 +68,8 @@ prepare_images() {
     [[ "$img" == *:* || "$img" == *@* ]] || img="$img:latest"
     f="$(file_for "$img")"
     [ -s "$f" ] && continue
-    if docker pull -q --platform "$PLATFORM" "$img" >/dev/null 2>&1; then
+    # Fall back to a local copy when Docker Hub rate-limits the pull
+    if docker pull -q --platform "$PLATFORM" "$img" >/dev/null 2>&1 || docker image inspect "$img" >/dev/null 2>&1; then
       docker save --platform "$PLATFORM" "$img" -o "$f" && log "image $img"
     else
       echo "   skip (cannot pull): $img"

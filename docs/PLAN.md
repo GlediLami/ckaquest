@@ -199,9 +199,9 @@ Each phase ends with the harness green for everything in it and a commit.
 | 3 | Base 50 upgrade (section 3.3) | Task, domain, docs, course section, strict validator | Done 2026-10-21 |
 | 4 | Worlds 7 to 10 | Harness green | Done 2026-10-21 |
 | 5 | Exam simulator plus mock sets | Full mock end to end | Done (smoke test). Play a full mock to confirm. |
-| 6 | Offline pack and proof | A full mock runs with the network cut | Written, proof run open |
+| 6 | Offline pack and proof | A full mock runs with the network cut | Done for 5 sample levels (`tests/offline-check.sh`). A full mock offline is still open. |
 | 7 | World 11, World 12, 6 mocks plus random | 6 mocks plus random | Done |
-| 8 | Polish: game mechanics, safety review | Review findings fixed | Mechanics done, namespace guard added |
+| 8 | Polish: game mechanics, safety review | Review findings fixed | Done: mechanics, namespace guard, pinned image tags |
 
 Suggested order of your own study: play worlds 1 to 5 now (they work). Phases 1 to 4 run in parallel with your course sections 1 to 10. Exam mocks are ready before you reach the course mock exams.
 
