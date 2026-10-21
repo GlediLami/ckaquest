@@ -74,7 +74,9 @@ level(W, "level-71-httproute", dict(
     namespace="shop", requires=["gateway"], concepts=["Gateway API", "HTTPRoute", "parentRefs", "hostnames"],
     task="""Namespace **shop** has a Gateway **web-gw** (class `nginx`, HTTP listener on port 80) and a Service **shop-frontend** on port 80.
 
-Create an HTTPRoute **shop-route** in namespace **shop** that attaches to **web-gw** and sends all requests for host `shop.example.com` to **shop-frontend** on port 80.""",
+Create an HTTPRoute **shop-route** in namespace **shop** that attaches to **web-gw** and sends all requests for host `shop.example.com` to **shop-frontend** on port 80.
+
+The Gateway needs about 1 minute to start routing after the HTTPRoute is created. Wait a minute before you check traffic or submit.""",
     docs=[K8S_GW, GW_DOCS]),
     setup=echo_app("shop", "shop-frontend", "shop frontend") + "\n" + gateway("shop"),
     validate=GET + "\n" + ACCEPTED + """

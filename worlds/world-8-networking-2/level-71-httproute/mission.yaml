@@ -21,6 +21,8 @@ task: |
   Namespace **shop** has a Gateway **web-gw** (class `nginx`, HTTP listener on port 80) and a Service **shop-frontend** on port 80.
 
   Create an HTTPRoute **shop-route** in namespace **shop** that attaches to **web-gw** and sends all requests for host `shop.example.com` to **shop-frontend** on port 80.
+
+  The Gateway needs about 1 minute to start routing after the HTTPRoute is created. Wait a minute before you check traffic or submit.
 docs:
   - https://kubernetes.io/docs/concepts/services-networking/gateway/
   - https://gateway-api.sigs.k8s.io/guides/http-routing/
