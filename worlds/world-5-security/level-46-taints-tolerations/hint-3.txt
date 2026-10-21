@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: nginx:latest
+    image: nginx:1.27
   tolerations:  # ✅ Add this!
   - key: "dedicated"  # ✅ Matches taint key
     operator: "Equal"

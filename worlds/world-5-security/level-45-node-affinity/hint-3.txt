@@ -21,7 +21,7 @@ metadata:
 spec:
   containers:
   - name: ml-training
-    image: nginx:latest
+    image: nginx:1.27
     command: ['sh', '-c', 'echo "GPU workload running"; sleep 3600']
   affinity:
     nodeAffinity:

@@ -39,6 +39,7 @@ spec:
   containers:
   - name: app
     image: bitnami/kubectl:latest
+    imagePullPolicy: IfNotPresent
     command:
     - sh
     - -c

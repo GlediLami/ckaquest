@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: postgres
-    image: postgres:latest
+    image: postgres:16
     env:
     - name: POSTGRES_PASSWORD
       value: "mysecretpassword"

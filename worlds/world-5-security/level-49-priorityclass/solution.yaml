@@ -30,7 +30,7 @@ spec:
   priorityClassName: low-priority  # ✅ Low priority
   containers:
   - name: app
-    image: nginx:latest
+    image: nginx:1.27
     command: ['sh', '-c', 'echo "Dev workload (low priority)"; sleep 3600']
     resources:
       requests:
@@ -48,7 +48,7 @@ spec:
   priorityClassName: high-priority  # ✅ High priority
   containers:
   - name: api
-    image: nginx:latest
+    image: nginx:1.27
     command: ['sh', '-c', 'echo "✅ Critical API running (high priority)"; sleep 3600']
     resources:
       requests:

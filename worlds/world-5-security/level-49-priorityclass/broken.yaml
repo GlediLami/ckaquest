@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: nginx:latest
+    image: nginx:1.27
     resources:
       requests:
         cpu: "500m"
@@ -27,7 +27,7 @@ metadata:
 spec:
   containers:
   - name: api
-    image: nginx:latest
+    image: nginx:1.27
     resources:
       requests:
         cpu: "500m"  # Needs resources

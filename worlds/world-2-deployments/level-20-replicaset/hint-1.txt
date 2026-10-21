@@ -6,7 +6,7 @@ Check what resources exist:
 Do you see a standalone ReplicaSet (web-app-rs) without a Deployment?
 
 Try to update the image:
-`kubectl set image replicaset/web-app-rs web=hashicorp/http-echo:latest -n replicaset`
+`kubectl set image replicaset/web-app-rs web=hashicorp/http-echo:1.0 -n replicaset`
 
 Check the pods:
 `kubectl get pods -n replicaset -l app=webapp`

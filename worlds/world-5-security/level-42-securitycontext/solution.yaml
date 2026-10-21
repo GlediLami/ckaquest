@@ -12,7 +12,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginxinc/nginx-unprivileged:latest
+    image: nginxinc/nginx-unprivileged:1.27
     ports:
     - containerPort: 8080  # Non-privileged port
     securityContext:

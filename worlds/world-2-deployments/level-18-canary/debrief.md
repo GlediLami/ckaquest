@@ -335,7 +335,7 @@ kubectl get endpoints app-service -n <namespace>
 
 # Test traffic distribution (sampling)
 for i in {1..100}; do
-  kubectl run -it --rm test-$i --image=busybox --restart=Never -n <namespace> -- wget -q -O- app-service
+  kubectl run -it --rm test-$i --image=busybox:1.36 --restart=Never -n <namespace> -- wget -q -O- app-service
 done | grep -c "Canary"
 
 # Quick rollback (scale canary to 0)

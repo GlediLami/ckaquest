@@ -337,7 +337,7 @@ kubectl patch service <name> -n <namespace> -p '{"spec":{"selector":{"version":"
 kubectl edit service <name> -n <namespace>
 
 # Test which version is serving traffic
-kubectl run -it --rm test --image=busybox --restart=Never -n <namespace> -- wget -q -O- <service-name>
+kubectl run -it --rm test --image=busybox:1.36 --restart=Never -n <namespace> -- wget -q -O- <service-name>
 
 # Get pod IPs and their labels
 kubectl get pods -n <namespace> -o wide -L version

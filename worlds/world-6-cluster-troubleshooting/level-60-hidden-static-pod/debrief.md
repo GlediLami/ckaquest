@@ -9,7 +9,7 @@ A static pod is created by the kubelet from a file, not by the API server. The k
 3. The folder can be anything. The exam likes to move it.
 
 ## Creating a static pod (common exam task)
-`kubectl run x --image=nginx $do > x.yaml`, copy it to the node, put it into the staticPodPath folder. The kubelet starts it. No kubectl apply needed.
+`kubectl run x --image=nginx:1.27 $do > x.yaml`, copy it to the node, put it into the staticPodPath folder. The kubelet starts it. No kubectl apply needed.
 
 ## Your notes
 - 5 Scheduling / Static Pods

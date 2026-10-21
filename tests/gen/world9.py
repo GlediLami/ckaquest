@@ -547,6 +547,7 @@ spec:
       containers:
       - name: operator
         image: bitnami/kubectl:latest
+        imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "while true; do kubectl get backups.ops.example.com -A 2>&1 | tail -1; sleep 5; done"]
 EOF""",
     validate="""SA=system:serviceaccount:backup-system:backup-operator

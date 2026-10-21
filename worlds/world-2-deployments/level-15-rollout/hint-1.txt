@@ -6,7 +6,7 @@ Check the deployment's rollout strategy:
 Look at `maxUnavailable` and `maxSurge`. What do you notice?
 
 Try triggering a rollout (change image tag):
-`kubectl set image deployment/critical-api api=hashicorp/http-echo:latest -n rollout`
+`kubectl set image deployment/critical-api api=hashicorp/http-echo:1.0 -n rollout`
 
 Watch what happens to pods:
 `kubectl get pods -n rollout -l app=api -w`

@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: nginx:latest
+    image: nginx:1.27
     command: ['sh', '-c', 'echo "Application running"; nginx -g "daemon off;"']
   # ❌ No tolerations!
   # Pod can't schedule on tainted nodes

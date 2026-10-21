@@ -182,7 +182,7 @@ port is what clients call. targetPort is what the container listens on:
 ```bash
 k get svc web-service -o wide
 k get ep web-service
-k run t --rm -it --image=busybox -- wget -qO- web-service
+k run t --rm -it --image=busybox:1.36 -- wget -qO- web-service
 ```
 
 Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/

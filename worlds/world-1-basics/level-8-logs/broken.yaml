@@ -6,6 +6,6 @@ metadata:
 spec:
   containers:
   - name: postgres
-    image: postgres:latest
+    image: postgres:16
     ports:
     - containerPort: 5432

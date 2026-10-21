@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: proxy
-        image: hashicorp/http-echo:latest
+        image: hashicorp/http-echo:1.0
         args: ["-text=DB Proxy", "-listen=:8080"]
         ports:
         - containerPort: 8080

@@ -21,5 +21,6 @@ spec:
       containers:
       - name: gen
         image: bitnami/kubectl:latest
+        imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "while true; do kubectl get configmaps -n reports -o name 2>&1 | tail -2; sleep 5; done"]
 EOF

@@ -131,7 +131,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: app
-        image: nginx:latest
+        image: nginx:1.27
         command: ['sh', '-c', 'echo "🎉 ALL SYSTEMS OPERATIONAL! The storm has passed!"; sleep 3600']
         resources:
           requests:

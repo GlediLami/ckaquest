@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.27
         command: ['sh', '-c', 'echo "Web server ready - replica $(hostname)"; nginx -g "daemon off;"']
 
 ---

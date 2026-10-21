@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: hashicorp/http-echo:latest
+        image: hashicorp/http-echo:1.0
         args: ["-text=Stable v1", "-listen=:8080"]
         ports:
         - containerPort: 8080
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: hashicorp/http-echo:latest
+        image: hashicorp/http-echo:1.0
         args: ["-text=Canary v2", "-listen=:8080"]
         ports:
         - containerPort: 8080

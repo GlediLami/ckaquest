@@ -23,11 +23,11 @@ metadata:
 spec:
   initContainers:
   - name: wait-for-service
-    image: busybox:latest
+    image: busybox:1.36
     # ✅ This now succeeds because the service exists!
     command: ['sh', '-c', 'until nslookup backend-service.initcontainer.svc.cluster.local; do echo waiting; sleep 2; done']
   containers:
   - name: web
-    image: nginx:latest
+    image: nginx:1.27
     ports:
     - containerPort: 80

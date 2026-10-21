@@ -578,7 +578,7 @@ One dash too many or too few changes the meaning. This is the most common Networ
 
 ## Exam angle
 - A policy only isolates the pods it selects, and only in the directions in `policyTypes`.
-- Test with `k run t -n <ns> --rm -it --image=busybox -- nc -zv -w2 <svc>.<ns> <port>`.
+- Test with `k run t -n <ns> --rm -it --image=busybox:1.36 -- nc -zv -w2 <svc>.<ns> <port>`.
 
 Bookmark: https://kubernetes.io/docs/concepts/services-networking/network-policies/
 

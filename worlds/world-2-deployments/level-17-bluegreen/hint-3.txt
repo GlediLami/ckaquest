@@ -23,6 +23,6 @@ spec:
 You should see 3 IPs from the green deployment now!
 
 5. Test:
-   `kubectl run -it --rm test --image=busybox --restart=Never -n bluegreen -- wget -q -O- app-service`
+   `kubectl run -it --rm test --image=busybox:1.36 --restart=Never -n bluegreen -- wget -q -O- app-service`
    
 Should show "Version GREEN (NEW)"!

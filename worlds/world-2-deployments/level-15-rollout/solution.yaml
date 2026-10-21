@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: hashicorp/http-echo:latest
+        image: hashicorp/http-echo:1.0
         args:
           - "-text=API v2"
           - "-listen=:8080"

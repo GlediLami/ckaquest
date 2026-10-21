@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: ml-training
-    image: nginx:latest
+    image: nginx:1.27
     command: ['sh', '-c', 'echo "✅ GPU workload scheduled successfully on node: $MY_NODE_NAME"; sleep 3600']
     env:
     - name: MY_NODE_NAME

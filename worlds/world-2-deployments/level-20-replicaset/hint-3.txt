@@ -7,7 +7,7 @@ Steps:
    `kubectl delete replicaset web-app-rs -n replicaset`
 
 2. Create a Deployment instead:
-   `kubectl create deployment web-app --image=hashicorp/http-echo:latest -n replicaset --replicas=3 -- -text="Version 2.0" -listen=:8080`
+   `kubectl create deployment web-app --image=hashicorp/http-echo:1.0 -n replicaset --replicas=3 -- -text="Version 2.0" -listen=:8080`
 
 3. OR use a YAML file:
    ```bash
@@ -29,7 +29,7 @@ Steps:
        spec:
          containers:
          - name: web
-           image: hashicorp/http-echo:latest
+           image: hashicorp/http-echo:1.0
            args: ["-text=Version 2.0", "-listen=:8080"]
            ports:
            - containerPort: 8080

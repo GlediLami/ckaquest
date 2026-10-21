@@ -501,7 +501,7 @@ volumeMounts:
 ```yaml
 initContainers:
 - name: validate-mounts
-  image: busybox
+  image: busybox:1.36
   command:
   - sh
   - -c

@@ -23,7 +23,7 @@ metadata:
 spec:
   containers:
   - name: backend
-    image: hashicorp/http-echo:latest
+    image: hashicorp/http-echo:1.0
     args:
       - "-text=API Response: Success"
       - "-listen=:8080"

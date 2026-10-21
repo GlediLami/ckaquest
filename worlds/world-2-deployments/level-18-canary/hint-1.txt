@@ -11,6 +11,6 @@ Check the service endpoints:
 Count the IPs - this shows ALL pods receiving traffic (both stable and canary).
 
 Test the traffic distribution:
-`for i in {1..20}; do kubectl run -it --rm test-$i --image=busybox --restart=Never -n canary -- wget -q -O- app-service; done`
+`for i in {1..20}; do kubectl run -it --rm test-$i --image=busybox:1.36 --restart=Never -n canary -- wget -q -O- app-service; done`
 
 Count how many times you see "Stable" vs "Canary". Is it close to 50/50? That's wrong for a canary!

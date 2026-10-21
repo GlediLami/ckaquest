@@ -1348,7 +1348,7 @@ clusterIP is immutable. Export, set clusterIP: None, replace:
 ```bash
 k get svc web-cluster -o yaml > s.yaml
 k replace --force -f s.yaml
-k run t --rm -it --image=busybox -- nslookup web-0.web-cluster
+k run t --rm -it --image=busybox:1.36 -- nslookup web-0.web-cluster
 ```
 
 Bookmark: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services

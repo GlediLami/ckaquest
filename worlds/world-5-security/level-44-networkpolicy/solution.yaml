@@ -54,7 +54,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: busybox
+    image: busybox:1.36
     command: ['sh', '-c', 'echo "Testing database connection..."; while true; do nc -vz database 5432 2>&1 && echo "✅ Connected to database"; sleep 10; done']
 
 ---

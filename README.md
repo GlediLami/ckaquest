@@ -13,8 +13,8 @@ Work in progress.
 | Part | State |
 |---|---|
 | Worlds 1 to 6: basics, deployments, networking, storage, security, cluster troubleshooting (60 levels) | Playable, tested |
-| Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills (50 levels) | Written, being tested |
-| Mock exams: 6 fixed sets (A to F) plus random sets | Written, being tested |
+| Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills (50 levels) | Playable, tested |
+| Mock exams: 6 fixed sets (A to F) plus random sets | Playable |
 | Offline pack | Written. The full offline proof run is still to do. |
 
 The full plan is in [docs/PLAN.md](docs/PLAN.md).

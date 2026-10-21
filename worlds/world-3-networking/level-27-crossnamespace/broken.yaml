@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
   - name: api
-    image: hashicorp/http-echo:latest
+    image: hashicorp/http-echo:1.0
     args:
       - "-text=API Response from backend-ns"
       - "-listen=:8080"

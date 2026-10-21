@@ -334,7 +334,7 @@ kubectl get pods -n <namespace> -l app=<label>
 kubectl describe statefulset <name> -n <namespace>
 
 # Check pod DNS names
-kubectl run -it --rm debug --image=busybox --restart=Never -n <namespace> -- nslookup database-0.database-service
+kubectl run -it --rm debug --image=busybox:1.36 --restart=Never -n <namespace> -- nslookup database-0.database-service
 
 # Scale StatefulSet (scales in order)
 kubectl scale statefulset <name> --replicas=5 -n <namespace>

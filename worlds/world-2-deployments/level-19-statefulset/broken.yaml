@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: db
-        image: hashicorp/http-echo:latest  # Simulating a database
+        image: hashicorp/http-echo:1.0  # Simulating a database
         args: 
           - "-text=Database Pod ($(HOSTNAME))"
           - "-listen=:8080"

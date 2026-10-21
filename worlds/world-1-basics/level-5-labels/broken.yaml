@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: hashicorp/http-echo:latest
+    image: hashicorp/http-echo:1.0
     args:
       - "-text=Hello from backend!"
     ports:

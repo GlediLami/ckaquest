@@ -216,7 +216,7 @@ command: ["curl", "http://$(API_SERVICE_HOST):$(API_SERVICE_PORT)"]
 ```yaml
 # Add a debug container:
 - name: debug
-  image: busybox
+  image: busybox:1.36
   command: ["sleep", "3600"]
   
 # Then test DNS:
@@ -291,7 +291,7 @@ pod-1.database-service.dns.svc.cluster.local → 10.244.2.8
 Service DNS name: <svc>.<ns>.svc.cluster.local. Test from inside:
 
 ```bash
-k run t --rm -it --image=busybox -- nslookup database-service
+k run t --rm -it --image=busybox:1.36 -- nslookup database-service
 ```
 
 Bookmark: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
