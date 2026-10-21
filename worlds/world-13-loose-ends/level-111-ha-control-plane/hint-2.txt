@@ -1,0 +1,1 @@
+`kubeadm init --help`: look for `--control-plane-endpoint` and `--upload-certs`. The init output prints two join commands. The one with `--control-plane` is for control plane nodes.

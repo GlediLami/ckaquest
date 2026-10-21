@@ -1,0 +1,1 @@
+`systemctl enable --now <service>` does enable and start in one step.

@@ -1,0 +1,1 @@
+The kubelet config file is `/var/lib/kubelet/config.yaml` on the node. `ssh node01` first.

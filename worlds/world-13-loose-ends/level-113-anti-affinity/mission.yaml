@@ -1,0 +1,24 @@
+name: "Never on the Same Node"
+description: "Two cache pods on one node means one node failure takes both"
+objective: "Spread a Deployment with required pod anti-affinity"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: workloads
+course_section: 3
+namespace: anti-lab
+exam: true
+concepts:
+  - podAntiAffinity
+  - topologyKey
+  - rolling update and anti-affinity
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **cache** in namespace **anti-lab** runs 2 pods with label `app=cache`.
+
+  Change it so that **no two cache pods can ever run on the same node** (a hard rule, by hostname). Then scale it to **3** replicas.
+
+  The cluster has 2 worker nodes, so one pod will stay Pending. That is expected. All 3 pods must come from the updated pod template.
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity

@@ -1,0 +1,27 @@
+name: "Even Across Zones"
+description: "All api pods pile up in one zone"
+objective: "Label nodes with zones and add a hard topology spread constraint"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: workloads
+course_section: 3
+namespace: spread-lab
+exam: true
+concepts:
+  - topologySpreadConstraints
+  - maxSkew
+  - zone labels
+  - matchLabelKeys
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **api** in namespace **spread-lab** runs 4 pods (`app=api`). They all land on node01.
+
+  1. Label node **node01** with `topology.kubernetes.io/zone=zone-a` and node **node02** with `topology.kubernetes.io/zone=zone-b`.
+  2. Add a topology spread constraint to **api**: spread by `topology.kubernetes.io/zone`, `maxSkew` 1, and do **not** schedule pods that would break it.
+
+  Keep the existing node affinity and the 4 replicas. In the end each zone must run 2 api pods.
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+  - https://kubernetes.io/docs/reference/labels-annotations-taints/#topologykubernetesiozone

@@ -1,0 +1,1 @@
+`k label node <name> key=value`. Find the real node names with `k get nodes`.

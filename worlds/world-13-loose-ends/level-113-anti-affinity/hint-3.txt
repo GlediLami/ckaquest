@@ -1,0 +1,1 @@
+If the rollout hangs: the new pods refuse nodes where old cache pods still run, and the old pods wait for the new ones. Scale to 0 first, or delete the old pods.

@@ -1,0 +1,1 @@
+Try `k edit pvc data -n grow-lab` and read the error carefully. It names the object at fault.

@@ -1,0 +1,23 @@
+name: "The Disk Is Too Small"
+description: "The database needs more space, but the API says no"
+objective: "Expand a bound PVC without recreating it"
+xp: 250
+difficulty: intermediate
+expected_time: 6m
+domain: storage
+course_section: 8
+namespace: grow-lab
+exam: true
+concepts:
+  - volume expansion
+  - allowVolumeExpansion
+  - PVC resize
+task: |
+  Context: `kind-ckaquest`
+
+  PVC **data** in namespace **grow-lab** requests 1Gi and is used by pod **db**. It must request **2Gi**.
+
+  Do not delete or recreate the PVC or the pod. If the API refuses the change, find out why and fix the cause.
+docs:
+  - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims
+  - https://kubernetes.io/docs/concepts/storage/storage-classes/#allow-volume-expansion

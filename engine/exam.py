@@ -47,7 +47,7 @@ PASS_MARK = 66
 PROTECTED = {"ckaquest", "default", "kube-system", "kube-public", "kube-node-lease", "local-path-storage",
              "ingress-nginx", "nginx-gateway"}
 
-# What a level changes outside its namespace. Two tasks with the same key never go in one set.
+# What a level changes or needs outside its namespace. Two tasks with a shared key never go in one set.
 TOUCHES = {
     51: "kubelet-node01", 60: "kubelet-node01", 68: "kubelet-node01",
     52: "node02", 59: "node02",
@@ -56,11 +56,14 @@ TOUCHES = {
     56: "coredns", 78: "coredns", 57: "kube-proxy",
     45: "node-labels", 46: "node-taints", 50: "node-taints", 94: "default-sc",
     101: "lab", 102: "lab",
+    # These need both workers free to schedule on
+    113: ("node-taints", "node02", "kubelet-node01"),
+    114: ("node-labels", "node-taints", "node02", "kubelet-node01"),
 }
 # Setups that leave part of the cluster broken run last, so other setups still work.
 DISRUPTIVE = {51, 52, 53, 54, 55, 56, 57, 60}
 # Never in an exam: separate machines, or drills that are not exam tasks.
-EXCLUDED = set(range(97, 101)) | set(range(103, 111))
+EXCLUDED = set(range(97, 101)) | set(range(103, 113))
 
 
 def level_number(path):
@@ -123,10 +126,10 @@ def ensure_contexts():
 def conflicts(numbers):
     seen = {}
     for n in numbers:
-        key = TOUCHES.get(n)
-        if key and key in seen:
-            return f"levels {seen[key]} and {n} both touch {key}"
-        if key:
+        keys = TOUCHES.get(n, ())
+        for key in (keys,) if isinstance(keys, str) else keys:
+            if key in seen:
+                return f"levels {seen[key]} and {n} both touch {key}"
             seen[key] = n
     return None
 

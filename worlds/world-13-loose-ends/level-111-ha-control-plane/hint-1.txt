@@ -1,0 +1,1 @@
+Get the IPv4 address with `ip -4 addr show eth0`. The endpoint must resolve before `kubeadm init` runs.

@@ -1,0 +1,1 @@
+`allowVolumeExpansion` can be changed on an existing StorageClass. Set it to true, then edit the PVC again.

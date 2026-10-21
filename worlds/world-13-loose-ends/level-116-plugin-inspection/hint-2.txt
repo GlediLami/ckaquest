@@ -1,0 +1,1 @@
+CNI configs live in `/etc/cni/net.d`. The plugin binaries live in `/opt/cni/bin`.

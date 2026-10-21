@@ -1,0 +1,1 @@
+If the spread ends 3 and 1 after the rollout, the old pods were counted while the new ones were placed. Add `matchLabelKeys: [pod-template-hash]` so only pods of the same version count, then `k rollout restart`.

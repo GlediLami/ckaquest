@@ -1,0 +1,1 @@
+Each entry needs a `labelSelector` that matches the cache pods and `topologyKey: kubernetes.io/hostname`.

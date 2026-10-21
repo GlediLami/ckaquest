@@ -1,0 +1,1 @@
+`k get node node01 -o wide` shows the runtime. `-o jsonpath='{.spec.podCIDR}'` shows the pod range. `k get csidriver` lists CSI drivers. Zero is a valid answer.

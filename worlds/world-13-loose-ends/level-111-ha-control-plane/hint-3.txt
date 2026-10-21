@@ -1,0 +1,1 @@
+The certificate key in the init output is easy to lose. `kubeadm init phase upload-certs --upload-certs` prints a fresh one, and `kubeadm token create --print-join-command --certificate-key <key>` builds the whole command.

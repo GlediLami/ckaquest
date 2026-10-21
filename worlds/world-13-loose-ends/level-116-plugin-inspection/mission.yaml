@@ -1,0 +1,29 @@
+name: "What Runs Under the Hood"
+description: "Find out which runtime, network plugin and storage drivers a node uses"
+objective: "Read CRI, CNI and CSI details from a node and the API"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 10
+namespace: plugin-lab
+exam: true
+concepts:
+  - CRI
+  - CNI
+  - CSI
+  - kubelet config
+task: |
+  Context: `kind-ckaquest`
+
+  Write the answers about node **node01** to `~/ckaquest-work/116/answers.txt`, one `key=value` per line with no spaces:
+
+  - `cri_endpoint`: the container runtime endpoint the kubelet on node01 uses
+  - `runtime`: the container runtime and version node01 reports, exactly as the API shows it
+  - `cni_config`: the file name (not the path) of the CNI config on node01
+  - `cni_plugin`: the `type` of the first plugin in that CNI config
+  - `pod_cidr`: the pod CIDR assigned to node01
+  - `csi_drivers`: how many CSIDriver objects the cluster has
+docs:
+  - https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
+  - https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/

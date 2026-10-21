@@ -1,0 +1,1 @@
+Write both lines to a new file like `/etc/sysctl.d/99-cri.conf`, then `sysctl --system`.

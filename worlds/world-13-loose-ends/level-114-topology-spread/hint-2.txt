@@ -1,0 +1,1 @@
+`k explain deploy.spec.template.spec.topologySpreadConstraints`. You need maxSkew, topologyKey, whenUnsatisfiable and labelSelector.

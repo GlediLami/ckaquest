@@ -1,0 +1,32 @@
+name: "Room for More Control Planes"
+description: "The first control plane must be ready for two more to join later"
+objective: "Init a cluster behind a stable endpoint and produce the control plane join command"
+xp: 400
+difficulty: advanced
+expected_time: 12m
+domain: architecture
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - HA control plane
+  - controlPlaneEndpoint
+  - upload-certs
+  - certificate key
+task: |
+  Context: `bare-controlplane`
+
+  The team wants a highly available control plane later. The first node must be set up so more control plane nodes can join.
+
+  On **bare-controlplane**:
+  - make the name `k8s-api.ckaquest.local` resolve to the node's own IPv4 address (use `/etc/hosts`)
+  - create the cluster with kubeadm. Control plane endpoint **k8s-api.ckaquest.local:6443**, pod network CIDR **10.50.0.0/16**. Upload the control plane certificates to the cluster
+  - set up `/root/.kube/config` for root
+  - write the full command that joins **another control plane node** to `/root/cp-join.sh`
+
+  Do not install a CNI.
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
+  - https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/

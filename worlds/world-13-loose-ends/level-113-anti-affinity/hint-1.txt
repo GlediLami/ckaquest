@@ -1,0 +1,1 @@
+`k explain deploy.spec.template.spec.affinity.podAntiAffinity`. You want the `requiredDuringScheduling...` list.

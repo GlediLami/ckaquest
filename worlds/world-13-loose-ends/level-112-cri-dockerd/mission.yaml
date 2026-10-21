@@ -1,0 +1,32 @@
+name: "Another Runtime Socket"
+description: "A node must run Docker workloads through cri-dockerd"
+objective: "Install a .deb, start its service and set the kernel parameters"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 10
+namespace: lifecycle
+exam: true
+concepts:
+  - CRI
+  - cri-dockerd
+  - dpkg
+  - systemctl
+  - sysctl
+task: |
+  Context: `bare-node01`
+
+  On **bare-node01** the package `/root/pkgs/cri-dockerd_0.3.20-ckaquest_all.deb` is ready.
+  - install it with dpkg
+  - enable and start its service **cri-docker** so it also starts after a reboot
+  - set these kernel parameters now and persistently in a file under `/etc/sysctl.d/`:
+    - `net.ipv4.ip_forward = 1`
+    - `net.ipv6.conf.all.forwarding = 1`
+
+  This package is a CKAQuest practice copy. It has the same name, service and socket path as the real cri-dockerd but does not need Docker.
+
+  The bare nodes are **bare-controlplane** and **bare-node01** (`ssh bare-controlplane`). They are separate from the game cluster. Your normal kubectl does not talk to them.
+docs:
+  - https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+  - https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/

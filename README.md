@@ -13,7 +13,7 @@ Work in progress.
 | Part | State |
 |---|---|
 | Worlds 1 to 6: basics, deployments, networking, storage, security, cluster troubleshooting (60 levels) | Playable, tested |
-| Worlds 7 to 12: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills (50 levels) | Playable, tested |
+| Worlds 7 to 13: admin and security, Gateway API, Helm and Kustomize, workloads, cluster lifecycle, speed drills, curriculum gaps (56 levels) | Playable, tested |
 | Mock exams: 6 fixed sets (A to F) plus random sets | Playable |
 | Offline pack | Works. `tests/offline-check.sh` passes 5 sample levels with the internet cut |
 
@@ -110,6 +110,7 @@ docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 | 10 Workloads 2 | Native sidecars, multi-container pods, HPA behavior, VPA, DaemonSets, CronJobs, Secret volumes, default StorageClass, LimitRange, parallel Jobs | Workloads, Storage |
 | 11 Cluster lifecycle | Node prep, `kubeadm init`, Calico with a custom CIDR, `kubeadm join`, control plane and worker upgrade to v1.37.1 | Architecture |
 | 12 Speed drills | JSONPath, custom-columns, sort-by, imperative commands, `$do`, field selectors, api-resources | All |
+| 13 Loose ends | HA control plane endpoint and control plane join, cri-dockerd from a .deb with sysctls, pod anti-affinity, topology spread across zones, PVC expansion, CRI/CNI/CSI inspection | Architecture, Workloads, Storage |
 
 ## Score, par time and readiness
 
