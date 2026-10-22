@@ -36,3 +36,71 @@ The fixed sets were built before World 13 and leave out the bare node levels. So
 2. Add G6 (Tigera operator) as a variant of level 99, and G9, G10, G12 as single levels.
 3. Make install tasks possible in mocks: bring up the bare nodes as `cluster3` when a set needs them, like `cluster2` for upgrades.
 4. Rebuild sets A to F so that every exam-eligible level appears in at least one set. Add sets G and H for the rest.
+
+## 4. theplatformlab mock exams (2 x 15 questions, "Kubernetes 1.35")
+
+Source: github.com/theplatformlab/CKA-Certified-Kubernetes-Administrator, `mock-exams/`. Its exercises 18 to 31 match the April 2026 exam report (cri-dockerd, Tigera, Argo CD, TLS config, PriorityClass patch, WaitForFirstConsumer, resource tuning, etcd endpoint).
+
+| Mock 1 | Ours | | Mock 2 | Ours | |
+|---|---|---|---|---|---|
+| 1 ConfigMap as a file for a crashing pod | 36, 93 | ✅ | 1 Cross-namespace DNS | 23, 27 | ✅ |
+| 2 Role + RoleBinding, `auth can-i` | 41, 61 | ✅ | 2 Rollout history, rollback | 11 | ✅ |
+| 3 Drain for maintenance | 59 | ✅ | 3 Secret as env vars | 37, 93 | ✅ |
+| 4 SC + PV + PVC (RWX) + mount in a Deployment | 31, 33, 35 | 🟡 G11 | 4 DaemonSet on control plane too | 91 | ✅ |
+| 5 Three-tier NetworkPolicies with ports | 25, 44, 77 | ✅ | 5 API server debugging | 54 | ✅ |
+| 6 Local chart dir, `--set`, `--create-namespace` | 79, 82 | 🟡 G16 | 6 ConfigMap changes reach pods (volume vs env vs subPath) | 36 | 🟡 G15 |
+| 7 Point the kubelet at cri-dockerd | 112 installs only | 🟡 G14 | 7 PriorityClass preemption | 49 | ✅ |
+| 8 API server audit logs | none | ⚪ CKS topic, not in the CKA curriculum | 8 NodePort / LoadBalancer | 22, 29 | ✅ |
+| 9 HPA 70% CPU | 14 | ✅ | 9 CronJob schedule, history, `suspend` | 92 | 🟡 suspend missing |
+| 10 Ingress with TLS | none (74 is Gateway TLS) | ❌ G13 | 10 kubeadm cert renewal | 64 | ✅ |
+| 11 Scheduler down | 53 | ✅ | 11 PDB + drain | 16, 47, 59 | ✅ |
+| 12 StatefulSet + headless + volumeClaimTemplates | 19, 30, 34 | ✅ | 12 CRD instance | 85 | ✅ |
+| 13 ResourceQuota + LimitRange | 43, 95 | ✅ | 13 PSS enforce + warn | 48 | ✅ |
+| 14 PSS enforce restricted, audit baseline | 48 | ✅ | 14 Dynamic provisioning | 35, 94 | ✅ |
+| 15 Sidecar tails nginx logs | 7, 87 | ✅ | 15 Quota + LimitRange min/max | 43, 95 | ✅ |
+
+Result: 22 ✅, 6 🟡, 1 ❌, 1 out of scope.
+
+New gaps from it:
+
+| # | Topic |
+|---|---|
+| G13 | Ingress with a `tls:` section and a TLS Secret |
+| G14 | Switch the kubelet to cri-dockerd (`containerRuntimeEndpoint`, `--cri-socket`) |
+| G15 | How ConfigMap changes reach pods: mounted volume updates, env and `subPath` do not, `rollout restart` |
+| G16 | Install a chart from a local directory with `--set` and `--create-namespace` |
+| G17 | CronJob `suspend` |
+
+## 5. Official curriculum v1.37 (cncf/curriculum, current)
+
+| Domain | Curriculum item | Levels |
+|---|---|---|
+| Storage 10% | Storage classes and dynamic provisioning | 35, 94, 115 |
+| | Volume types, access modes, reclaim policies | 32, 33, 38, 39, 40 |
+| | PVs and PVCs | 31, 34, 105 |
+| Troubleshooting 30% | Clusters and nodes | 51, 52, 59, 67 |
+| | Cluster components | 53 to 57, 60 |
+| | Resource usage monitoring | 14, 58 |
+| | Container output streams | 1, 8, 54 |
+| | Services and networking | 21, 23, 28, 72 |
+| Workloads 15% | Deployments, rolling update, rollback | 2, 11, 15, 17, 18 |
+| | ConfigMaps and Secrets | 36, 37, 93 |
+| | Workload autoscaling | 14, 89, 90 |
+| | Self-healing primitives | 12, 13, 19, 20, 91, 92, 96 |
+| | Pod admission and scheduling | 4, 43, 45 to 49, 95, 113, 114 |
+| Architecture 25% | RBAC | 41, 61, 62, 63, 86 |
+| | Prepare infrastructure | 97, 112 |
+| | Clusters with kubeadm | 70, 98, 100 |
+| | Cluster lifecycle | 64, 65, 66, 101, 102 |
+| | HA control plane | 111 |
+| | Helm and Kustomize | 79 to 84 |
+| | Extension interfaces (CNI, CSI, CRI) | 99, 112, 116 |
+| | CRDs and operators | 85, 86 |
+| Networking 20% | Pod connectivity | 5, 6, 27 |
+| | NetworkPolicies | 25, 44, 77 |
+| | ClusterIP, NodePort, LoadBalancer, endpoints | 21, 22, 26, 29, 30 |
+| | Gateway API | 71 to 74, 76 |
+| | Ingress controllers and resources | 24, 75 |
+| | CoreDNS | 23, 56, 78 |
+
+Every curriculum item has at least one level. The thinnest are the HA control plane (1 level) and installing operators (85 and 86 only define a CRD and RBAC. No level installs a real operator, which G1 Argo CD and G8 cert-manager would fix).
