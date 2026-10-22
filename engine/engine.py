@@ -345,6 +345,14 @@ class CKAQuest:
             "player_name": "Padawan",
         }
 
+    def choose_name(self):
+        """Ask for a player name and remember it, including the default 'Padawan'"""
+        self.progress["player_name"] = get_player_name(console)
+        self.progress["name_chosen"] = True
+        self.save_progress()
+        console.print(f"\n[green]✨ Welcome, {self.progress['player_name']}![/green]\n")
+        time.sleep(1)
+
     def save_progress(self):
         """Save player progress"""
         with open(self.progress_file, "w", encoding='utf-8') as f:
@@ -1183,12 +1191,10 @@ class CKAQuest:
 def main():
     game = CKAQuest()
 
-    if game.progress["player_name"] == "Padawan":
+    # Ask once. "Padawan" is a valid choice too, so a flag remembers that a name was picked.
+    if not game.progress.get("name_chosen") and game.progress["player_name"] == "Padawan":
         console.print()
-        game.progress["player_name"] = get_player_name(console)
-        game.save_progress()
-        console.print(f"\n[green]✨ Welcome, {game.progress['player_name']}![/green]\n")
-        time.sleep(1)
+        game.choose_name()
 
     game.show_welcome()
 
@@ -1202,13 +1208,18 @@ def main():
         console.print("  [2] Play a specific level", markup=False)
         console.print("  [3] Play by course section", markup=False)
         console.print("  [4] Start over (reset progress)", markup=False)
-        menu_choices = ["1", "2", "3", "4"]
+        menu_choices = ["1", "2", "3", "4", "n"]
         if game.get_completed_debriefs():
             console.print("  [5] Review completed mission debriefs", markup=False)
             menu_choices.append("5")
+        console.print(f"  [n] Change player name ({game.progress['player_name']})", markup=False)
         console.print("  [q] Quit", markup=False)
         console.print()
         choice = Prompt.ask("Your choice", choices=menu_choices + ["q"], default="1")
+
+        if choice == "n":
+            game.choose_name()
+            continue
 
         if choice == "1":
             game.play_from(game.progress.get("current_level"))

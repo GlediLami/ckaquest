@@ -19,7 +19,7 @@ level(W, "level-111-ha-control-plane", dict(
     name="Room for More Control Planes",
     description="The first control plane must be ready for two more to join later",
     objective="Init a cluster behind a stable endpoint and produce the control plane join command",
-    xp=400, difficulty="advanced", expected_time="12m", domain="architecture", course_section=11,
+    xp=400, difficulty="advanced", expected_time="12m", domain="architecture", course_section=10,
     namespace="lifecycle", context="bare-controlplane",
     concepts=["HA control plane", "controlPlaneEndpoint", "upload-certs", "certificate key"],
     task="""The team wants a highly available control plane later. The first node must be set up so more control plane nodes can join.

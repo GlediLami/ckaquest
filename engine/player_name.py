@@ -56,7 +56,7 @@ def get_player_name(console, current_name=None):
     
     if choice == "1":
         name = Prompt.ask("Enter your name", default="K8s Explorer")
-        return name.strip()
+        return name.strip() or "K8s Explorer"
     elif choice == "2":
         generated = generate_random_name()
         console.print(f"\n[green]✨ Generated name: [bold]{generated}[/bold][/green]")

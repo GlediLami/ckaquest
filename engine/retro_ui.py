@@ -6,6 +6,7 @@ ASCII art, animations, and classic arcade aesthetics
 
 import time
 import random
+import sys
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -156,8 +157,13 @@ def show_retro_welcome():
         time.sleep(1.5)
     
     console.print()
-    console.print(Align.center("✨ PRESS START TO BEGIN ✨"), style="bold magenta blink")
+    console.print(Align.center("✨ PRESS ENTER TO START ✨"), style="bold magenta blink")
     console.print()
+    if sys.stdin.isatty():
+        try:
+            input()
+        except EOFError:
+            pass
 
 def show_world_entry(world_num):
     """Animated world entry screen"""

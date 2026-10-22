@@ -5,7 +5,7 @@ xp: 400
 difficulty: advanced
 expected_time: 12m
 domain: architecture
-course_section: 11
+course_section: 10
 namespace: lifecycle
 exam: true
 concepts:
