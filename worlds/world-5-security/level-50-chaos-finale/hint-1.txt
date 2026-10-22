@@ -48,6 +48,6 @@ Fix ALL 9 World 5 concepts simultaneously!
 1. Start with solution.yaml as template
 2. Apply section by section
 3. Debug errors one at a time
-4. Run ./validate.sh to check progress
+4. Type validate in the game to check progress
 
 **You've got this! All concepts learned in Levels 41-49!** 🚀

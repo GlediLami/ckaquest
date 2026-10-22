@@ -23,7 +23,7 @@ spec:
             - nvidia-tesla  # ❌ Wrong value! Nodes have 'gpu'
             
 # Actual node labels (check with: kubectl get nodes --show-labels):
-# - kubernetes.io/hostname=kind-control-plane
+# - kubernetes.io/hostname=<node name>
 # - accelerator=gpu (NOT gpu-type=nvidia-tesla)
 #
 # Result: No nodes match, pod stays Pending

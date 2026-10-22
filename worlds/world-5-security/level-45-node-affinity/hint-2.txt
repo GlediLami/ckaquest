@@ -58,7 +58,7 @@ kubectl get nodes --show-labels
 ```
 
 You'll see labels like:
-- `kubernetes.io/hostname=kind-control-plane`
+- `kubernetes.io/hostname=<node name>`
 - `node-role.kubernetes.io/control-plane=`
 - Maybe `accelerator=gpu` (if we add it)
 
@@ -71,7 +71,7 @@ For this level: **Label a node** then use correct affinity.
 
 ```bash
 # Add label to node
-kubectl label nodes kind-control-plane accelerator=gpu
+kubectl label nodes <node01> accelerator=gpu   # real name: kubectl get nodes
 
 # Then update pod affinity to match
 ```

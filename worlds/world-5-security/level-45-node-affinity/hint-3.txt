@@ -4,7 +4,7 @@
 
 ```bash
 # Label the control-plane node for GPU workloads
-kubectl label nodes kind-control-plane accelerator=gpu
+kubectl label nodes <node01> accelerator=gpu   # real name: kubectl get nodes
 
 # Verify label was added
 kubectl get nodes --show-labels | grep accelerator
@@ -41,7 +41,7 @@ spec:
           - key: kubernetes.io/hostname
             operator: In
             values:
-            - kind-control-plane
+            - <node01>
 ```
 
 ## Step 3: Apply and Verify
@@ -63,7 +63,7 @@ kubectl get pod gpu-workload -n node-affinity -o wide
 
 ```bash
 # 1. Label node
-kubectl label nodes kind-control-plane accelerator=gpu
+kubectl label nodes <node01> accelerator=gpu   # real name: kubectl get nodes
 
 # 2. Apply solution
 kubectl apply -f solution.yaml
@@ -73,7 +73,7 @@ kubectl get pod gpu-workload -n node-affinity
 kubectl describe pod gpu-workload -n node-affinity | grep "Node:"
 
 # 4. Run validation
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 ## Required vs Preferred
@@ -109,5 +109,5 @@ preferredDuringSchedulingIgnoredDuringExecution:
 **Run the validation** to confirm everything works!
 
 ```bash
-./validate.sh
+# then type: validate   (in the game)
 ```

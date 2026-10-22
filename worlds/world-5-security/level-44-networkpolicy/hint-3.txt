@@ -160,5 +160,5 @@ Backend Pod                Database Pod
 **Run the validation script** to verify everything works!
 
 ```bash
-./validate.sh
+# then type: validate   (in the game)
 ```

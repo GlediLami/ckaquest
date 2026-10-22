@@ -37,7 +37,7 @@ Always review rollout history before blindly running `undo`. You need to know wh
 **What players try:**
 ```bash
 kubectl rollout undo deployment/payment-api -n rollback
-./validate.sh  # Immediate validation!
+# then type: validate   (in the game)
 ```
 
 **Why it fails:**
@@ -56,7 +56,7 @@ kubectl get pods -n rollback -w
 # Press Ctrl+C when all pods are Running
 
 # NOW validate
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 **Key Learning:**
@@ -277,7 +277,7 @@ kubectl get pods -n rollback
 kubectl logs deployment/payment-api -n rollback
 
 # 8. Validate
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 ---

@@ -170,7 +170,7 @@ kubectl get pod nginx-broken -n pods-lab
 kubectl wait --for=condition=ready pod/nginx-broken -n pods-lab --timeout=60s
 
 # 5. NOW validate
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 **Key Learning:**
@@ -233,7 +233,7 @@ kubectl get pod nginx-broken -n pods-lab -w
 # Wait for Running status (Ctrl+C to stop)
 
 # 9. Validate
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 ---

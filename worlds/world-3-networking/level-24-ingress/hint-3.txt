@@ -100,7 +100,7 @@ Validation:
 
 After applying, run:
 ```bash
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 You should see: ✅ VALIDATION PASSED!

@@ -23,4 +23,4 @@ spec:
   priorityClassName: high-priority
 ```
 
-Run `./validate.sh` to verify!
+Type `validate` in the game to verify!

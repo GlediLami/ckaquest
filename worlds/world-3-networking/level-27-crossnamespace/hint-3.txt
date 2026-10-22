@@ -240,7 +240,7 @@ Validation:
 
 Run the validation script:
 ```bash
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 You should see: ✅ VALIDATION PASSED!

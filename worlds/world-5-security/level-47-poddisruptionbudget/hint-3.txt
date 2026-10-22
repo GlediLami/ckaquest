@@ -23,7 +23,7 @@ Now: 3 replicas, need 2 minimum = ✅ Can lose 1 during drain
 ## Apply
 ```bash
 kubectl apply -f solution.yaml
-./validate.sh
+# then type: validate   (in the game)
 ```
 
 **Success!** Node drain now allowed.

@@ -37,5 +37,5 @@ spec:
 # PDB can never be satisfied
 # Node drain blocked: "Cannot evict pod as it would violate the pod's disruption budget"
 #
-# Try: kubectl drain kind-control-plane --ignore-daemonsets --delete-emptydir-data
+# Try: kubectl drain <node01> --ignore-daemonsets --delete-emptydir-data
 # Result: FAILS due to PDB violation

@@ -1,7 +1,7 @@
 # SOLUTION: NodeAffinity with correct labels
 
 # First, label a node for GPU workloads
-# kubectl label nodes kind-control-plane accelerator=gpu
+# kubectl label nodes ckaquest-worker accelerator=gpu   # node01 (setup already did this)
 
 apiVersion: v1
 kind: Pod
@@ -36,11 +36,11 @@ spec:
           - key: kubernetes.io/hostname
             operator: In
             values:
-            - kind-control-plane
+            - ckaquest-worker
 
 # This configuration:
 # 1. REQUIRES node with label accelerator=gpu
-# 2. PREFERS kind-control-plane node (weight 100)
-# 3. Will schedule to any node with accelerator=gpu if control-plane unavailable
+# 2. PREFERS node01 (ckaquest-worker, weight 100)
+# 3. Will schedule to any node with accelerator=gpu if node01 is unavailable
 #
 # The pod now schedules successfully!

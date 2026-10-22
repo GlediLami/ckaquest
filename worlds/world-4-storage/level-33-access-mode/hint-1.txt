@@ -19,7 +19,7 @@ Let's check the current configuration:
    Does it match what you need for multiple pods?
 
 4️⃣ Run validation to see if configuration is correct:
-   ./validate.sh
+   # then type: validate   (in the game)
    
    The validation checks for CORRECT configuration, not just whether pods run!
 

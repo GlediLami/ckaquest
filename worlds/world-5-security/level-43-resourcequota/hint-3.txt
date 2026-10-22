@@ -185,5 +185,5 @@ kubectl top pod resource-hungry-app -n resourcequota
 **Run the validation script** to verify everything is configured correctly!
 
 ```bash
-./validate.sh
+# then type: validate   (in the game)
 ```

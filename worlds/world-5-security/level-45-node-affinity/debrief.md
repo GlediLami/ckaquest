@@ -21,7 +21,7 @@ nodeAffinity:
 **The Solution:**
 ```yaml
 # 1. Label node
-kubectl label nodes kind-control-plane accelerator=gpu
+kubectl label nodes <node01> accelerator=gpu   # real name: kubectl get nodes
 
 # 2. Fix affinity
 nodeAffinity:
