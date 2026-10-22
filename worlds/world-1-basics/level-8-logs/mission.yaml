@@ -20,3 +20,4 @@ task: |
   Pod **database-app** in namespace **logs** keeps restarting.
   Use its logs to find the missing configuration and fix the pod so the database runs.
 namespace: logs
+exam: true

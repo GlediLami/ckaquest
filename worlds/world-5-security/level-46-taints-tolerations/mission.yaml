@@ -36,3 +36,4 @@ task: |
   Node **node01** carries the taint `dedicated=gpu:NoSchedule`. Pod **regular-app** in namespace **taints-tolerations** must run on node01 but stays Pending.
   Add a toleration so the pod runs on node01. Do not remove the taint or the pod's nodeSelector.
 namespace: taints-tolerations
+exam: true

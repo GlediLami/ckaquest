@@ -1,21 +1,37 @@
 name: I
-description: 'Mock I: exam-report tasks, HA control plane init on cluster3'
+description: 'Exam layout. Install task on cluster3: Another Runtime Socket, classic
+  task Upgrade the Worker'
 minutes: 120
 tasks:
-- level: 52
-- level: 53
-- level: 57
-- level: 67
-- level: 129
-- level: 68
-- level: 111
 - level: 117
+  weight: 6.2
+- level: 112
+  weight: 6.2
 - level: 122
-- level: 123
-- level: 127
-- level: 130
-- level: 14
-- level: 48
-- level: 124
-- level: 94
+  weight: 6.2
+- level: 102
+  weight: 6.2
+- level: 52
+  weight: 6.2
+- level: 125
+  weight: 6.2
+- level: 90
+  weight: 6.2
+- level: 12
+  weight: 6.2
+- level: 95
+  weight: 6.2
+- level: 121
+  weight: 6.2
+- level: 131
+  weight: 6.2
+- level: 39
+  weight: 6.2
 - level: 115
+  weight: 6.2
+- level: 22
+  weight: 6.2
+- level: 72
+  weight: 6.2
+- level: 130
+  weight: 6.2

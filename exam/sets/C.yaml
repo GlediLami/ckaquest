@@ -1,21 +1,37 @@
 name: C
-description: 'Mock C: controller manager, static pods, Gateway TLS'
+description: 'Exam layout. Install task on cluster3: Add a Worker, classic task Maintenance
+  Window'
 minutes: 120
 tasks:
-- level: 55
-- level: 60
+- level: 79
+  weight: 6.2
+- level: 100
+  weight: 6.2
+- level: 85
+  weight: 6.2
 - level: 59
-- level: 50
-- level: 3
-- level: 80
-- level: 84
-- level: 86
-- level: 102
-- level: 74
-- level: 76
-- level: 44
-- level: 90
-- level: 95
-- level: 45
-- level: 34
-- level: 38
+  weight: 6.2
+- level: 129
+  weight: 6.2
+- level: 7
+  weight: 6.2
+- level: 14
+  weight: 6.2
+- level: 16
+  weight: 6.2
+- level: 120
+  weight: 6.2
+- level: 121
+  weight: 6.2
+- level: 48
+  weight: 6.2
+- level: 32
+  weight: 6.2
+- level: 115
+  weight: 6.2
+- level: 30
+  weight: 6.2
+- level: 75
+  weight: 6.2
+- level: 25
+  weight: 6.2

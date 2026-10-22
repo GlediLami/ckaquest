@@ -20,3 +20,4 @@ task: |
   Pod **web-app** in namespace **imagepull** never starts.
   Fix the pod so it runs nginx and becomes Ready. Keep the pod name.
 namespace: imagepull
+exam: true

@@ -1,21 +1,36 @@
 name: D
-description: 'Mock D: API server down, etcd backup, DNS'
+description: 'Exam layout. Install task on cluster3: Install the CNI'
 minutes: 120
 tasks:
-- level: 54
-- level: 57
-- level: 59
-- level: 1
-- level: 72
-- level: 61
-- level: 65
-- level: 81
-- level: 70
+- level: 117
+  weight: 6.2
+- level: 99
+  weight: 6.2
+- level: 122
+  weight: 6.2
+- level: 55
+  weight: 6.2
+- level: 51
+  weight: 6.2
+- level: 125
+  weight: 6.2
+- level: 133
+  weight: 6.2
+- level: 15
+  weight: 6.2
+- level: 47
+  weight: 6.2
+- level: 42
+  weight: 6.2
+- level: 41
+  weight: 6.2
+- level: 39
+  weight: 6.2
+- level: 126
+  weight: 6.2
 - level: 78
-- level: 21
-- level: 30
-- level: 96
-- level: 88
-- level: 49
-- level: 33
-- level: 40
+  weight: 6.2
+- level: 76
+  weight: 6.2
+- level: 44
+  weight: 6.2

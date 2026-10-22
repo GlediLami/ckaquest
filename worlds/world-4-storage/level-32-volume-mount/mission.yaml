@@ -42,3 +42,4 @@ task: |
   Pod **web-app** in namespace **volume-mount** expects its config file at `/app/config/app.conf`. The file comes from PVC **config-pvc**, but the app cannot find it.
   Fix the pod so the volume is mounted where the app looks.
 namespace: volume-mount
+exam: true

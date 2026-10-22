@@ -36,3 +36,4 @@ task: |
   Pod **critical-api** in namespace **priorityclass** must win against dev workloads when the cluster is full.
   Create PriorityClass **high-priority** (value 1000) and PriorityClass **low-priority** (value 100). Run critical-api with high-priority and **dev-workload-1** with low-priority.
 namespace: priorityclass
+exam: true

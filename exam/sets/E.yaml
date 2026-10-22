@@ -1,21 +1,36 @@
 name: E
-description: 'Mock E: scheduler, CoreDNS, Helm, upgrade'
+description: 'Exam layout. Install task on cluster3: kubeadm init'
 minutes: 120
 tasks:
-- level: 51
-- level: 53
-- level: 56
-- level: 58
-- level: 28
-- level: 62
 - level: 82
-- level: 85
-- level: 101
-- level: 73
-- level: 77
-- level: 22
-- level: 91
-- level: 92
-- level: 47
+  weight: 6.2
+- level: 98
+  weight: 6.2
+- level: 86
+  weight: 6.2
+- level: 68
+  weight: 6.2
+- level: 1
+  weight: 6.2
+- level: 7
+  weight: 6.2
+- level: 14
+  weight: 6.2
+- level: 12
+  weight: 6.2
+- level: 4
+  weight: 6.2
+- level: 36
+  weight: 6.2
+- level: 62
+  weight: 6.2
+- level: 34
+  weight: 6.2
 - level: 94
-- level: 37
+  weight: 6.2
+- level: 132
+  weight: 6.2
+- level: 71
+  weight: 6.2
+- level: 44
+  weight: 6.2

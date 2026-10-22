@@ -1,21 +1,36 @@
 name: B
-description: 'Mock B: control plane and kube-proxy faults'
+description: 'Exam layout. Install task on cluster3: Prepare the Nodes'
 minutes: 120
 tasks:
-- level: 52
-- level: 53
-- level: 57
-- level: 58
-- level: 67
-- level: 63
-- level: 70
-- level: 83
-- level: 85
-- level: 73
-- level: 75
-- level: 23
+- level: 128
+  weight: 6.2
+- level: 97
+  weight: 6.2
+- level: 86
+  weight: 6.2
+- level: 60
+  weight: 6.2
+- level: 3
+  weight: 6.2
 - level: 87
-- level: 93
-- level: 46
+  weight: 6.2
+- level: 89
+  weight: 6.2
+- level: 92
+  weight: 6.2
+- level: 124
+  weight: 6.2
+- level: 37
+  weight: 6.2
+- level: 63
+  weight: 6.2
+- level: 33
+  weight: 6.2
 - level: 35
-- level: 39
+  weight: 6.2
+- level: 5
+  weight: 6.2
+- level: 127
+  weight: 6.2
+- level: 77
+  weight: 6.2

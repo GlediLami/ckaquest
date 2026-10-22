@@ -29,3 +29,4 @@ task: |
   Pod **web-app** in namespace **configmap-key** does not start. It reads its settings from ConfigMap **app-config**.
   Find which key is missing and add it with value `postgres.configmap-key.svc.cluster.local`. The pod must be Running.
 namespace: configmap-key
+exam: true

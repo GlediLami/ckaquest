@@ -43,3 +43,4 @@ task: |
   Pod **frontend-app** in namespace **crossnamespace** must call Service **api-service** in namespace **backend-ns**. Its requests fail.
   Fix the frontend so it reaches api-service. Do not move the Service.
 namespace: crossnamespace
+exam: true

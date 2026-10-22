@@ -37,3 +37,4 @@ task: |
   NetworkPolicy **deny-all** in namespace **netpol-db** blocks all ingress and egress. Pod **backend** cannot reach Service **database** on TCP 5432.
   Keep deny-all. Add NetworkPolicies so backend pods can reach the database pods on TCP 5432. Backend also needs DNS. Nothing else may reach the database.
 namespace: netpol-db
+exam: true

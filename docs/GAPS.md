@@ -106,3 +106,8 @@ New gaps from it:
 | | CoreDNS | 23, 56, 78 |
 
 Every curriculum item has at least one level. The thinnest are the HA control plane (1 level) and installing operators (85 and 86 only define a CRD and RBAC. No level installs a real operator, which G1 Argo CD and G8 cert-manager would fix).
+
+
+## 6. Mock layout (2026-10-22)
+
+Sets A to J and `random` now follow one layout from 56 reported questions (KodeKloud mocks 1 to 3, April 2026 report): 16 slots, see `BLUEPRINT` in `engine/exam.py`. 39 base levels are exam-eligible now. Campaign-only: 10, 17, 18, 20, 26, 29, 40, 50 and the drills 103 to 110.

@@ -20,3 +20,4 @@ task: |
   Service **backend-service** in namespace **service-selector** gets no traffic to pod **backend-pod**. Pod **test-client** cannot reach it.
   Fix the Service so it routes to backend-pod. Do not change the pod.
 namespace: service-selector
+exam: true

@@ -19,3 +19,4 @@ task: |
   Deployment **web** in namespace **deploy-lab** has no available pods.
   Fix it so the Deployment has at least one ready replica.
 namespace: deploy-lab
+exam: true

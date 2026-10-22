@@ -21,3 +21,4 @@ task: |
   Deployment **critical-api** in namespace **rollout** (3 replicas) uses a rolling update strategy that can take every pod down at once.
   Change the strategy so at most 1 pod is unavailable during an update.
 namespace: rollout
+exam: true

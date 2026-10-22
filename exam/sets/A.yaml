@@ -1,21 +1,36 @@
 name: A
-description: 'Mock A: exam-like mix, upgrade on cluster2'
+description: 'Exam layout. Install task on cluster3: Room for More Control Planes'
 minutes: 120
 tasks:
-- level: 51
+- level: 81
+  weight: 6.2
+- level: 111
+  weight: 6.2
+- level: 116
+  weight: 6.2
 - level: 54
-- level: 56
-- level: 58
-- level: 72
-- level: 65
-- level: 61
-- level: 79
-- level: 101
-- level: 71
-- level: 77
-- level: 25
-- level: 89
-- level: 91
-- level: 92
+  weight: 6.2
+- level: 28
+  weight: 6.2
+- level: 88
+  weight: 6.2
+- level: 90
+  weight: 6.2
+- level: 13
+  weight: 6.2
+- level: 43
+  weight: 6.2
+- level: 93
+  weight: 6.2
+- level: 131
+  weight: 6.2
 - level: 31
+  weight: 6.2
 - level: 94
+  weight: 6.2
+- level: 27
+  weight: 6.2
+- level: 73
+  weight: 6.2
+- level: 130
+  weight: 6.2

@@ -36,3 +36,4 @@ task: |
   Pod **gpu-workload** in namespace **node-affinity** must run only on nodes labelled `accelerator=gpu`.
   Add a required node affinity for that label. The pod must be Running on such a node.
 namespace: node-affinity
+exam: true

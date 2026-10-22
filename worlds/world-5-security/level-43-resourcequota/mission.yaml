@@ -37,3 +37,4 @@ task: |
   The manifest for pod **resource-hungry-app** is in `~/ckaquest-work/43/pod.yaml`. Creating it in namespace **resourcequota** fails because of ResourceQuota **compute-quota**.
   Read the quota, change the requests and limits in the file so the pod fits, and create the pod. Do not change the quota.
 namespace: resourcequota
+exam: true

@@ -1,21 +1,37 @@
 name: F
-description: 'Mock F (killer): many control plane faults at once'
+description: 'Exam layout. Install task on cluster3: Another Runtime Socket, classic
+  task Restore etcd'
 minutes: 120
 tasks:
-- level: 52
-- level: 55
-- level: 57
-- level: 60
-- level: 67
-- level: 63
-- level: 83
+- level: 80
+  weight: 6.2
+- level: 112
+  weight: 6.2
 - level: 86
-- level: 102
-- level: 74
-- level: 76
-- level: 78
-- level: 87
-- level: 89
-- level: 90
-- level: 31
-- level: 39
+  weight: 6.2
+- level: 66
+  weight: 6.2
+- level: 8
+  weight: 6.2
+- level: 125
+  weight: 6.2
+- level: 14
+  weight: 6.2
+- level: 11
+  weight: 6.2
+- level: 49
+  weight: 6.2
+- level: 121
+  weight: 6.2
+- level: 61
+  weight: 6.2
+- level: 119
+  weight: 6.2
+- level: 94
+  weight: 6.2
+- level: 21
+  weight: 6.2
+- level: 24
+  weight: 6.2
+- level: 25
+  weight: 6.2

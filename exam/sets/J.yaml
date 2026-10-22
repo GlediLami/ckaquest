@@ -1,21 +1,36 @@
 name: J
-description: 'Mock J: exam-report tasks, kubeadm init on cluster3'
+description: 'Exam layout. Install task on cluster3: Another Runtime Socket'
 minutes: 120
 tasks:
-- level: 56
-- level: 57
-- level: 58
-- level: 72
+- level: 79
+  weight: 6.2
+- level: 112
+  weight: 6.2
+- level: 86
+  weight: 6.2
+- level: 55
+  weight: 6.2
 - level: 129
-- level: 69
-- level: 98
-- level: 128
-- level: 131
-- level: 123
-- level: 127
-- level: 132
-- level: 48
-- level: 120
-- level: 125
+  weight: 6.2
+- level: 87
+  weight: 6.2
+- level: 89
+  weight: 6.2
+- level: 96
+  weight: 6.2
+- level: 113
+  weight: 6.2
+- level: 42
+  weight: 6.2
+- level: 41
+  weight: 6.2
+- level: 32
+  weight: 6.2
 - level: 115
-- level: 126
+  weight: 6.2
+- level: 6
+  weight: 6.2
+- level: 76
+  weight: 6.2
+- level: 25
+  weight: 6.2

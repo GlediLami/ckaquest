@@ -21,3 +21,4 @@ task: |
   Service **slow-app-service** in namespace **readiness** sends traffic to pods of Deployment **slow-startup-app** before they can serve it.
   Add a readiness probe to the container: HTTP GET on path `/`, port 80. All replicas must become ready.
 namespace: readiness
+exam: true

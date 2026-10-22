@@ -30,3 +30,4 @@ task: |
   PV **important-data** holds data that must survive even if PVC **data-claim** in namespace **reclaim-policy** is deleted.
   Change the PV so its data is kept when the claim is released. Pod **data-writer** must keep running.
 namespace: reclaim-policy
+exam: true

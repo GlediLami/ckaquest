@@ -29,3 +29,4 @@ task: |
   PVC **app-storage** in namespace **storageclass** stays Pending, so pod **data-processor** cannot start.
   Check which StorageClasses exist in the cluster. Fix the claim so it is provisioned and the pod runs.
 namespace: storageclass
+exam: true

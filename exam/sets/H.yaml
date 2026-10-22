@@ -1,21 +1,36 @@
 name: H
-description: 'Mock H: exam-report tasks, Calico with the Tigera operator on cluster3'
+description: 'Exam layout. Install task on cluster3: Install the CNI'
 minutes: 120
 tasks:
-- level: 56
-- level: 57
-- level: 58
-- level: 72
-- level: 129
-- level: 64
-- level: 118
-- level: 128
-- level: 131
-- level: 123
-- level: 127
-- level: 130
-- level: 113
+- level: 80
+  weight: 6.2
+- level: 99
+  weight: 6.2
+- level: 122
+  weight: 6.2
+- level: 67
+  weight: 6.2
+- level: 9
+  weight: 6.2
+- level: 87
+  weight: 6.2
+- level: 89
+  weight: 6.2
+- level: 2
+  weight: 6.2
+- level: 45
+  weight: 6.2
 - level: 121
-- level: 133
-- level: 119
+  weight: 6.2
+- level: 48
+  weight: 6.2
+- level: 31
+  weight: 6.2
 - level: 126
+  weight: 6.2
+- level: 56
+  weight: 6.2
+- level: 123
+  weight: 6.2
+- level: 25
+  weight: 6.2

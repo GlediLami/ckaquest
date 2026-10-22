@@ -185,7 +185,9 @@ docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 
 Like the real exam there are several clusters. `cluster1` is the game cluster, `cluster2` the small lab cluster for upgrades, and `cluster3` two bare nodes for install tasks (cri-dockerd, kubeadm init, CNI, HA). Each task starts with the `kubectl config use-context` line to run. `ssh cluster1-node01` or `ssh cluster2-controlplane` work like in the exam. There are no hints during a mock.
 
-cluster2 and cluster3 are only created when a set needs them (about 1 GB more RAM each). Sets G to J each have one install task on cluster3, and every exam task appears in at least one set.
+cluster2 and cluster3 are only created when a set needs them (about 1 GB more RAM each).
+
+Every set follows the same exam layout, built from 56 reported questions (the 3 KodeKloud course mocks and a 2026 exam report): 16 tasks, one each of Helm, an install task on cluster3, CRDs, a control plane fix, an app fix, multi-container pods, autoscaling, Deployments, scheduling and resources, ConfigMaps and Secrets, RBAC, PV/PVC, StorageClass, Services and DNS, Gateway or Ingress, and NetworkPolicy. Sets C, F and I swap the control plane fix for an old-exam classic (upgrade, etcd, cert renewal). All tasks weigh the same. `random` uses the same layout. The layout is `BLUEPRINT` in `engine/exam.py`, the sets come from `tests/gen/mock_sets.py`.
 
 ## ✈️ Offline
 

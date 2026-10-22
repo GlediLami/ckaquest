@@ -43,3 +43,4 @@ task: |
   Pod **database-pod** in namespace **pvc-pending** stays Pending because PVC **app-storage-claim** never binds. PV **app-storage** exists.
   Find why the claim and the volume do not match and fix it, so the PVC is Bound and the pod Running.
 namespace: pvc-pending
+exam: true

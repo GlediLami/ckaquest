@@ -31,3 +31,4 @@ task: |
   StatefulSet **postgres-cluster** in namespace **statefulset-volumes** mounts one shared PVC **database-storage** in every replica.
   Give each replica its own volume with `volumeClaimTemplates`. Remove the shared PVC.
 namespace: statefulset-volumes
+exam: true

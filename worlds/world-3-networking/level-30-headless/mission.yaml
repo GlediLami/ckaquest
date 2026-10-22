@@ -43,3 +43,4 @@ task: |
   StatefulSet **web** in namespace **headless** needs a stable DNS name per pod, like `web-0.web-cluster`. Service **web-cluster** does not give that.
   Make web-cluster a headless Service. Keep its name, selector and port.
 namespace: headless
+exam: true

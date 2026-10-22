@@ -68,6 +68,29 @@ NEEDS = {
     120: {"kubelet-node01", "node-taints"},
     126: {"node02"},
 }
+# Exam layout, from 56 reported questions (KodeKloud mocks 1 to 3 and an April 2026 exam report,
+# see docs/GAPS.md): one task per slot. Every set has exactly one install task on cluster3.
+BLUEPRINT = [
+    ("helm",          [117, 79, 80, 81, 82, 128]),
+    ("install",       [112, 118, 97, 99, 98, 100, 111]),
+    ("crd",           [122, 85, 86, 116]),
+    ("control-plane", [54, 53, 55, 67, 68, 60]),
+    ("app-fix",       [1, 3, 8, 9, 28, 58, 129, 51, 52]),
+    ("multi-container", [125, 87, 7, 88]),
+    ("autoscaling",   [89, 14, 133, 90]),
+    ("deployment",    [11, 15, 2, 12, 13, 16, 92, 96]),
+    ("scheduling",    [120, 124, 49, 45, 46, 113, 114, 43, 95, 4, 47]),
+    ("config",        [121, 36, 93, 37, 42]),
+    ("rbac",          [41, 61, 62, 63, 131, 48]),
+    ("pv-pvc",        [119, 31, 33, 39, 34, 32]),
+    ("storage-class", [126, 94, 35, 115]),
+    ("service-dns",   [22, 21, 132, 23, 27, 78, 56, 5, 6, 30]),
+    ("gateway-ingress", [123, 71, 73, 74, 76, 72, 127, 24, 75]),
+    ("network-policy", [130, 44, 25, 77]),
+]
+# Old-exam classics. Rare in recent reports, so they replace the control-plane slot in about 1 set in 3.
+CLASSIC = [101, 102, 65, 66, 64, 70, 57, 59]
+
 # Setups that leave part of the cluster broken run last, so other setups still work.
 DISRUPTIVE = {51, 52, 53, 54, 55, 56, 57, 60}
 # Never in an exam: separate machines, or drills that are not exam tasks.
@@ -149,22 +172,28 @@ def conflicts(numbers):
     return None
 
 
-def random_set(levels):
-    by_domain = {}
-    for n, d in levels.items():
-        if n in EXCLUDED:
-            continue
-        m = load_mission(d)
-        if m.get("exam") and m.get("domain") in DOMAIN_COUNTS:
-            by_domain.setdefault(m["domain"], []).append(n)
-    for _ in range(200):
+def blueprint_set(rng, classic=False, prefer=()):
+    """One level per BLUEPRINT slot, conflict-free. Levels in prefer are picked first."""
+    for _ in range(2000):
         picked = []
-        for dom, count in DOMAIN_COUNTS.items():
-            picked += random.sample(by_domain[dom], min(count, len(by_domain[dom])))
-        if not conflicts(picked):
-            return {"name": "random", "description": "Random set with exam domain weights",
-                    "minutes": 120, "tasks": [{"level": n} for n in picked]}
-    raise SystemExit("could not build a conflict-free random set")
+        for slot, pool in BLUEPRINT:
+            if slot == "control-plane" and classic:
+                pool = CLASSIC
+            options = [n for n in pool if n not in picked and not conflicts(picked + [n])]
+            if not options:
+                break
+            first = [n for n in options if n in prefer]
+            picked.append(rng.choice(first or options))
+        else:
+            return picked
+    raise SystemExit("could not build a conflict-free set from the blueprint")
+
+
+def random_set(levels):
+    rng = random.Random()
+    picked = blueprint_set(rng, classic=rng.random() < 0.33)
+    return {"name": "random", "description": "Random set in the exam layout", "minutes": 120,
+            "tasks": [{"level": n, "weight": round(100 / len(picked), 1)} for n in picked]}
 
 
 def load_set(name, levels):
@@ -193,7 +222,7 @@ def cmd_list():
     for p in sorted(SETS.glob("*.yaml")):
         s = yaml.safe_load(p.read_text())
         table.add_row(p.stem, str(len(s["tasks"])), s.get("description", ""))
-    table.add_row("random", "17", "New set from the whole bank, exam domain weights")
+    table.add_row("random", str(len(BLUEPRINT)), "New set in the exam layout from the whole bank")
     console.print(table)
 
 

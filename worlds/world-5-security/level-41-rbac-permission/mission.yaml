@@ -31,3 +31,4 @@ task: |
   Pod **pod-lister** in namespace **rbac-permission** runs as ServiceAccount **pod-reader** and gets `Forbidden` when it lists pods.
   Create Role **pod-reader-role** that allows get, list and watch on pods, and bind it to the ServiceAccount. Grant nothing more.
 namespace: rbac-permission
+exam: true
