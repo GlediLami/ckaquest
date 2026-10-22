@@ -1,0 +1,1 @@
+`k describe hpa api -n hpa-multi` shows both current values once metrics-server has data, after about a minute.

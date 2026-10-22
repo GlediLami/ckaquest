@@ -1,0 +1,25 @@
+name: "No Shell, No Problem"
+description: "The container has no shell and the node is far away. Debug both anyway"
+objective: "Use kubectl debug with an ephemeral container and on a node"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: troubleshooting
+course_section: 14
+namespace: debug-lab
+exam: true
+concepts:
+  - kubectl debug
+  - ephemeral containers
+  - --target
+  - node debugging
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **api** in namespace **debug-lab** runs an image without a shell. `kubectl exec api -- sh` fails.
+
+  1. Use `kubectl debug` to add an ephemeral `busybox:1.36` container to pod **api** that shares the process namespace of container **api**. Read the value of the environment variable **API_TOKEN** of the running api process and write it to `~/ckaquest-work/129/token.txt`.
+  2. Use `kubectl debug` on node **node01** (image `busybox:1.36`, namespace **debug-lab**). Write the kubelet's `staticPodPath` from node01's `/var/lib/kubelet/config.yaml` to `~/ckaquest-work/129/staticpodpath.txt`.
+docs:
+  - https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container
+  - https://kubernetes.io/docs/tasks/debug/debug-cluster/kubectl-node-debug/

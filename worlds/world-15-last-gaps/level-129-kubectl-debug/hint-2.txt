@@ -1,0 +1,1 @@
+In the debug container the api process is PID 1. `cat /proc/1/environ | tr '\0' '\n'` prints its environment.

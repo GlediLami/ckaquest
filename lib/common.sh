@@ -28,8 +28,8 @@ cq_node_container() {
     node02|cluster1-node02)             echo "${CQ_CLUSTER}-worker2" ;;
     lab-controlplane|cluster2-controlplane) echo "${CQ_LAB_CLUSTER}-control-plane" ;;
     lab-node01|cluster2-node01)         echo "${CQ_LAB_CLUSTER}-worker" ;;
-    bare-controlplane)                  echo "${CQ_CLUSTER}-bare-cp" ;;
-    bare-node01)                        echo "${CQ_CLUSTER}-bare-worker" ;;
+    bare-controlplane|cluster3-controlplane) echo "${CQ_CLUSTER}-bare-cp" ;;
+    bare-node01|cluster3-node01)        echo "${CQ_CLUSTER}-bare-worker" ;;
     "${CQ_CLUSTER}"-*|"${CQ_LAB_CLUSTER}"-*) echo "$1" ;;
     *) return 1 ;;
   esac

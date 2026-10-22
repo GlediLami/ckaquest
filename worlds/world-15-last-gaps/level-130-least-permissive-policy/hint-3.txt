@@ -1,0 +1,1 @@
+A selector that matches no pod (check the labels with `k get pods -n np-pick --show-labels`) blocks frontend. That is too strict, not least permissive.

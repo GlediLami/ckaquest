@@ -1,0 +1,29 @@
+name: "Scale on Two Signals"
+description: "The API is memory hungry as well as CPU hungry"
+objective: "Create an autoscaling/v2 HPA with a CPU and a memory metric"
+xp: 250
+difficulty: intermediate
+expected_time: 7m
+domain: workloads
+course_section: 5
+namespace: hpa-multi
+exam: true
+concepts:
+  - HorizontalPodAutoscaler v2
+  - Utilization
+  - AverageValue
+  - multiple metrics
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **api** in namespace **hpa-multi** has CPU and memory requests.
+
+  Create HPA **api** for it:
+  - min **2**, max **6** replicas
+  - CPU: average utilization **60%**
+  - memory: average value **50Mi** per pod (an absolute value, not a percentage)
+
+  The HPA must read both metrics.
+docs:
+  - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics
+  - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/

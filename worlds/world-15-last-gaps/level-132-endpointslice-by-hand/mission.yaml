@@ -1,0 +1,25 @@
+name: "A Service Without a Selector"
+description: "The legacy backend is not something a selector can find"
+objective: "Create a selectorless Service and its EndpointSlice by hand"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: networking
+course_section: 9
+namespace: ext-lab
+exam: true
+concepts:
+  - Service without selector
+  - EndpointSlice
+  - kubernetes.io/service-name
+task: |
+  Context: `kind-ckaquest`
+
+  Pod **legacy-backend** in namespace **legacy-host** answers on port **5678**. Apps in **ext-lab** must reach it as `legacy.ext-lab:80`, but nobody may add labels to it or touch namespace legacy-host.
+
+  1. Create Service **legacy** in **ext-lab** **without a selector**, with port **80** named **http**.
+  2. Create EndpointSlice **legacy-1** in **ext-lab** for that Service. Address type IPv4, one endpoint with the current IP of pod legacy-backend, port **5678** named **http**.
+  3. `http://legacy.ext-lab` must answer from inside the cluster.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors
+  - https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/

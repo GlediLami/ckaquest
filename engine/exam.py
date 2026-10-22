@@ -47,28 +47,35 @@ PASS_MARK = 66
 PROTECTED = {"ckaquest", "default", "kube-system", "kube-public", "kube-node-lease", "local-path-storage",
              "ingress-nginx", "nginx-gateway"}
 
-# What a level changes or needs outside its namespace. Two tasks with a shared key never go in one set.
+# What a level changes outside its namespace. Two tasks that change the same thing never go in one set.
 TOUCHES = {
     51: "kubelet-node01", 60: "kubelet-node01", 68: "kubelet-node01",
     52: "node02", 59: "node02",
     53: "control-plane", 54: "control-plane", 55: "control-plane", 64: "control-plane",
     66: "control-plane", 69: "control-plane", 67: "cp-kubeconfig",
     56: "coredns", 78: "coredns", 57: "kube-proxy",
-    45: "node-labels", 46: ("node-taints", "kubelet-node01"), 50: "node-taints", 94: "default-sc",
+    45: "node-labels", 46: "node-taints", 50: "node-taints", 94: "default-sc",
     101: "lab", 102: "lab",
-    # These need both workers free to schedule on
     49: "priorityclasses", 124: "priorityclasses",
-    # 119 keeps its PV on node01, 120 fills node01, 126 keeps its PV on node02
-    119: ("kubelet-node01", "node-taints", "node01-capacity"),
-    120: ("kubelet-node01", "node-taints", "node01-capacity"),
-    126: ("node02",),
-    113: ("node-taints", "node02", "kubelet-node01"),
-    114: ("node-labels", "node-taints", "node02", "kubelet-node01"),
+    114: "node-labels", 120: "node01-capacity",
+}
+# What a level needs to stay healthy. A task never shares a set with one that changes what it needs.
+NEEDS = {
+    46: {"kubelet-node01"},
+    113: {"kubelet-node01", "node02", "node-taints", "node01-capacity"},
+    114: {"kubelet-node01", "node02", "node-taints", "node01-capacity"},
+    119: {"kubelet-node01", "node-taints", "node01-capacity"},
+    120: {"kubelet-node01", "node-taints"},
+    126: {"node02"},
 }
 # Setups that leave part of the cluster broken run last, so other setups still work.
 DISRUPTIVE = {51, 52, 53, 54, 55, 56, 57, 60}
 # Never in an exam: separate machines, or drills that are not exam tasks.
-EXCLUDED = set(range(97, 101)) | set(range(103, 113)) | {118}
+# Install tasks run on the bare nodes (cluster3). Each one starts from fresh nodes, so one per set.
+BARE = {97, 98, 99, 100, 111, 112, 118}
+for _n in BARE:
+    TOUCHES[_n] = "bare"
+EXCLUDED = set(range(103, 111))
 
 
 def level_number(path):
@@ -119,6 +126,8 @@ def exam_text(text):
     text = re.sub(r"Context: `kind-ckaquest`", "Context: `kubectl config use-context cluster1`", text)
     text = text.replace("--context kind-ckaquest-lab", "--context cluster2")
     text = text.replace("lab-controlplane", "cluster2-controlplane").replace("lab-node01", "cluster2-node01")
+    text = text.replace("bare-controlplane", "cluster3-controlplane").replace("bare-node01", "cluster3-node01")
+    text = text.replace("The bare nodes are", "cluster3 has the nodes").replace("The bare node is", "cluster3 has the node")
     return text
 
 
@@ -129,13 +138,14 @@ def ensure_contexts():
 
 
 def conflicts(numbers):
-    seen = {}
-    for n in numbers:
+    def changes(n):
         keys = TOUCHES.get(n, ())
-        for key in (keys,) if isinstance(keys, str) else keys:
-            if key in seen:
-                return f"levels {seen[key]} and {n} both touch {key}"
-            seen[key] = n
+        return {keys} if isinstance(keys, str) else set(keys)
+    for i, a in enumerate(numbers):
+        for b in numbers[i + 1:]:
+            clash = (changes(a) & (changes(b) | NEEDS.get(b, set()))) | (changes(b) & NEEDS.get(a, set()))
+            if clash:
+                return f"levels {a} and {b} both touch {sorted(clash)[0]}"
     return None
 
 
@@ -362,6 +372,8 @@ def cmd_end():
         ns = m.get("namespace", "ckaquest")
         if ns not in PROTECTED:
             subprocess.run(["kubectl", "delete", "ns", ns, "--ignore-not-found", "--wait=false"], capture_output=True)
+    if any(t["level"] in BARE for t in s["tasks"]):
+        subprocess.run([str(CQ_ROOT / "bin" / "cq-cluster"), "bare-down"], capture_output=True)
     s["ended"] = True
     save_state(s)
     STATE.rename(EXAM_DIR / f"exam-{int(s['started'])}.json")

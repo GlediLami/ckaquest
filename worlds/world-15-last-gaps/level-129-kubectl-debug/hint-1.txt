@@ -1,0 +1,1 @@
+`k debug -h` lists the examples. For a pod: `--image`, `--target=<container>` to share its processes.

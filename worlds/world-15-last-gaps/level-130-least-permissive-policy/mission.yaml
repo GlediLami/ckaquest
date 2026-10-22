@@ -1,0 +1,24 @@
+name: "Pick the Right Key"
+description: "Five candidate NetworkPolicies, only one is right"
+objective: "Read several NetworkPolicies and apply the least permissive one that works"
+xp: 250
+difficulty: intermediate
+expected_time: 7m
+domain: networking
+course_section: 7
+namespace: np-pick
+exam: true
+concepts:
+  - NetworkPolicy
+  - podSelector
+  - namespaceSelector
+  - ports
+  - least privilege
+task: |
+  Context: `kind-ckaquest`
+
+  Namespace **np-pick** has pods **frontend**, **backend** and **other**, and a default deny-all ingress policy. **frontend** must reach **backend** on TCP port **8080**.
+
+  `~/ckaquest-work/130/` has five candidate policies. Apply **exactly one**: the least permissive policy that still lets frontend reach backend on 8080. Do not edit the files, and do not delete `deny-all`.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/network-policies/

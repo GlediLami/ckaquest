@@ -1,0 +1,1 @@
+`k autoscale` only does CPU. Start from it with `$do`, then add the memory metric by hand.

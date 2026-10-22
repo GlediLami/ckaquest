@@ -1,0 +1,24 @@
+name: "Roles That Grow by Themselves"
+description: "The monitoring team wants one role that collects permissions from others"
+objective: "Build an aggregated ClusterRole and bind it to a ServiceAccount"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 7
+namespace: agg-lab
+exam: true
+concepts:
+  - ClusterRole aggregation
+  - aggregationRule
+  - ClusterRoleBinding
+  - ServiceAccount
+task: |
+  Context: `kind-ckaquest`
+
+  1. Create ClusterRole **monitoring** with no rules of its own. It must aggregate every ClusterRole labeled `rbac.ckaquest.io/aggregate-to-monitoring: "true"`.
+  2. Create ClusterRole **monitoring-pods** with that label: `get`, `list`, `watch` on pods.
+  3. Create ClusterRole **monitoring-nodes** with that label: `get`, `list` on nodes.
+  4. Bind ClusterRole **monitoring** to ServiceAccount **monitor** in namespace **agg-lab** with ClusterRoleBinding **monitoring**.
+docs:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles

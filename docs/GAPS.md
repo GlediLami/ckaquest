@@ -1,6 +1,6 @@
 # Coverage gaps (2026-10-22)
 
-**Status:** World 14 (levels 117 to 128) closes G1, G3, G4, G6, G7 (HTTPS Gateway from scratch), G8, G11, G13, G15, G16. G17 is now part of level 92. Exam-style `sudo` login: `CQ_NODE_USER=candidate`. Still open: G2 (`kubectl debug`), G5 (pick the least permissive policy), G9 (aggregated ClusterRoles), G10 (EndpointSlice by hand), G12 (HPA on a custom metric), G14 (kubelet to cri-dockerd), install tasks in mocks, mock sets G and H.
+**Status (2026-10-22):** all closed except G14. World 14 (117 to 128) closes G1, G3, G4, G6, G7, G8, G11, G13, G15, G16. Level 92 covers G17. World 15 (129 to 133) closes G2, G5, G9, G10, G12. Install tasks now run in mocks on cluster3, and sets G to J put every exam task in at least one set (97, 99 and 100 only in random sets, one install task per set). G14 (kubelet to cri-dockerd) stays open: it needs a real Docker Engine inside the node. `sudo` login: `CQ_NODE_USER=candidate`.
 
 Compared: the 116 levels and mock sets A to F, against the official CKA curriculum, the 40 questions of the 3 KodeKloud mock exams in the course notes, and topic-level reports of the 2025/2026 exam (study repos and blogs). Real exam questions are under NDA, so only topics are used.
 

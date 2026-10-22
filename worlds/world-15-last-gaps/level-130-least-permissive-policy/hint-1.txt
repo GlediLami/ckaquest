@@ -1,0 +1,1 @@
+Read every file. Ask three questions: who may connect (from), on which ports, and to which pods.

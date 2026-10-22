@@ -1,0 +1,1 @@
+`aggregationRule.clusterRoleSelectors[].matchLabels` picks the roles. The controller fills `rules` for you, so leave them empty.

@@ -1,0 +1,1 @@
+`k create clusterrole monitoring-pods --verb=get,list,watch --resource=pods`, then `k label clusterrole monitoring-pods rbac.ckaquest.io/aggregate-to-monitoring=true`.

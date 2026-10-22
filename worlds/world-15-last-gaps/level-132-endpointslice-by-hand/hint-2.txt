@@ -1,0 +1,1 @@
+A Service without `selector` gets no endpoints. You provide them. The docs page for Service has the example under **Services without selectors**.

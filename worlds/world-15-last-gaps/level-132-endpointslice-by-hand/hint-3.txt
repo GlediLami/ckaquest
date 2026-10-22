@@ -1,0 +1,1 @@
+The EndpointSlice needs the label `kubernetes.io/service-name: legacy`. Its port **name** must match the Service port name (`http`). The number is the backend's port (5678).

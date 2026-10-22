@@ -1,0 +1,1 @@
+The RBAC docs page has an example under **Aggregated ClusterRoles**.

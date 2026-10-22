@@ -1,0 +1,1 @@
+An empty `from` entry (`- {}`) or a `namespaceSelector: {}` allows far more than the frontend pod. A rule without `ports` allows every port.

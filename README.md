@@ -9,7 +9,7 @@
    ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝
 ```
 
-**A game that gets you through the CKA exam.** 128 levels, 14 worlds, 6 mock exams, one real Kubernetes v1.37 cluster.
+**A game that gets you through the CKA exam.** 133 levels, 15 worlds, 10 mock exams, one real Kubernetes v1.37 cluster.
 
 Every level breaks something on the cluster, or hands you a task the way the exam would. You fix it in a real terminal with `kubectl`, `ssh` and `vim`. The game checks your work, gives you XP, and tells you what the exam likes to ask about it.
 
@@ -68,6 +68,7 @@ No multiple choice. No fake shell. If you can clear the game, you can do the exa
 | ⏱️ 12 Speed drills | 103–110 | JSONPath, custom-columns, sort-by, imperative commands, `$do`, field selectors, api-resources | All |
 | 🧩 13 Loose ends | 111–116 | HA control plane join, cri-dockerd from a .deb, pod anti-affinity, topology spread, PVC expansion, CRI/CNI/CSI inspection | Architecture, Workloads, Storage |
 | 📰 14 Exam reports | 117–128 | Tasks people report from the 2025/2026 exam: Argo CD chart without CRDs, Calico with the Tigera operator, PVC for a given PV, splitting node resources, TLS config in a ConfigMap, cert-manager CRDs, Ingress to HTTPS Gateway, PriorityClass with patch, sidecar on a Deployment, WaitForFirstConsumer by hand, Ingress TLS, local chart | All |
+| 🔎 15 Last gaps | 129–133 | `kubectl debug` (ephemeral and node), the least permissive NetworkPolicy, aggregated ClusterRoles, a Service with a hand-made EndpointSlice, HPA on CPU and memory | All |
 
 Worlds 6 and 11 break or build real control planes. The game repairs the cluster when you finish, skip or reset the level.
 
@@ -76,7 +77,7 @@ Worlds 6 and 11 break or build real control planes. The game repairs the cluster
 17 tasks. 2 hours. Two clusters. No hints. Pass mark 66%, like the real thing.
 
 ```bash
-./exam.sh start A         # sets A to F, or "random"
+./exam.sh start A         # sets A to J, or "random"
 ```
 
 Commands are below in [Mock exams](#mock-exams).
@@ -85,8 +86,8 @@ Commands are below in [Mock exams](#mock-exams).
 
 | Part | State |
 |---|---|
-| Worlds 1 to 14 (128 levels) | ✅ Playable. Every level passes the test harness. |
-| Mock exams: 6 fixed sets (A to F) plus random sets | ✅ Playable |
+| Worlds 1 to 15 (133 levels) | ✅ Playable. Every level passes the test harness. |
+| Mock exams: 10 fixed sets (A to J) plus random sets | ✅ Playable |
 | Offline pack | ✅ Works. `tests/offline-check.sh` passes sample levels with the internet cut |
 
 The full plan is in [docs/PLAN.md](docs/PLAN.md).
@@ -171,7 +172,7 @@ docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 ## Mock exams
 
 ```bash
-./exam.sh list            # sets A to F, plus random
+./exam.sh list            # sets A to J, plus random
 ./exam.sh start A         # sets up 17 tasks, then the 2-hour timer starts
 ./exam.sh                 # task list, weights, time left
 ./exam.sh task 3          # one task
@@ -182,9 +183,9 @@ docker start ckaquest-control-plane ckaquest-worker ckaquest-worker2  # resume
 ./exam.sh history
 ```
 
-Like the real exam there are two clusters. `cluster1` is the game cluster and `cluster2` is the small lab cluster. Each task starts with the `kubectl config use-context` line to run. `ssh cluster1-node01` or `ssh cluster2-controlplane` work like in the exam. There are no hints during a mock.
+Like the real exam there are several clusters. `cluster1` is the game cluster, `cluster2` the small lab cluster for upgrades, and `cluster3` two bare nodes for install tasks (cri-dockerd, kubeadm init, CNI, HA). Each task starts with the `kubectl config use-context` line to run. `ssh cluster1-node01` or `ssh cluster2-controlplane` work like in the exam. There are no hints during a mock.
 
-Upgrade tasks use cluster2. It is created when a set needs it (about 1 GB more RAM).
+cluster2 and cluster3 are only created when a set needs them (about 1 GB more RAM each). Sets G to J each have one install task on cluster3, and every exam task appears in at least one set.
 
 ## ✈️ Offline
 

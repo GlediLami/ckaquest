@@ -1,0 +1,1 @@
+Each entry in `metrics` is `type: Resource` with `resource.name` and a `target`. CPU uses `type: Utilization` with `averageUtilization`. Memory here uses `type: AverageValue` with `averageValue: 50Mi`.

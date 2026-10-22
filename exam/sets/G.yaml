@@ -1,0 +1,21 @@
+name: G
+description: 'Mock G: exam-report tasks, cri-dockerd install on cluster3'
+minutes: 120
+tasks:
+- level: 56
+- level: 57
+- level: 67
+- level: 72
+- level: 129
+- level: 66
+- level: 112
+- level: 116
+- level: 122
+- level: 127
+- level: 130
+- level: 132
+- level: 114
+- level: 124
+- level: 125
+- level: 115
+- level: 119

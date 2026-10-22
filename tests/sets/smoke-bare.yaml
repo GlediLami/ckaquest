@@ -1,0 +1,7 @@
+name: smoke-bare
+description: Small set with an install task on cluster3, for tests/exam-smoke.sh
+minutes: 120
+tasks:
+- level: 112
+- level: 129
+- level: 130
