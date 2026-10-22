@@ -1,0 +1,1 @@
+`k edit deploy app-logger -n logs-lab`. Add `volumes:` at the pod level, next to `containers:`.

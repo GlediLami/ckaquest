@@ -1,0 +1,1 @@
+`helm template <release> <chart> --version <v> -n <ns> --set <key>=<value> > file`. Without `-n`, the manifests get the wrong namespace.

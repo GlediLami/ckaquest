@@ -1,0 +1,29 @@
+name: "Fair Shares"
+description: "Three replicas must share node01 evenly"
+objective: "Set requests from the node's free allocatable capacity"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: workloads
+course_section: 3
+namespace: resource-lab
+exam: true
+concepts:
+  - node allocatable
+  - resource requests
+  - init container requests
+  - scheduling
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **wordpress** in namespace **resource-lab** runs on **node01** only. It has an init container **init-db** and a container **wordpress**.
+
+  1. Scale it to **3** replicas.
+  2. Set CPU and memory **requests** so the 3 pods share node01 evenly. Look at node01's allocatable capacity and what other pods on it already request. Give each pod about a third of what is free, keeping a little headroom.
+  3. The init container and the main container get the **same** requests.
+  4. All 3 pods must be Running on node01.
+
+  The containers are stand-ins and use almost nothing. The task is the scheduling math.
+docs:
+  - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  - https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable

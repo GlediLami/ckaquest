@@ -10,6 +10,11 @@ if container="$(cq_node_container "$target" 2>/dev/null)"; then
   if [ $# -gt 0 ]; then
     exec docker exec -i "$container" bash -c "$*"
   fi
+  # CQ_NODE_USER=candidate logs in like the exam: a normal user who needs sudo for root work
+  user="${CQ_NODE_USER:-root}"
+  if [ "$user" != root ] && docker exec "$container" id "$user" >/dev/null 2>&1; then
+    exec docker exec -it -u "$user" -e KUBECONFIG="/home/$user/.kube/config" -e PS1="${user}@${target}:\w\$ " -w "/home/$user" "$container" bash
+  fi
   exec docker exec -it -e PS1="root@${target}:\w# " -w /root "$container" bash
 fi
 

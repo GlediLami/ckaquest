@@ -1,0 +1,1 @@
+`helm install <release> <path to chart dir>` works without a repo.

@@ -1,0 +1,1 @@
+Scale to 0 first. Otherwise a rolling update needs a 4th pod's worth of room and gets stuck. Set the same requests on `init-db` and `wordpress`, then scale to 3.

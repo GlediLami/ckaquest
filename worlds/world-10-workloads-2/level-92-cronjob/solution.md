@@ -9,4 +9,5 @@ k create cronjob cleanup -n cron-lab --image=busybox:1.36 --schedule="*/5 * * * 
 k apply -f cj.yaml
 k create job cleanup-now -n cron-lab --from=cronjob/cleanup
 k logs job/cleanup-now -n cron-lab
+k patch cj cleanup -n cron-lab -p '{"spec":{"suspend":true}}'   # resume: suspend false
 ```

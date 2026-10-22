@@ -1,0 +1,27 @@
+name: "Bound Only When Needed"
+description: "Build local storage from scratch and watch the claim wait for its pod"
+objective: "Create a StorageClass with WaitForFirstConsumer, a local PV, a PVC and a pod"
+xp: 300
+difficulty: intermediate
+expected_time: 10m
+domain: storage
+course_section: 8
+namespace: wffc-lab
+exam: true
+concepts:
+  - StorageClass
+  - WaitForFirstConsumer
+  - local PersistentVolume
+  - node affinity
+task: |
+  Context: `kind-ckaquest`
+
+  Build local storage on **node02** by hand. The directory `/mnt/wffc` exists on node02.
+
+  1. StorageClass **local-wffc**: provisioner `kubernetes.io/no-provisioner`, volume binding mode **WaitForFirstConsumer**.
+  2. PersistentVolume **wffc-pv**: 200Mi, ReadWriteOnce, class local-wffc, a **local** volume at `/mnt/wffc`, only on node02.
+  3. PVC **wffc-pvc** in namespace **wffc-lab**: 200Mi, ReadWriteOnce, class local-wffc. Check its status. It stays Pending, and that is correct.
+  4. Pod **wffc-pod** (`busybox:1.36`, `sleep 3600`) that mounts the PVC at `/data`. Now the PVC must become Bound.
+docs:
+  - https://kubernetes.io/docs/concepts/storage/storage-classes/#local
+  - https://kubernetes.io/docs/concepts/storage/volumes/#local

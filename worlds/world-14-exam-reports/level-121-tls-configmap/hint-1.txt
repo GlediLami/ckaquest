@@ -1,0 +1,1 @@
+`k edit cm nginx-tls -n tls-lab`: the line is `ssl_protocols`.

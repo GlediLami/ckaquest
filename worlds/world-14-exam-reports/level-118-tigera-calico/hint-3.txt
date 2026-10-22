@@ -1,0 +1,1 @@
+After `custom-resources.yaml`, watch `kubectl get tigerastatus` and `kubectl get pods -n calico-system`. It takes a few minutes.

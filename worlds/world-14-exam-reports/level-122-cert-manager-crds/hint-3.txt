@@ -1,0 +1,1 @@
+`k explain certificate.spec.subject > ~/ckaquest-work/122/subject.txt`. Add `--api-version=cert-manager.io/v1` if two groups had a Certificate kind.

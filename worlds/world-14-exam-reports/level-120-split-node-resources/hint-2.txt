@@ -1,0 +1,1 @@
+Free = allocatable minus what other pods request. Each pod gets about free / 3. Keep some headroom, about 10%, and lower it if a pod stays Pending.

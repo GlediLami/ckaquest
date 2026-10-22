@@ -1,0 +1,1 @@
+`k patch cm nginx-tls -n tls-lab -p '{"immutable":true}'`. Do this last. Afterwards the data cannot change any more.

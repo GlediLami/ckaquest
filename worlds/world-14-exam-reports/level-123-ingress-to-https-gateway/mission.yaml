@@ -1,0 +1,33 @@
+name: "Retire the Ingress"
+description: "Move an HTTPS Ingress to a new Gateway of its own"
+objective: "Create an HTTPS Gateway and an HTTPRoute that replace an Ingress"
+xp: 350
+difficulty: advanced
+expected_time: 12m
+domain: networking
+course_section: 9
+namespace: shop-migrate
+requires:
+  - gateway
+exam: true
+concepts:
+  - Gateway
+  - HTTPS listener
+  - TLS terminate
+  - HTTPRoute
+  - Ingress migration
+task: |
+  Context: `kind-ckaquest`
+
+  Ingress **shop** in namespace **shop-migrate** serves `https://shop.example.com` with the TLS Secret **shop-tls**:
+  - path prefix `/api` to Service **api** port 80
+  - path prefix `/` to Service **web** port 80
+
+  Replace it with Gateway API:
+  1. Create Gateway **shop-gw** in **shop-migrate** with the existing GatewayClass **nginx**. Listener **https**: port 443, protocol HTTPS, hostname `shop.example.com`, TLS terminate with Secret **shop-tls**.
+  2. Create HTTPRoute **shop-route** attached to it, with the same rules as the Ingress.
+  3. Delete Ingress **shop**.
+docs:
+  - https://gateway-api.sigs.k8s.io/guides/tls/
+  - https://gateway-api.sigs.k8s.io/guides/migrating-from-ingress/
+  - https://kubernetes.io/docs/concepts/services-networking/gateway/

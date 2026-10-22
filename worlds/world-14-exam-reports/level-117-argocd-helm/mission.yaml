@@ -1,0 +1,27 @@
+name: "Argo CD Without Its CRDs"
+description: "The platform team owns the Argo CD CRDs. The chart must not touch them"
+objective: "Add a chart repo, render a chart without CRDs to a file, install it"
+xp: 300
+difficulty: intermediate
+expected_time: 8m
+domain: architecture
+course_section: 12
+namespace: argocd
+exam: true
+concepts:
+  - helm repo add
+  - helm template
+  - chart values
+  - CRDs managed outside Helm
+task: |
+  Context: `kind-ckaquest`
+
+  Argo CD's CRDs are already installed in the cluster. Install Argo CD with Helm, but the chart must not install CRDs.
+
+  1. Add the Argo CD chart repository `https://argoproj.github.io/argo-helm` as repo **argo**. Offline, use `http://127.0.0.1:8879` instead. It serves the same chart.
+  2. Render chart **argo/argo-cd** version **10.10.3** for release **argocd** in namespace **argocd**, with CRD installation turned off. Save the output to `~/ckaquest-work/117/argocd.yaml`.
+  3. Install the same chart, version and setting as release **argocd** in namespace **argocd**.
+docs:
+  - https://helm.sh/docs/helm/helm_template/
+  - https://helm.sh/docs/helm/helm_install/
+  - https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#helm

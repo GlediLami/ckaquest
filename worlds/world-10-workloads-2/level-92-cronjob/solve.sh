@@ -11,3 +11,4 @@ c["spec"]["jobTemplate"]["spec"]["activeDeadlineSeconds"] = 60
 print(yaml.safe_dump(c))' | kubectl apply -f -
 kubectl create job cleanup-now -n cron-lab --from=cronjob/cleanup
 kubectl wait --for=condition=complete job/cleanup-now -n cron-lab --timeout=90s
+kubectl patch cronjob cleanup -n cron-lab -p '{"spec":{"suspend":true}}'

@@ -4,11 +4,25 @@
 #   cq-helm-repo stop     stop the server
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
+source "$CQ_ROOT/cluster/versions.env"
 REPO="$CQ_HOME/helm-repo"
 PORT=8879
 
+# The real Argo CD chart, so its level also works offline (cq-offline prepare keeps a copy)
+argo_chart() {
+  local f="argo-cd-$ARGOCD_CHART_VERSION.tgz"
+  [ -f "$REPO/$f" ] && return 0
+  if [ -s "$CQ_HOME/offline/manifests/$f" ]; then
+    cp "$CQ_HOME/offline/manifests/$f" "$REPO/"
+  else
+    helm pull argo-cd --repo https://argoproj.github.io/argo-helm --version "$ARGOCD_CHART_VERSION" -d "$REPO" >/dev/null 2>&1 || return 0
+  fi
+  helm repo index "$REPO" --url "http://127.0.0.1:$PORT" >/dev/null
+}
+
 package() {
   mkdir -p "$REPO"
+  argo_chart
   [ -f "$REPO/webapp-1.0.0.tgz" ] && [ -f "$REPO/webapp-1.1.0.tgz" ] && return 0
   local tmp="$CQ_HOME/helm-build"
   mkdir -p "$tmp"

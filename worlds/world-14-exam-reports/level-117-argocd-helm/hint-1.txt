@@ -1,0 +1,1 @@
+`helm show values argo/argo-cd --version 10.10.3 | grep -A3 '^crds'` shows the switch.

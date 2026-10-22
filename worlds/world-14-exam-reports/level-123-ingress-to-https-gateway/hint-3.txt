@@ -1,0 +1,1 @@
+HTTPRoute: `parentRefs: [{name: shop-gw}]`, `hostnames`, one rule per path with `PathPrefix`. The new Gateway gets its own data plane. Give it a minute before testing.

@@ -1,0 +1,28 @@
+name: "Lock the Front Door"
+description: "The app is only reachable over plain HTTP"
+objective: "Create a TLS Secret and an Ingress that terminates HTTPS"
+xp: 250
+difficulty: intermediate
+expected_time: 7m
+domain: networking
+course_section: 9
+namespace: tls-ingress
+requires:
+  - ingress
+exam: true
+concepts:
+  - Ingress TLS
+  - kubernetes.io/tls Secret
+  - ingressClassName
+task: |
+  Context: `kind-ckaquest`
+
+  Service **app** in namespace **tls-ingress** listens on port 80. A certificate and key for `secure.example.com` are in `~/ckaquest-work/127/` (`tls.crt`, `tls.key`).
+
+  1. Create TLS Secret **app-tls** in **tls-ingress** from them.
+  2. Create Ingress **app-ingress** with IngressClass **nginx** for host `secure.example.com`: path prefix `/` to Service **app** port 80, and TLS with Secret **app-tls**.
+
+  `https://secure.example.com` must reach the app.
+docs:
+  - https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  - https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets

@@ -1,0 +1,27 @@
+name: "A Reader Next to the Writer"
+description: "The app writes logs to a file nobody can see"
+objective: "Add a log-reading sidecar to an existing Deployment with a shared volume"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: workloads
+course_section: 5
+namespace: logs-lab
+exam: true
+concepts:
+  - co-located containers
+  - emptyDir
+  - volumeMounts
+  - kubectl logs -c
+task: |
+  Context: `kind-ckaquest`
+
+  Deployment **app-logger** in namespace **logs-lab** has a container **app** that writes to `/var/log/app.log` inside the container. `kubectl logs` shows nothing.
+
+  Update the Deployment:
+  1. Add a volume **logs** (emptyDir) and mount it at `/var/log` in container **app**.
+  2. Add a container **sidecar**, image `busybox:1.36`, command `/bin/sh -c "tail -n+1 -f /var/log/app.log"`, with the same volume at `/var/log`.
+  3. `kubectl logs` of container **sidecar** must show the app's lines.
+docs:
+  - https://kubernetes.io/docs/concepts/cluster-administration/logging/#sidecar-container-with-logging-agent
+  - https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/

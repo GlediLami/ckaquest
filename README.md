@@ -9,7 +9,7 @@
    ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝
 ```
 
-**A game that gets you through the CKA exam.** 116 levels, 13 worlds, 6 mock exams, one real Kubernetes v1.37 cluster.
+**A game that gets you through the CKA exam.** 128 levels, 14 worlds, 6 mock exams, one real Kubernetes v1.37 cluster.
 
 Every level breaks something on the cluster, or hands you a task the way the exam would. You fix it in a real terminal with `kubectl`, `ssh` and `vim`. The game checks your work, gives you XP, and tells you what the exam likes to ask about it.
 
@@ -67,6 +67,7 @@ No multiple choice. No fake shell. If you can clear the game, you can do the exa
 | 🏗️ 11 Cluster lifecycle | 97–102 | Node prep, `kubeadm init`, Calico with a custom CIDR, `kubeadm join`, control plane and worker upgrade to v1.37.1 | Architecture |
 | ⏱️ 12 Speed drills | 103–110 | JSONPath, custom-columns, sort-by, imperative commands, `$do`, field selectors, api-resources | All |
 | 🧩 13 Loose ends | 111–116 | HA control plane join, cri-dockerd from a .deb, pod anti-affinity, topology spread, PVC expansion, CRI/CNI/CSI inspection | Architecture, Workloads, Storage |
+| 📰 14 Exam reports | 117–128 | Tasks people report from the 2025/2026 exam: Argo CD chart without CRDs, Calico with the Tigera operator, PVC for a given PV, splitting node resources, TLS config in a ConfigMap, cert-manager CRDs, Ingress to HTTPS Gateway, PriorityClass with patch, sidecar on a Deployment, WaitForFirstConsumer by hand, Ingress TLS, local chart | All |
 
 Worlds 6 and 11 break or build real control planes. The game repairs the cluster when you finish, skip or reset the level.
 
@@ -84,7 +85,7 @@ Commands are below in [Mock exams](#mock-exams).
 
 | Part | State |
 |---|---|
-| Worlds 1 to 13 (116 levels) | ✅ Playable. Every level passes the test harness. |
+| Worlds 1 to 14 (128 levels) | ✅ Playable. Every level passes the test harness. |
 | Mock exams: 6 fixed sets (A to F) plus random sets | ✅ Playable |
 | Offline pack | ✅ Works. `tests/offline-check.sh` passes sample levels with the internet cut |
 
@@ -134,6 +135,8 @@ After that, this terminal talks only to the CKAQuest cluster. You get:
 - `$do` for `--dry-run=client -o yaml` and `$now` for `--force --grace-period 0`
 - `ssh controlplane`, `ssh node01` and `ssh node02` to log into the nodes
 - `~/ckaquest-work/` for files that tasks ask you to write
+
+In the exam you log into nodes as a normal user and need `sudo` for root work. To practise that, set `export CQ_NODE_USER=candidate` before `source ./env.sh`. Then `ssh node01` logs in as `candidate`, and editing `/etc/kubernetes/manifests` or restarting the kubelet needs `sudo`.
 
 In the game, each level shows the task, the CKA domain it belongs to and the doc pages you may open in the exam. Commands inside a level:
 

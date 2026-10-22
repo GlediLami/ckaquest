@@ -20,6 +20,7 @@ Status: on 2026-10-20 work stopped after World 6 was written. This file is the p
 | Worlds 8, 9, 10, 12 (71 to 96, 103 to 110) | Done, 34 of 34 pass |
 | World 11 lifecycle (97 to 102), bare nodes and lab cluster | Done, 6 of 6 pass (101 also through the offline apt repo) |
 | World 13 curriculum gaps (111 to 116) | Done, 6 of 6 pass |
+| World 14 exam reports (117 to 128) | Done, 12 of 12 pass |
 | Exam simulator `exam.sh`, sets A to F, random sets, history | Done. `tests/exam-smoke.sh` runs a 5-task set end to end: 8.9% unsolved, 91.7% solved (one Gateway check graded too early). A full 17-task mock is still to play. |
 | Offline pack `bin/cq-offline` | Done: 26 images (1.4 GB), add-on manifests, NGF chart, Calico, v1.37.1 .debs, baked `ckaquest-node` images |
 | Game mechanics: par time, stars, hint cost, streak, domain mastery, readiness, play by course section | Done |
@@ -61,8 +62,9 @@ Rule: **we write everything ourselves.** Outside sources give topics and ideas o
 | 11 | Lifecycle on the lab cluster: node prep (sysctl, modules), kubeadm init and join, CNI install (Calico, custom CIDR), kubeadm upgrade control plane, upgrade worker, HA concepts | 97 to 102 | Written (spikes passed, section 12) |
 | 12 | Speed drills: JSONPath, custom-columns, imperative commands, `$do` YAML, against a clock | 103 to 110 | Done, tested |
 | 13 | Curriculum gaps: HA control plane endpoint and control plane join, cri-dockerd install with sysctls, pod anti-affinity, topology spread, PVC expansion, CRI/CNI/CSI inspection | 111 to 116 | Done, tested |
+| 14 | Tasks reported from the 2025/2026 exam (docs/GAPS.md): Argo CD, Tigera Calico, PVC for a given PV, node resource split, TLS ConfigMap, cert-manager CRDs, Ingress to HTTPS Gateway, PriorityClass patch, sidecar Deployment, WaitForFirstConsumer, Ingress TLS, local chart | 117 to 128 | Done, tested |
 
-116 levels in total. Every curriculum bullet gets at least 2 levels.
+128 levels in total. Every curriculum bullet gets at least 2 levels.
 
 ### 3.2 Sync with the course
 

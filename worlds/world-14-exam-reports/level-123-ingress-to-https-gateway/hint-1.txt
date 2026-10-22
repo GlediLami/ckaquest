@@ -1,0 +1,1 @@
+`k get ingress shop -n shop-migrate -o yaml`: copy host, TLS secret and the two paths.

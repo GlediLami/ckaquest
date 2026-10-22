@@ -1,0 +1,1 @@
+`k explain` works for custom resources too, once their CRD has a schema.

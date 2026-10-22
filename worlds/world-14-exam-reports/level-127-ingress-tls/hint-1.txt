@@ -1,0 +1,1 @@
+`k create secret tls app-tls -n tls-ingress --cert=... --key=...`

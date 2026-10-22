@@ -1,0 +1,1 @@
+`k create ingress app-ingress -n tls-ingress --class=nginx --rule="secure.example.com/*=app:80,tls=app-tls"`

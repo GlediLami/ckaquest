@@ -1,0 +1,1 @@
+Both containers get `volumeMounts: [{name: logs, mountPath: /var/log}]`.

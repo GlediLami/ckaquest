@@ -1,0 +1,1 @@
+A `local` PV must have `nodeAffinity`. Use `kubernetes.io/hostname` with node02's real name (`k get nodes`).

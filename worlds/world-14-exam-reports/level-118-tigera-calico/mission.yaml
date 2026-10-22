@@ -1,0 +1,29 @@
+name: "Calico, the Operator Way"
+description: "The new cluster has no pod network. Install Calico with the Tigera operator"
+objective: "Install the Tigera operator and an Installation with the cluster's pod CIDR"
+xp: 350
+difficulty: advanced
+expected_time: 12m
+domain: architecture
+course_section: 11
+namespace: lifecycle
+exam: true
+concepts:
+  - CNI
+  - Tigera operator
+  - Installation custom resource
+  - cluster-cidr
+task: |
+  Context: `bare-controlplane`
+
+  The cluster on **bare-controlplane** was created with kubeadm but has no CNI. The node is NotReady.
+
+  Install Calico with the Tigera operator. The two manifests from the Calico docs are in `/root/`:
+  1. Create the operator from `/root/tigera-operator.yaml`.
+  2. Set the IP pool CIDR in `/root/custom-resources.yaml` to the cluster's pod CIDR. Find it in the kube-controller-manager manifest (`--cluster-cidr`). Then create the resources.
+  3. The node must become Ready.
+
+  The bare node is **bare-controlplane** (`ssh bare-controlplane`). It is separate from the game cluster. Your normal kubectl does not talk to it.
+docs:
+  - https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
+  - https://kubernetes.io/docs/concepts/cluster-administration/addons/

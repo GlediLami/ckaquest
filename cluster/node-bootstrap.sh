@@ -15,6 +15,10 @@ if ! command -v vim >/dev/null; then
   apt-get update -qq >/dev/null
   apt-get install -y -qq --no-install-recommends vim less bash-completion iproute2 procps >/dev/null
 fi
+if ! command -v sudo >/dev/null; then
+  apt-get update -qq >/dev/null
+  apt-get install -y -qq --no-install-recommends sudo >/dev/null
+fi
 
 grep -q "CKAQuest exam-node setup" /root/.bashrc 2>/dev/null || cat >> /root/.bashrc <<'EOF'
 # CKAQuest exam-node setup
@@ -45,9 +49,22 @@ if [ ! -x /usr/local/bin/etcdctl ]; then
   install -m 0755 "$tmp/etcdctl" "$tmp/etcdutl" /usr/local/bin/
 fi
 
+# Exam-style login user: like the real exam, root-only work needs sudo (CQ_NODE_USER=candidate)
+if ! id candidate >/dev/null 2>&1; then
+  useradd -m -s /bin/bash candidate
+  echo 'candidate ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/candidate
+  chmod 0440 /etc/sudoers.d/candidate
+fi
+sed -n '/# CKAQuest exam-node setup/,$p' /root/.bashrc > /home/candidate/.bashrc.cq
+grep -q "bashrc.cq" /home/candidate/.bashrc 2>/dev/null || echo 'source ~/.bashrc.cq' >> /home/candidate/.bashrc
+cp /root/.vimrc /home/candidate/.vimrc
+chown candidate:candidate /home/candidate/.bashrc.cq /home/candidate/.vimrc
+
 if [ "$role" = "controlplane" ]; then
-  mkdir -p /root/.kube
+  mkdir -p /root/.kube /home/candidate/.kube
   cp /etc/kubernetes/admin.conf /root/.kube/config
+  cp /etc/kubernetes/admin.conf /home/candidate/.kube/config
+  chown -R candidate:candidate /home/candidate/.kube
 fi
 
 touch "$marker"

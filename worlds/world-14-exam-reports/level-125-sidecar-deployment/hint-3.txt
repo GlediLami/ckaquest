@@ -1,0 +1,1 @@
+Errors from the sidecar in the first seconds (file not found yet) are fine. It catches up. Check with `k logs deploy/app-logger -n logs-lab -c sidecar`.

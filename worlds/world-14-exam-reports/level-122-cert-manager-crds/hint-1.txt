@@ -1,0 +1,1 @@
+`k get crd | grep cert-manager`. Redirect it with `>`.

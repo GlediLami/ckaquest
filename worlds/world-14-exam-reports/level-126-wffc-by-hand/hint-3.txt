@@ -1,0 +1,1 @@
+`k get pvc -n wffc-lab` shows Pending with the event `WaitForFirstConsumer`. That is right. Create the pod and check again.

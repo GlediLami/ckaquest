@@ -1,0 +1,1 @@
+Use `kubectl create -f`, not `apply`. The operator's CRDs are too big for the annotation `apply` writes.

@@ -1,0 +1,1 @@
+`k create ingress --help` shows the `tls=` part of `--rule`.

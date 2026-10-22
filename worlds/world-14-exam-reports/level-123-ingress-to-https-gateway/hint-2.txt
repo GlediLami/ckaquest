@@ -1,0 +1,1 @@
+Gateway: `gatewayClassName: nginx`, a listener with `protocol: HTTPS`, `port: 443`, `hostname`, and `tls.mode: Terminate` with `certificateRefs: [{name: shop-tls}]`.

@@ -1,0 +1,1 @@
+Install with the same flags. If you forget `crds.install=false`, Helm refuses because the CRDs already exist and are not owned by the release.

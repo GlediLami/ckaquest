@@ -1,0 +1,28 @@
+name: "The Database Wants Its Old Disk"
+description: "A PersistentVolume with the database files is waiting. Claim exactly that one"
+objective: "Create a PVC that binds to a given PV and wire it into a Deployment"
+xp: 250
+difficulty: intermediate
+expected_time: 8m
+domain: storage
+course_section: 8
+namespace: mariadb
+exam: true
+concepts:
+  - static binding
+  - storageClassName
+  - PersistentVolumeClaim
+  - Deployment volumes
+task: |
+  Context: `kind-ckaquest`
+
+  PersistentVolume **mariadb-pv** holds the database files. Look at it first.
+
+  1. Create PVC **mariadb** in namespace **mariadb**: access mode ReadWriteOnce, **250Mi**, and the same storage class as the PV. It must bind to **mariadb-pv**.
+  2. `~/ckaquest-work/119/mariadb-deploy.yaml` is the Deployment. Make it use the PVC and apply it.
+  3. Deployment **mariadb** must be Ready.
+
+  The image is a small stand-in that writes a marker file where MariaDB keeps its data.
+docs:
+  - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#binding
+  - https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/

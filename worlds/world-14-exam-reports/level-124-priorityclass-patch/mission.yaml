@@ -1,0 +1,22 @@
+name: "Just Below the Top"
+description: "The logger must win against almost everything, but not against the top class"
+objective: "Create a PriorityClass from existing values and patch a Deployment"
+xp: 200
+difficulty: intermediate
+expected_time: 5m
+domain: workloads
+course_section: 3
+namespace: priority-lab
+exam: true
+concepts:
+  - PriorityClass
+  - kubectl patch
+  - pod priority
+task: |
+  Context: `kind-ckaquest`
+
+  1. Create PriorityClass **high-priority**. Its value is **one less** than the highest value of the existing **user-defined** PriorityClasses (ignore the built-in `system-` classes).
+  2. Make Deployment **busybox-logger** in namespace **priority-lab** use it. Use `kubectl patch`, not edit.
+docs:
+  - https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+  - https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/

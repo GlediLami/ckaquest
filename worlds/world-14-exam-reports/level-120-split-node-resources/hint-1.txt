@@ -1,0 +1,1 @@
+`k describe node node01`: look at **Allocatable** and at **Allocated resources** (what other pods request).

@@ -1,0 +1,24 @@
+name: "Read the Operator's Manual"
+description: "cert-manager is installed. Find its types and read one field's documentation"
+objective: "List an operator's CRDs and use kubectl explain on a custom resource"
+xp: 200
+difficulty: beginner
+expected_time: 5m
+domain: architecture
+course_section: 7
+namespace: cert-lab
+exam: true
+concepts:
+  - CustomResourceDefinition
+  - kubectl explain
+  - operators
+task: |
+  Context: `kind-ckaquest`
+
+  cert-manager's CRDs are installed in the cluster.
+
+  1. Write all cert-manager CRDs to `~/ckaquest-work/122/crds.txt`. Use kubectl's normal output, one CRD per line.
+  2. Write the documentation of field **spec.subject** of the **Certificate** resource to `~/ckaquest-work/122/subject.txt`. Use kubectl, not the website.
+docs:
+  - https://kubernetes.io/docs/reference/kubectl/generated/kubectl_explain/
+  - https://cert-manager.io/docs/reference/api-docs/

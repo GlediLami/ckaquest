@@ -1,0 +1,1 @@
+`k get pv mariadb-pv -o yaml`: note storageClassName, capacity and access mode. The PVC must match them.

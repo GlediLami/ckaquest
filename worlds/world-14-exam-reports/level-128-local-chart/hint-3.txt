@@ -1,0 +1,1 @@
+`helm install monitoring-stack ~/ckaquest-work/128/webapp -n monitoring --create-namespace --set replicaCount=3 --set service.type=NodePort`

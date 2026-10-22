@@ -424,7 +424,8 @@ level(W, "level-92-cronjob", dict(
     namespace="cron-lab", concepts=["CronJob", "history limits", "kubectl create job --from"],
     task="""In namespace **cron-lab**:
 1. Create CronJob **cleanup**: schedule every 5 minutes, image `busybox:1.36`, command `echo cleaning`. Keep **2** successful and **1** failed job in history. Each job gets at most **2** retries and must finish within **60** seconds.
-2. Run it once now as Job **cleanup-now**, created from the CronJob.""",
+2. Run it once now as Job **cleanup-now**, created from the CronJob.
+3. Then suspend the CronJob, so it does not run on its schedule until someone resumes it.""",
     docs=["https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
           "https://kubernetes.io/docs/concepts/workloads/controllers/job/"]),
     validate="""J='{.spec.jobTemplate.spec'

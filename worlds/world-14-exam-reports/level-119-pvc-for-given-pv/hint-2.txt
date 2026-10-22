@@ -1,0 +1,1 @@
+Without `storageClassName`, the PVC gets the default class `standard` and a brand new empty volume. `volumeName: mariadb-pv` pins the binding.

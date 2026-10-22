@@ -1,0 +1,27 @@
+name: "A Chart on Disk"
+description: "The chart is a folder, not a repo, and the namespace does not exist yet"
+objective: "Install a chart from a local directory with overrides into a new namespace"
+xp: 200
+difficulty: beginner
+expected_time: 5m
+domain: architecture
+course_section: 12
+namespace: helm-local
+exam: true
+concepts:
+  - helm install from a directory
+  - --set
+  - --create-namespace
+task: |
+  Context: `kind-ckaquest`
+
+  A chart is in `~/ckaquest-work/128/webapp/`.
+
+  Install it as release **monitoring-stack** in namespace **monitoring** (it does not exist yet), with:
+  - `replicaCount` **3**
+  - `service.type` **NodePort**
+
+  All 3 pods must be Running.
+docs:
+  - https://helm.sh/docs/helm/helm_install/
+  - https://helm.sh/docs/chart_template_guide/values_files/

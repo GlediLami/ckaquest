@@ -1,0 +1,1 @@
+`k get priorityclass` and sort by VALUE. Skip `system-cluster-critical` and `system-node-critical`.

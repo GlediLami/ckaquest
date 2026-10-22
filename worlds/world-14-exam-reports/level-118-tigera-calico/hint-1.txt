@@ -1,0 +1,1 @@
+`grep cluster-cidr /etc/kubernetes/manifests/kube-controller-manager.yaml`. That is the value for `cidr:`.

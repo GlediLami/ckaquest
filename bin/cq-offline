@@ -27,6 +27,9 @@ gateway-api.yaml https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/$INGRESS_NGINX_VERSION/deploy/static/provider/kind/deploy.yaml
 calico.yaml https://raw.githubusercontent.com/projectcalico/calico/$CALICO_VERSION/manifests/calico.yaml
 vpa-crd.yaml https://raw.githubusercontent.com/kubernetes/autoscaler/$VPA_VERSION/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
+tigera-operator.yaml https://raw.githubusercontent.com/projectcalico/calico/$CALICO_VERSION/manifests/tigera-operator.yaml
+custom-resources.yaml https://raw.githubusercontent.com/projectcalico/calico/$CALICO_VERSION/manifests/custom-resources.yaml
+cert-manager.crds.yaml https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_VERSION/cert-manager.crds.yaml
 EOF
 }
 
@@ -58,6 +61,10 @@ prepare_manifests() {
     log "NGF chart $NGF_VERSION"
     helm pull oci://ghcr.io/nginx/charts/nginx-gateway-fabric --version "$NGF_VERSION" -d "$VENDOR" >/dev/null || true
     helm template ngf "$VENDOR/nginx-gateway-fabric-$NGF_VERSION.tgz" -n nginx-gateway > "$VENDOR/ngf-rendered.yaml" 2>/dev/null || true
+  fi
+  if command -v helm >/dev/null && [ ! -s "$VENDOR/argo-cd-$ARGOCD_CHART_VERSION.tgz" ]; then
+    log "Argo CD chart $ARGOCD_CHART_VERSION"
+    helm pull argo-cd --repo https://argoproj.github.io/argo-helm --version "$ARGOCD_CHART_VERSION" -d "$VENDOR" >/dev/null || true
   fi
 }
 

@@ -1,0 +1,1 @@
+`k patch deploy busybox-logger -n priority-lab -p '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'`

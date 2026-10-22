@@ -35,4 +35,5 @@ fi
 
 echo "CKAQuest shell ready. Context: $(kubectl config current-context 2>/dev/null || echo 'none, run ./install.sh')"
 echo "Nodes: controlplane, node01, node02 (use: ssh node01). Work files: $CQ_WORK"
+[ "${CQ_NODE_USER:-root}" != root ] && echo "ssh logs in as ${CQ_NODE_USER}. Use sudo for manifests, kubelet and /etc, like in the exam."
 unset _cq_root

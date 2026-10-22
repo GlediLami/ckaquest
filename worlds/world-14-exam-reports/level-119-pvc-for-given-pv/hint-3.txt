@@ -1,0 +1,1 @@
+Then set `claimName: mariadb` in the file and `k apply -f`.
